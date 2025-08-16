@@ -1,0 +1,82 @@
+import React from 'react';
+import {StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import {PickView, PickText} from '@Components';
+import {COLORS, SPACING, FONT_SIZE} from '@Constants/theme';
+import MovieCard from './MovieCard';
+
+interface Movie {
+  id: string;
+  title: string;
+  genre: string;
+  rating: number;
+  duration: string;
+  imageUrl?: string;
+}
+
+interface MovieSectionProps {
+  title: string;
+  movies: Movie[];
+  onSeeAll?: () => void;
+}
+
+const MovieSection: React.FC<MovieSectionProps> = ({
+  title,
+  movies,
+  onSeeAll,
+}) => {
+  return (
+    <PickView style={styles.container}>
+      <PickView row justifySpaceBetween alignCenter style={styles.header}>
+        <PickText style={styles.sectionTitle}>{title}</PickText>
+        {onSeeAll && (
+          <TouchableOpacity onPress={onSeeAll}>
+            <PickText style={styles.seeAllText}>Xem tất cả</PickText>
+          </TouchableOpacity>
+        )}
+      </PickView>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}>
+        {movies.map(movie => (
+          <MovieCard
+            key={movie.id}
+            title={movie.title}
+            genre={movie.genre}
+            rating={movie.rating}
+            duration={movie.duration}
+            imageUrl={movie.imageUrl}
+            onPress={() => console.log('Movie pressed:', movie.title)}
+          />
+        ))}
+      </ScrollView>
+    </PickView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: SPACING.xl,
+  },
+  header: {
+    paddingHorizontal: SPACING.md,
+    marginBottom: SPACING.md,
+  },
+  sectionTitle: {
+    color: COLORS.text.primary,
+    fontSize: FONT_SIZE.xl,
+    fontWeight: 'bold',
+  },
+  seeAllText: {
+    color: COLORS.accent,
+    fontSize: FONT_SIZE.md,
+    fontWeight: '600',
+  },
+  scrollContainer: {
+    paddingLeft: SPACING.md,
+    paddingRight: SPACING.xs, // Small padding to show the edge of the last card
+  },
+});
+
+export default MovieSection;

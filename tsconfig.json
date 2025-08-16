@@ -1,3 +1,39 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@Constants": ["src/Constants"],
+      "@Constants/*": ["src/Constants/*"],
+      "@Screens": ["src/Screens"],
+      "@Screens/*": ["src/Screens/*"],
+      "@Components": ["src/Components"],
+      "@Components/*": ["src/Components/*"],
+      "@Services": ["src/Services"],
+      "@Services/*": ["src/Services/*"],
+      "@Store": ["src/Store"],
+      "@Store/*": ["src/Store/*"],
+      "@Utils": ["src/Utils"],
+      "@Utils/*": ["src/Utils/*"],
+      "@Assets": ["src/Assets"],
+      "@Images/*": ["src/Assets/Images/*"],
+      "@Fonts/*": ["src/Assets/Fonts/*"],
+      "@Assets/*": ["src/Assets/*"],
+      "@Validations": ["src/Validations"],
+      "@Navigation": ["src/Navigation"],
+      "@Models": ["src/Models"],
+      "@Models/*": ["src/Models/*"],
+      "@Locales": ["src/Locales"],
+      "@Locales/*": ["src/Locales/*"],
+      "@Contexts": ["src/Contexts"],
+      "@Contexts/*": ["src/Contexts/*"],
+      "@Types": ["src/Types"],
+      "@Types/*": ["src/Types/*"],
+      "@Hooks": ["src/Hooks"],
+      "@Hooks/*": ["src/Hooks/*"],
+      "@Theme": ["src/Theme"],
+      "@Theme/*": ["src/Theme/*"]
+    }
+  }
 }

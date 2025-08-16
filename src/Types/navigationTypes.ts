@@ -1,0 +1,27 @@
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {CompositeNavigationProp} from '@react-navigation/native';
+import {ROOT_STACK, MAIN_TAB_STACK} from '@Constants';
+
+// Root Stack Param List
+export type RootStackParamList = {
+  [ROOT_STACK.SPLASH]: undefined;
+  [ROOT_STACK.MAIN]: undefined;
+};
+
+// Main Tab Param List
+export type MainTabParamList = {
+  [MAIN_TAB_STACK.HOME]: undefined;
+  [MAIN_TAB_STACK.BOOKING]: undefined;
+  [MAIN_TAB_STACK.NEWS]: undefined;
+  [MAIN_TAB_STACK.PROFILE]: undefined;
+};
+
+// Navigation Props
+export type RootStackNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
+
+export type MainTabNavigationProp = CompositeNavigationProp<
+  BottomTabNavigationProp<MainTabParamList>,
+  NativeStackNavigationProp<RootStackParamList>
+>;

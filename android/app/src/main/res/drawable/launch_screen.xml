@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="150dp"
+    android:viewportWidth="200"
+    android:viewportHeight="150">
+    
+    <!-- Cinema icon representation -->
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M50,30 L150,30 L150,120 L50,120 Z M60,40 L140,40 L140,110 L60,110 Z"/>
+    
+    <!-- Film reel circles -->
+    <path
+        android:fillColor="#1a1a2e"
+        android:pathData="M80,57 A8,8 0 1,1 80,73 A8,8 0 1,1 80,57 Z"/>
+    <path
+        android:fillColor="#1a1a2e"
+        android:pathData="M120,57 A8,8 0 1,1 120,73 A8,8 0 1,1 120,57 Z"/>
+    <path
+        android:fillColor="#1a1a2e"
+        android:pathData="M80,77 A8,8 0 1,1 80,93 A8,8 0 1,1 80,77 Z"/>
+    <path
+        android:fillColor="#1a1a2e"
+        android:pathData="M120,77 A8,8 0 1,1 120,93 A8,8 0 1,1 120,77 Z"/>
+</vector>
