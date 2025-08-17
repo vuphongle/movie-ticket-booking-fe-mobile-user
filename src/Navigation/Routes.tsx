@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import RootNavigator from "./RootNavigator";
 import { ROOT_STACK } from "@Constants";
 import { RootStackParamList } from "@Types/navigationTypes";
+import { AuthProvider } from "@Contexts/AuthContext";
 
 const Routes = () => {
   const [initialRoute, setInitialRoute] = useState<keyof RootStackParamList>(ROOT_STACK.SPLASH);
@@ -13,9 +14,11 @@ const Routes = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <RootNavigator initialRouteName={initialRoute} />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <RootNavigator initialRouteName={initialRoute} />
+      </NavigationContainer>
+    </AuthProvider>
   );
 };
 

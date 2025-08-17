@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: SPACING.md,
     right: SPACING.md,
-    bottom: SPACING.md,
+    bottom: 0,
   },
   tabContainer: {
     height: CONTAINER_HEIGHT,
