@@ -1,7 +1,7 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import {PickView, PickText} from '@Components';
-import {COLORS, SPACING, RADIUS, FONT_SIZE} from '@Constants/theme';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { PickView, PickText } from "@Components";
+import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
 
 interface MovieCardProps {
   title: string;
@@ -24,7 +24,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <PickView style={styles.imageContainer}>
         {imageUrl ? (
-          <Image source={{uri: imageUrl}} style={styles.image} />
+          <Image source={{ uri: imageUrl }} style={styles.image} />
         ) : (
           <PickView style={styles.placeholderImage} justifyCenter alignCenter>
             <Text style={styles.placeholderText}>🎬</Text>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
     marginRight: SPACING.md,
     width: 160,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -62,30 +62,30 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   imageContainer: {
-    position: 'relative',
+    position: "relative",
     height: 200,
     borderTopLeftRadius: RADIUS.md,
     borderTopRightRadius: RADIUS.md,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   placeholderImage: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     backgroundColor: COLORS.border,
   },
   placeholderText: {
     fontSize: 40,
   },
   ratingBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: SPACING.sm,
     right: SPACING.sm,
-    backgroundColor: 'rgba(0,0,0,0.8)',
+    backgroundColor: "rgba(0,0,0,0.8)",
     paddingHorizontal: SPACING.sm,
     paddingVertical: SPACING.xs,
     borderRadius: RADIUS.sm,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   ratingText: {
     color: COLORS.text.white,
     fontSize: FONT_SIZE.xs,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   contentContainer: {
     padding: SPACING.md,
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   title: {
     color: COLORS.text.primary,
     fontSize: FONT_SIZE.md,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: SPACING.xs,
     lineHeight: 20,
   },

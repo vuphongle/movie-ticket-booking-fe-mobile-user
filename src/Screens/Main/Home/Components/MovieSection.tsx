@@ -1,8 +1,8 @@
-import React from 'react';
-import {StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
-import {PickView, PickText} from '@Components';
-import {COLORS, SPACING, FONT_SIZE} from '@Constants/theme';
-import MovieCard from './MovieCard';
+import React from "react";
+import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import { PickView, PickText } from "@Components";
+import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
+import MovieCard from "./MovieCard";
 
 interface Movie {
   id: string;
@@ -19,11 +19,7 @@ interface MovieSectionProps {
   onSeeAll?: () => void;
 }
 
-const MovieSection: React.FC<MovieSectionProps> = ({
-  title,
-  movies,
-  onSeeAll,
-}) => {
+const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) => {
   return (
     <PickView style={styles.container}>
       <PickView row justifySpaceBetween alignCenter style={styles.header}>
@@ -38,8 +34,9 @@ const MovieSection: React.FC<MovieSectionProps> = ({
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainer}>
-        {movies.map(movie => (
+        contentContainerStyle={styles.scrollContainer}
+      >
+        {movies.map((movie) => (
           <MovieCard
             key={movie.id}
             title={movie.title}
@@ -47,7 +44,7 @@ const MovieSection: React.FC<MovieSectionProps> = ({
             rating={movie.rating}
             duration={movie.duration}
             imageUrl={movie.imageUrl}
-            onPress={() => console.log('Movie pressed:', movie.title)}
+            onPress={() => console.log("Movie pressed:", movie.title)}
           />
         ))}
       </ScrollView>
@@ -66,12 +63,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: COLORS.text.primary,
     fontSize: FONT_SIZE.xl,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   seeAllText: {
     color: COLORS.accent,
     fontSize: FONT_SIZE.md,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   scrollContainer: {
     paddingLeft: SPACING.md,

@@ -1,8 +1,8 @@
-import React from 'react';
-import {View, Text, StyleSheet, ImageBackground} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {PickView, PickText} from '@Components';
-import {COLORS, SPACING, FONT_SIZE} from '@Constants/theme';
+import React from "react";
+import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { PickView, PickText } from "@Components";
+import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 
 const Header = () => {
   const insets = useSafeAreaInsets();
@@ -15,7 +15,8 @@ const Header = () => {
           paddingTop: insets.top + SPACING.md,
           paddingBottom: SPACING.xl,
         },
-      ]}>
+      ]}
+    >
       <PickView row justifySpaceBetween alignCenter style={styles.headerRow}>
         <PickView style={styles.locationContainer}>
           <PickText style={styles.locationLabel}>📍 Địa điểm hiện tại</PickText>
@@ -32,9 +33,7 @@ const Header = () => {
       <PickView style={styles.titleContainer}>
         <PickText style={styles.welcomeText}>Chào mừng bạn đến với</PickText>
         <PickText style={styles.appTitle}>GO CINEMA</PickText>
-        <PickText style={styles.subtitle}>
-          Khám phá những bộ phim hay nhất
-        </PickText>
+        <PickText style={styles.subtitle}>Khám phá những bộ phim hay nhất</PickText>
       </PickView>
     </View>
   );
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
   locationText: {
     color: COLORS.text.white,
     fontSize: FONT_SIZE.md,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   iconContainer: {
     gap: SPACING.md,
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     color: COLORS.text.white,
   },
   titleContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: SPACING.lg,
   },
   welcomeText: {
@@ -82,14 +81,14 @@ const styles = StyleSheet.create({
   appTitle: {
     color: COLORS.text.white,
     fontSize: FONT_SIZE.xxxl,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     letterSpacing: 2,
     marginBottom: SPACING.sm,
   },
   subtitle: {
     color: COLORS.text.light,
     fontSize: FONT_SIZE.sm,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

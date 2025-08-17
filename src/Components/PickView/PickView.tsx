@@ -1,6 +1,6 @@
-import React, {ReactNode, forwardRef, useMemo} from 'react';
-import {View as RNView, StyleProp, LayoutChangeEvent} from 'react-native';
-import type {ViewStyle} from 'react-native';
+import React, { ReactNode, forwardRef, useMemo } from "react";
+import { View as RNView, StyleProp, LayoutChangeEvent } from "react-native";
+import type { ViewStyle } from "react-native";
 
 export type LayoutProps = Partial<ViewStyle>;
 
@@ -73,34 +73,32 @@ export const PickView = forwardRef<RNView, Props>((props, ref) => {
         borderBottomLeftRadius: borderLeftRadius,
       }),
     }),
-    [borderTopRadius, borderBottomRadius, borderRightRadius, borderLeftRadius],
+    [borderTopRadius, borderBottomRadius, borderRightRadius, borderLeftRadius]
   );
 
   const combinedStyle: ViewStyle = useMemo(
     () => ({
-      flexDirection: row ? 'row' : 'column',
-      ...(typeof flex === 'number' ? {flex: flex > 1 ? flex : 1} : {}),
-      ...(alignSelf || centerSelf ? {alignSelf: 'center'} : {}),
+      flexDirection: row ? "row" : "column",
+      ...(typeof flex === "number" ? { flex: flex > 1 ? flex : 1 } : {}),
+      ...(alignSelf || centerSelf ? { alignSelf: "center" } : {}),
       ...(centerItems || alignCenter
-        ? {alignItems: 'center'}
+        ? { alignItems: "center" }
         : alignEnd
-        ? {alignItems: 'flex-end'}
+        ? { alignItems: "flex-end" }
         : alignStart
-        ? {alignItems: 'flex-start'}
+        ? { alignItems: "flex-start" }
         : {}),
       ...(centerItems || justifyCenter
-        ? {justifyContent: 'center'}
+        ? { justifyContent: "center" }
         : justifySpaceAround
-        ? {justifyContent: 'space-around'}
+        ? { justifyContent: "space-around" }
         : justifySpaceBetween
-        ? {justifyContent: 'space-between'}
+        ? { justifyContent: "space-between" }
         : justifyEnd
-        ? {justifyContent: 'flex-end'}
+        ? { justifyContent: "flex-end" }
         : {}),
-      ...(typeof opacity === 'number' ? {opacity} : {}),
-      ...(backgroundColor
-        ? {backgroundColor}
-        : {backgroundColor: 'transparent'}),
+      ...(typeof opacity === "number" ? { opacity } : {}),
+      ...(backgroundColor ? { backgroundColor } : { backgroundColor: "transparent" }),
     }),
     [
       row,
@@ -117,7 +115,7 @@ export const PickView = forwardRef<RNView, Props>((props, ref) => {
       justifyEnd,
       opacity,
       backgroundColor,
-    ],
+    ]
   );
 
   return (
@@ -125,10 +123,11 @@ export const PickView = forwardRef<RNView, Props>((props, ref) => {
       ref={ref}
       onLayout={onLayout}
       style={[radiusStyle, combinedStyle, style]}
-      {...otherProps}>
+      {...otherProps}
+    >
       {children}
     </RNView>
   );
 });
 
-PickView.displayName = 'View';
+PickView.displayName = "View";

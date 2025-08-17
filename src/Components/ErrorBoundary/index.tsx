@@ -1,7 +1,7 @@
-import * as React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import RNRestart from 'react-native-restart';
+import * as React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import RNRestart from "react-native-restart";
 
 interface IErrorBoundaryState {
   isError: boolean;
@@ -10,10 +10,7 @@ interface IErrorBoundaryState {
   isCollapse: boolean;
 }
 
-export class ErrorBoundary extends React.Component<
-  React.PropsWithChildren,
-  IErrorBoundaryState
-> {
+export class ErrorBoundary extends React.Component<React.PropsWithChildren, IErrorBoundaryState> {
   constructor(props: React.PropsWithChildren) {
     super(props);
     this.state = {
@@ -45,9 +42,7 @@ export class ErrorBoundary extends React.Component<
             <Text style={styles.subtitle}>
               Đã xảy ra lỗi không mong muốn. Vui lòng khởi động lại ứng dụng.
             </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={this.onClickReloadApp}>
+            <TouchableOpacity style={styles.button} onPress={this.onClickReloadApp}>
               <Text style={styles.buttonText}>Khởi động lại</Text>
             </TouchableOpacity>
           </View>
@@ -61,34 +56,34 @@ export class ErrorBoundary extends React.Component<
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 24,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
-    color: '#d32f2f',
+    fontWeight: "bold",
+    color: "#d32f2f",
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   button: {
-    backgroundColor: '#1976d2',
+    backgroundColor: "#1976d2",
     paddingVertical: 10,
     paddingHorizontal: 24,
     borderRadius: 6,
     marginBottom: 12,
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 16,
   },
 });

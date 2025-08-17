@@ -1,7 +1,7 @@
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import {CompositeNavigationProp} from '@react-navigation/native';
-import {ROOT_STACK, MAIN_TAB_STACK} from '@Constants';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { ROOT_STACK, MAIN_TAB_STACK } from "@Constants";
 
 // Root Stack Param List
 export type RootStackParamList = {
@@ -18,8 +18,7 @@ export type MainTabParamList = {
 };
 
 // Navigation Props
-export type RootStackNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
+export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export type MainTabNavigationProp = CompositeNavigationProp<
   BottomTabNavigationProp<MainTabParamList>,

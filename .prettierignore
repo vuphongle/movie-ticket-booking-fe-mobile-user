@@ -1,0 +1,25 @@
+# Generated & Dependencies
+node_modules/
+ios/Pods/
+vendor/
+coverage/
+ios/build/
+android/build/
+.bundle/
+
+# Assets
+src/Assets/fonts/
+*.otf
+*.ttf
+*.woff*
+
+# Config files  
+*.lock
+*.xcworkspace
+*.xcodeproj
+*.plist
+package-lock.json
+
+# Logs
+*.log
+pnpm-lock.yaml

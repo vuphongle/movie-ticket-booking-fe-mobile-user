@@ -1,13 +1,13 @@
-import {useEffect} from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
-import {RootStackNavigationProp} from '@Types/navigationTypes';
-import {ROOT_STACK} from '@Constants';
+import { useEffect } from "react";
+import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { RootStackNavigationProp } from "@Types/navigationTypes";
+import { ROOT_STACK } from "@Constants";
 
 interface SplashScreenProps {
   navigation: RootStackNavigationProp;
 }
 
-const SplashScreen: React.FC<SplashScreenProps> = ({navigation}) => {
+const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace(ROOT_STACK.MAIN);
@@ -18,11 +18,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({navigation}) => {
 
   return (
     <>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="#1a1a2e"
-        translucent={false}
-      />
+      <StatusBar barStyle="light-content" backgroundColor="#1a1a2e" translucent={false} />
       <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Text style={styles.logo}>🎬</Text>
@@ -37,12 +33,12 @@ const SplashScreen: React.FC<SplashScreenProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#1a1a2e",
+    justifyContent: "center",
+    alignItems: "center",
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   logo: {
     fontSize: 80,
@@ -50,14 +46,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#ffffff',
+    fontWeight: "bold",
+    color: "#ffffff",
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#cccccc',
-    textAlign: 'center',
+    color: "#cccccc",
+    textAlign: "center",
   },
 });
 

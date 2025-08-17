@@ -1,47 +1,37 @@
-import React, {useMemo} from 'react';
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {
-  createBottomTabNavigator,
-  BottomTabBarProps,
-} from '@react-navigation/bottom-tabs';
-import {MAIN_TAB_STACK, COLORS, SPACING, FONT_SIZE} from '@Constants';
-import {MainTabParamList} from '@Types/navigationTypes';
-import {HomeScreen, BookingScreen, NewsScreen, ProfileScreen} from '@Screens';
+import React, { useMemo } from "react";
+import { Animated, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { createBottomTabNavigator, BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { MAIN_TAB_STACK, COLORS, SPACING, FONT_SIZE } from "@Constants";
+import { MainTabParamList } from "@Types/navigationTypes";
+import { HomeScreen, BookingScreen, NewsScreen, ProfileScreen } from "@Screens";
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
 const EMOJI: Record<string, string> = {
-  [MAIN_TAB_STACK.HOME]: '🏠',
-  [MAIN_TAB_STACK.BOOKING]: '🎫',
-  [MAIN_TAB_STACK.NEWS]: '📰',
-  [MAIN_TAB_STACK.PROFILE]: '👤',
+  [MAIN_TAB_STACK.HOME]: "🏠",
+  [MAIN_TAB_STACK.BOOKING]: "🎫",
+  [MAIN_TAB_STACK.NEWS]: "📰",
+  [MAIN_TAB_STACK.PROFILE]: "👤",
 };
 
 const LABEL: Record<string, string> = {
-  [MAIN_TAB_STACK.HOME]: 'Trang chủ',
-  [MAIN_TAB_STACK.BOOKING]: 'Đặt vé',
-  [MAIN_TAB_STACK.NEWS]: 'Tin tức',
-  [MAIN_TAB_STACK.PROFILE]: 'Cá nhân',
+  [MAIN_TAB_STACK.HOME]: "Trang chủ",
+  [MAIN_TAB_STACK.BOOKING]: "Đặt vé",
+  [MAIN_TAB_STACK.NEWS]: "Tin tức",
+  [MAIN_TAB_STACK.PROFILE]: "Cá nhân",
 };
 
-function CustomTabBar({state, descriptors, navigation}: BottomTabBarProps) {
+function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   return (
-    <SafeAreaView edges={['bottom']} style={styles.safeArea}>
+    <SafeAreaView edges={["bottom"]} style={styles.safeArea}>
       <View style={styles.tabContainer}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
-          const {options} = descriptors[route.key];
+          const { options } = descriptors[route.key];
           const onPress = () => {
             const event = navigation.emit({
-              type: 'tabPress',
+              type: "tabPress",
               target: route.key,
               canPreventDefault: true,
             });
@@ -50,7 +40,7 @@ function CustomTabBar({state, descriptors, navigation}: BottomTabBarProps) {
             }
           };
           const onLongPress = () => {
-            navigation.emit({type: 'tabLongPress', target: route.key});
+            navigation.emit({ type: "tabLongPress", target: route.key });
           };
 
           const scale = new Animated.Value(isFocused ? 1 : 0.95);
@@ -64,20 +54,18 @@ function CustomTabBar({state, descriptors, navigation}: BottomTabBarProps) {
             <TouchableOpacity
               key={route.key}
               accessibilityRole="button"
-              accessibilityState={isFocused ? {selected: true} : {}}
+              accessibilityState={isFocused ? { selected: true } : {}}
               accessibilityLabel={options.tabBarAccessibilityLabel}
               onPress={onPress}
               onLongPress={onLongPress}
               style={styles.itemTouchable}
-              hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
               <Animated.View
-                style={[
-                  styles.item,
-                  isFocused && styles.itemFocused,
-                  {transform: [{scale}]},
-                ]}>
-                <Text style={[styles.icon, {opacity: isFocused ? 1 : 0.6}]}>
-                  {EMOJI[route.name] ?? '📱'}
+                style={[styles.item, isFocused && styles.itemFocused, { transform: [{ scale }] }]}
+              >
+                <Text style={[styles.icon, { opacity: isFocused ? 1 : 0.6 }]}>
+                  {EMOJI[route.name] ?? "📱"}
                 </Text>
 
                 <Text
@@ -88,8 +76,9 @@ function CustomTabBar({state, descriptors, navigation}: BottomTabBarProps) {
                       opacity: isFocused ? 1 : 0.7,
                     },
                   ]}
-                  numberOfLines={1}>
-                  {LABEL[route.name] ?? ''}
+                  numberOfLines={1}
+                >
+                  {LABEL[route.name] ?? ""}
                 </Text>
               </Animated.View>
             </TouchableOpacity>
@@ -103,12 +92,13 @@ function CustomTabBar({state, descriptors, navigation}: BottomTabBarProps) {
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      tabBar={props => <CustomTabBar {...props} />}
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {display: 'none'},
+        tabBarStyle: { display: "none" },
         tabBarHideOnKeyboard: true,
-      }}>
+      }}
+    >
       <Tab.Screen name={MAIN_TAB_STACK.HOME} component={HomeScreen} />
       <Tab.Screen name={MAIN_TAB_STACK.BOOKING} component={BookingScreen} />
       <Tab.Screen name={MAIN_TAB_STACK.NEWS} component={NewsScreen} />
@@ -117,11 +107,11 @@ const TabNavigator = () => {
   );
 };
 
-const CONTAINER_HEIGHT = Platform.select({ios: 70, android: 66});
+const CONTAINER_HEIGHT = Platform.select({ ios: 70, android: 66 });
 
 const styles = StyleSheet.create({
   safeArea: {
-    position: 'absolute',
+    position: "absolute",
     left: SPACING.md,
     right: SPACING.md,
     bottom: SPACING.md,
@@ -132,14 +122,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: SPACING.sm,
     paddingVertical: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
 
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.08,
     shadowRadius: 10,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     elevation: 6,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.border,
@@ -148,14 +138,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   item: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 6,
     paddingHorizontal: 8,
     borderRadius: 14,
   },
   itemFocused: {
-    backgroundColor: 'rgba(233,69,96,0.12)',
+    backgroundColor: "rgba(233,69,96,0.12)",
   },
   icon: {
     fontSize: 22,
@@ -163,7 +153,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: FONT_SIZE.xs,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

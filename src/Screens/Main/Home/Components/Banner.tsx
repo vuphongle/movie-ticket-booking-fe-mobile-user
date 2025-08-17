@@ -1,7 +1,7 @@
-import React from 'react';
-import {StyleSheet, ScrollView, TouchableOpacity, Image} from 'react-native';
-import {PickView, PickText} from '@Components';
-import {COLORS, SPACING, RADIUS, FONT_SIZE} from '@Constants/theme';
+import React from "react";
+import { StyleSheet, ScrollView, TouchableOpacity, Image } from "react-native";
+import { PickView, PickText } from "@Components";
+import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
 
 interface BannerItem {
   id: string;
@@ -15,33 +15,30 @@ interface BannerProps {
   banners: BannerItem[];
 }
 
-const Banner: React.FC<BannerProps> = ({banners}) => {
+const Banner: React.FC<BannerProps> = ({ banners }) => {
   return (
     <PickView style={styles.container}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        contentContainerStyle={styles.scrollContainer}>
-        {banners.map(banner => (
+        contentContainerStyle={styles.scrollContainer}
+      >
+        {banners.map((banner) => (
           <TouchableOpacity
             key={banner.id}
             style={[
               styles.bannerItem,
-              {backgroundColor: banner.backgroundColor || COLORS.secondary},
-            ]}>
+              { backgroundColor: banner.backgroundColor || COLORS.secondary },
+            ]}
+          >
             {banner.imageUrl ? (
-              <Image
-                source={{uri: banner.imageUrl}}
-                style={styles.bannerImage}
-              />
+              <Image source={{ uri: banner.imageUrl }} style={styles.bannerImage} />
             ) : (
               <PickView style={styles.bannerContent} justifyCenter alignCenter>
                 <PickText style={styles.bannerTitle}>{banner.title}</PickText>
                 {banner.subtitle && (
-                  <PickText style={styles.bannerSubtitle}>
-                    {banner.subtitle}
-                  </PickText>
+                  <PickText style={styles.bannerSubtitle}>{banner.subtitle}</PickText>
                 )}
               </PickView>
             )}
@@ -64,12 +61,12 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: RADIUS.lg,
     marginRight: SPACING.md,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   bannerImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   bannerContent: {
     flex: 1,
@@ -78,14 +75,14 @@ const styles = StyleSheet.create({
   bannerTitle: {
     color: COLORS.text.white,
     fontSize: FONT_SIZE.xl,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: SPACING.sm,
   },
   bannerSubtitle: {
     color: COLORS.text.white,
     fontSize: FONT_SIZE.md,
-    textAlign: 'center',
+    textAlign: "center",
     opacity: 0.9,
   },
 });
