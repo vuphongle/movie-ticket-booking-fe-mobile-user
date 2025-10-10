@@ -1,23 +1,35 @@
-import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { useEffect } from "react";
+import { hideSplash } from "react-native-splash-view";
 import RootNavigator from "./RootNavigator";
 import { ROOT_STACK } from "@Constants";
-import { RootStackParamList } from "@Types/navigationTypes";
-import { AuthProvider } from "@Contexts/AuthContext";
+import { AuthProvider, useAuth } from "@Contexts/AuthContext";
 
-const Routes = () => {
-  const [initialRoute, setInitialRoute] = useState<keyof RootStackParamList>(ROOT_STACK.SPLASH);
+const AppNavigator = () => {
+  const { state } = useAuth();
+  const { isLoading } = state;
 
   useEffect(() => {
-    // Keep splash screen for branding purposes
-    // setInitialRoute(ROOT_STACK.SPLASH);
-  }, []);
+    if (!isLoading) {
+      hideSplash();
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
+    <NavigationContainer>
+      <RootNavigator initialRouteName={ROOT_STACK.MAIN} />
+    </NavigationContainer>
+  );
+};
+
+const Routes = () => {
+  return (
     <AuthProvider>
-      <NavigationContainer>
-        <RootNavigator initialRouteName={initialRoute} />
-      </NavigationContainer>
+      <AppNavigator />
     </AuthProvider>
   );
 };

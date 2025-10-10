@@ -1,6 +1,5 @@
 // Navigation constants
 export const ROOT_STACK = {
-  SPLASH: "Splash",
   MAIN: "Main",
 } as const;
 

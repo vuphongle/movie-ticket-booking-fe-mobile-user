@@ -5,7 +5,6 @@ import { ROOT_STACK, MAIN_TAB_STACK } from "@Constants";
 
 // Root Stack Param List
 export type RootStackParamList = {
-  [ROOT_STACK.SPLASH]: undefined;
   [ROOT_STACK.MAIN]: undefined;
 };
 

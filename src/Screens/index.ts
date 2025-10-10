@@ -1,7 +1,3 @@
-// Export splash screen
-export { default as SplashScreen } from "./SplashScreen";
-
-// Export main screens
 export { default as HomeScreen } from "./Main/Home/HomeScreen";
 export { default as BookingScreen } from "./Main/Booking/BookingScreen";
 export { default as NewsScreen } from "./Main/News/NewsScreen";
