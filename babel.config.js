@@ -18,7 +18,6 @@ module.exports = {
           "@Validations": "./src/Validations",
           "@Navigation": "./src/Navigation",
           "@Models": "./src/Models",
-          "@Locales": "./src/Locales",
           "@Contexts": "./src/Contexts",
           "@Types": "./src/Types",
           "@Hooks": "./src/Hooks",

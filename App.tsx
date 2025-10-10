@@ -7,7 +7,6 @@ import { PortalProvider } from "@gorhom/portal";
 import { enableScreens } from "react-native-screens";
 import { ErrorBoundary } from "@Components/ErrorBoundary";
 import { Routes } from "@Navigation";
-import "@Locales";
 
 // Enable screens for better navigation performance
 enableScreens();

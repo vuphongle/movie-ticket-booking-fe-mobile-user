@@ -24,8 +24,6 @@
       "@Navigation": ["src/Navigation"],
       "@Models": ["src/Models"],
       "@Models/*": ["src/Models/*"],
-      "@Locales": ["src/Locales"],
-      "@Locales/*": ["src/Locales/*"],
       "@Contexts": ["src/Contexts"],
       "@Contexts/*": ["src/Contexts/*"],
       "@Types": ["src/Types"],

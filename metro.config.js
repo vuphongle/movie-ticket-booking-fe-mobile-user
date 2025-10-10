@@ -12,7 +12,6 @@ const config = {
       "@Utils": "./src/Utils",
       "@Assets": "./src/Assets",
       "@Navigation": "./src/Navigation",
-      "@Locales": "./src/Locales",
       "@Contexts": "./src/Contexts",
       "@Types": "./src/Types",
       "@Hooks": "./src/Hooks",
