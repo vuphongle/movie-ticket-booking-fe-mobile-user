@@ -1,13 +1,12 @@
 import React from "react";
 import { View, ActivityIndicator } from "react-native";
-import { useIsAuthenticated } from "@Hooks/Profile";
+import { useAuth } from "@Contexts/AuthContext";
 import { GuestProfileView } from "./Components/GuestProfileView";
+import { AuthenticatedProfileView } from "./Components/AuthenticatedProfileView";
 
 const ProfileScreen = React.memo(() => {
-  const isAuthenticated = useIsAuthenticated();
-
-  // TODO: Replace with actual loading state from auth hook
-  const isLoading = false;
+  const { state } = useAuth();
+  const { isAuthenticated, isLoading } = state;
 
   if (isLoading) {
     return (
@@ -22,8 +21,8 @@ const ProfileScreen = React.memo(() => {
     return <GuestProfileView />;
   }
 
-  // TODO: Show authenticated profile view
-  return <GuestProfileView />;
+  // Show authenticated profile view
+  return <AuthenticatedProfileView />;
 });
 
 export default ProfileScreen;

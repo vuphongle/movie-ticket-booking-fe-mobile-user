@@ -11,6 +11,9 @@ import { PickButton, PickText, PickView, PickInput } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { authService } from "@Services/authService";
 import { loginSchema, type LoginFormData } from "../../Schemas/authSchemas";
+import { useAuth } from "@Contexts/AuthContext";
+import { getErrorMessage } from "@Constants";
+import { transformLoginResponse, getUserDisplayName } from "@Utils/authHelpers";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -18,6 +21,7 @@ export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const insets = useSafeAreaInsets();
   const { colors, dimensions } = useThemedStyles();
+  const { updateAuthStatus } = useAuth();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -38,17 +42,36 @@ export const LoginScreen: React.FC = () => {
       setIsLoading(true);
       const response = await authService.login(data);
 
-      if (response.isAuthenticated) {
-        Alert.alert("Thành công", `Chào mừng ${response.user.name}!`);
-        // TODO: Navigate to Main screen
-        console.log("Login success:", response);
+      if (response.isAuthenticated && response.accessToken) {
+        const { tokens, userInfo } = transformLoginResponse(response);
+
+        await updateAuthStatus(tokens, userInfo);
+
+        Alert.alert("Đăng nhập thành công", `Chào mừng ${getUserDisplayName(userInfo)}!`, [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("Main"),
+          },
+        ]);
+      } else {
+        Alert.alert("Đăng nhập thất bại", "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.");
       }
     } catch (error: any) {
-      Alert.alert(
-        "Đăng nhập thất bại",
-        error.message || "Vui lòng kiểm tra lại thông tin đăng nhập"
+      if (__DEV__) {
+        console.log("Login network error:", {
+          code: error?.code,
+          message: error?.message,
+          status: error?.status,
+        });
+      }
+
+      const errorCode = error?.code || error?.response?.data?.code;
+      const errorMessage = getErrorMessage(
+        errorCode,
+        error?.message || "Không thể kết nối đến máy chủ. Vui lòng thử lại."
       );
-      console.error("Login error:", error);
+
+      Alert.alert("Lỗi", errorMessage);
     } finally {
       setIsLoading(false);
     }

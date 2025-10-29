@@ -12,3 +12,6 @@ export const MAIN_TAB_STACK = {
 
 // Theme constants
 export * from "./theme";
+
+// Error constants
+export * from "./errorCodes";

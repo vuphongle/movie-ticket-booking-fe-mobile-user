@@ -63,8 +63,8 @@ export class HttpService {
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
     try {
-      // Log request in development
-      if (__DEV__) {
+      // Log request in development (only log non-auth endpoints to reduce noise)
+      if (__DEV__ && !config.url?.includes('/auth/')) {
         console.log(`🚀 [API Request] ${config.method?.toUpperCase()} ${config.url}`, {
           params: config.params,
           data: config.data,
@@ -93,8 +93,8 @@ export class HttpService {
   };
 
   private handleResponse = (response: AxiosResponse): AxiosResponse => {
-    // Log response in development
-    if (__DEV__) {
+    // Log response in development (only log non-auth endpoints to reduce noise)
+    if (__DEV__ && !response.config.url?.includes('/auth/')) {
       console.log(
         `✅ [API Response] ${response.config.method?.toUpperCase()} ${response.config.url}`,
         {
@@ -311,23 +311,33 @@ export class HttpService {
 
   /**
    * Error handling
+   * Returns error in format compatible with web version
    */
   private handleError(error: any): Error {
     if (axios.isAxiosError(error)) {
       const message = error.response?.data?.message || error.message;
       const code = error.response?.data?.code || "UNKNOWN_ERROR";
 
-      if (__DEV__) {
-        console.error(`❌ [API Error] ${code}:`, message);
+      // Only log actual network errors, not business logic errors
+      if (__DEV__ && !error.response) {
+        console.error(`❌ [Network Error]`, message);
       }
 
-      return {
-        name: "ApiError",
-        message,
-        code,
+      // Create error object with response structure like web
+      const apiError: any = new Error(message);
+      apiError.name = "ApiError";
+      apiError.code = code;
+      apiError.status = error.response?.status;
+      apiError.response = {
+        data: {
+          code,
+          message,
+          ...error.response?.data,
+        },
         status: error.response?.status,
-        details: error.response?.data,
-      } as any;
+      };
+
+      return apiError;
     }
 
     return error;

@@ -66,7 +66,7 @@ export const GuestProfileView: React.FC = () => {
   };
 
   return (
-    <PickView flex={1} backgroundColor={colors.background["bg-brand-quaternary"]}>
+    <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
