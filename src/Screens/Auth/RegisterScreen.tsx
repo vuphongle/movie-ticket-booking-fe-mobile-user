@@ -23,7 +23,6 @@ export const RegisterScreen: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 
   const handleRegister = () => {
-    // TODO: Implement register logic
     console.log("Register with:", { name, email, phone, password });
   };
 
@@ -45,8 +44,7 @@ export const RegisterScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <PickView paddingHorizontal={20} paddingTop={insets.top + 20}>
-            {/* Back Button */}
+          <PickView paddingHorizontal={20} paddingTop={insets.top}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <PickView width={40} height={40} justifyCenter>
                 <Icon name="arrow-back" size={24} color="#1a1a2e" />
@@ -76,7 +74,13 @@ export const RegisterScreen: React.FC = () => {
 
             {/* Title */}
             <PickView gap={8} marginBottom={32} alignCenter>
-              <PickText size={32} font="bold" align="center" style={{ color: "#1a1a2e" }}>
+              <PickText
+                size={32}
+                font="bold"
+                align="center"
+                lineHeight={40}
+                style={{ color: "#1a1a2e" }}
+              >
                 Đăng ký
               </PickText>
               <PickText size={16} align="center" style={{ color: "#666" }}>
@@ -84,9 +88,7 @@ export const RegisterScreen: React.FC = () => {
               </PickText>
             </PickView>
 
-            {/* Form */}
             <PickView gap={16}>
-              {/* Name Input */}
               <PickInput
                 placeholder="Họ và tên"
                 value={name}
@@ -96,7 +98,6 @@ export const RegisterScreen: React.FC = () => {
                 containerStyle={{ marginBottom: 0 }}
               />
 
-              {/* Email Input */}
               <PickInput
                 placeholder="Email"
                 value={email}
@@ -108,7 +109,6 @@ export const RegisterScreen: React.FC = () => {
                 containerStyle={{ marginBottom: 0 }}
               />
 
-              {/* Phone Input */}
               <PickInput
                 placeholder="Số điện thoại"
                 value={phone}
@@ -117,8 +117,6 @@ export const RegisterScreen: React.FC = () => {
                 iconBefore={<Icon name="call-outline" size={20} color="#666" />}
                 containerStyle={{ marginBottom: 0 }}
               />
-
-              {/* Password Input */}
               <PickInput
                 placeholder="Mật khẩu"
                 value={password}
@@ -141,7 +139,6 @@ export const RegisterScreen: React.FC = () => {
                 containerStyle={{ marginBottom: 0 }}
               />
 
-              {/* Confirm Password Input */}
               <PickInput
                 placeholder="Xác nhận mật khẩu"
                 value={confirmPassword}
@@ -190,55 +187,6 @@ export const RegisterScreen: React.FC = () => {
                 title="Đăng ký"
                 onPress={handleRegister}
               />
-
-              {/* Divider */}
-              <PickView row alignCenter marginTop={8} marginBottom={8}>
-                <PickView flex={1} height={1} backgroundColor="#e0e0e0" />
-                <PickText size={14} style={{ color: "#999", marginHorizontal: 16 }}>
-                  hoặc
-                </PickText>
-                <PickView flex={1} height={1} backgroundColor="#e0e0e0" />
-              </PickView>
-
-              {/* Social Register Buttons */}
-              <PickView row justifyCenter gap={16} marginBottom={16}>
-                <TouchableOpacity>
-                  <PickView
-                    width={56}
-                    height={56}
-                    borderRadius={28}
-                    backgroundColor="#f5f5f5"
-                    justifyCenter
-                    alignCenter
-                  >
-                    <Icon name="logo-google" size={24} color="#DB4437" />
-                  </PickView>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <PickView
-                    width={56}
-                    height={56}
-                    borderRadius={28}
-                    backgroundColor="#f5f5f5"
-                    justifyCenter
-                    alignCenter
-                  >
-                    <Icon name="logo-facebook" size={24} color="#4267B2" />
-                  </PickView>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <PickView
-                    width={56}
-                    height={56}
-                    borderRadius={28}
-                    backgroundColor="#f5f5f5"
-                    justifyCenter
-                    alignCenter
-                  >
-                    <Icon name="logo-apple" size={24} color="#000" />
-                  </PickView>
-                </TouchableOpacity>
-              </PickView>
 
               {/* Login Link */}
               <PickView row justifyCenter alignCenter marginTop={8}>
