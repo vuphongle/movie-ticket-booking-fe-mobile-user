@@ -1,24 +1,29 @@
 import React from "react";
-import { ScrollView } from "react-native";
-import { PickView } from "@Components";
-import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { View, ActivityIndicator } from "react-native";
+import { useIsAuthenticated } from "@Hooks/Profile";
+import { GuestProfileView } from "./Components/GuestProfileView";
 
 const ProfileScreen = React.memo(() => {
-  const { colors, spacing } = useThemedStyles();
+  const isAuthenticated = useIsAuthenticated();
 
-  return (
-    <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScrollView
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingTop: spacing.s20,
-          paddingBottom: spacing.s32,
-          paddingHorizontal: spacing.s10,
-        }}
-      ></ScrollView>
-    </PickView>
-  );
+  // TODO: Replace with actual loading state from auth hook
+  const isLoading = false;
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#6d5edc" />
+      </View>
+    );
+  }
+
+  // Show guest view if not authenticated
+  if (!isAuthenticated) {
+    return <GuestProfileView />;
+  }
+
+  // TODO: Show authenticated profile view
+  return <GuestProfileView />;
 });
 
 export default ProfileScreen;

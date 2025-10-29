@@ -1,3 +1,26 @@
+// Login API Types
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  avatar: string;
+  role: string;
+  dob: number;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: User;
+  accessToken: string;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+}
+
 export interface AuthState {
   isLoading: boolean;
   isAuthenticated: boolean;
