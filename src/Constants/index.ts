@@ -1,4 +1,3 @@
-// Navigation constants
 export const ROOT_STACK = {
   MAIN: "Main",
 } as const;
@@ -10,8 +9,8 @@ export const MAIN_TAB_STACK = {
   PROFILE: "Profile",
 } as const;
 
-// Theme constants
 export * from "./theme";
 
-// Error constants
 export * from "./errorCodes";
+
+export * from "./api";

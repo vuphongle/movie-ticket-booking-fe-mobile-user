@@ -33,10 +33,7 @@ export const transformLoginResponse = (
 /**
  * Check if user is authenticated based on auth state
  */
-export const isUserAuthenticated = (
-  accessToken: string | null,
-  user: UserInfo | null
-): boolean => {
+export const isUserAuthenticated = (accessToken: string | null, user: UserInfo | null): boolean => {
   return Boolean(accessToken && user);
 };
 
@@ -53,16 +50,16 @@ export const getUserDisplayName = (user: UserInfo | null): string => {
  */
 export const getFullAvatarUrl = (avatarUrl?: string, apiDomain?: string): string => {
   if (!avatarUrl) return "";
-  
+
   // If avatar starts with /api, prepend domain
   if (avatarUrl.startsWith("/api") && apiDomain) {
     return `${apiDomain}${avatarUrl}`;
   }
-  
+
   // If it's already a full URL, return as is
   if (avatarUrl.startsWith("http://") || avatarUrl.startsWith("https://")) {
     return avatarUrl;
   }
-  
+
   return avatarUrl;
 };

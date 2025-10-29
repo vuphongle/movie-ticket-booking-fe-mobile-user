@@ -46,37 +46,26 @@ export class HttpService {
   }
 
   private setupInterceptors(): void {
-    // Request interceptor
-    this.axiosInstance.interceptors.request.use(
-      this.handleRequest,
-      this.handleRequestError
-    );
+    this.axiosInstance.interceptors.request.use(this.handleRequest, this.handleRequestError);
 
-    // Response interceptor
-    this.axiosInstance.interceptors.response.use(
-      this.handleResponse,
-      this.handleResponseError
-    );
+    this.axiosInstance.interceptors.response.use(this.handleResponse, this.handleResponseError);
   }
 
   private handleRequest = async (
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> => {
     try {
-      // Log request in development (only log non-auth endpoints to reduce noise)
-      if (__DEV__ && !config.url?.includes('/auth/')) {
+      if (__DEV__ && !config.url?.includes("/auth/")) {
         console.log(`🚀 [API Request] ${config.method?.toUpperCase()} ${config.url}`, {
           params: config.params,
           data: config.data,
         });
       }
 
-      // Skip auth for public endpoints
       if (this.isPublicEndpoint(config.url || "")) {
         return config;
       }
 
-      // Attach auth token
       const token = await this.getStoredToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -93,8 +82,7 @@ export class HttpService {
   };
 
   private handleResponse = (response: AxiosResponse): AxiosResponse => {
-    // Log response in development (only log non-auth endpoints to reduce noise)
-    if (__DEV__ && !response.config.url?.includes('/auth/')) {
+    if (__DEV__ && !response.config.url?.includes("/auth/")) {
       console.log(
         `✅ [API Response] ${response.config.method?.toUpperCase()} ${response.config.url}`,
         {
@@ -109,15 +97,12 @@ export class HttpService {
   private handleResponseError = async (error: any) => {
     const originalRequest = error.config;
 
-    // Handle non-401 errors
     if (error.response?.status !== 401) {
       return Promise.reject(error);
     }
 
-    // Handle 401 with refresh token logic
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (this.isRefreshing) {
-        // Queue the request while refreshing
         return new Promise((resolve, reject) => {
           this.failedQueue.push({ resolve, reject });
         })
@@ -240,11 +225,7 @@ export class HttpService {
     }
   }
 
-  async post<T = any>(
-    url: string,
-    data?: any,
-    config?: HttpServiceConfig
-  ): Promise<T> {
+  async post<T = any>(url: string, data?: any, config?: HttpServiceConfig): Promise<T> {
     try {
       const response = await this.axiosInstance.post<T>(url, data, config);
       return response.data;
@@ -253,11 +234,7 @@ export class HttpService {
     }
   }
 
-  async put<T = any>(
-    url: string,
-    data?: any,
-    config?: HttpServiceConfig
-  ): Promise<T> {
+  async put<T = any>(url: string, data?: any, config?: HttpServiceConfig): Promise<T> {
     try {
       const response = await this.axiosInstance.put<T>(url, data, config);
       return response.data;
@@ -266,11 +243,7 @@ export class HttpService {
     }
   }
 
-  async patch<T = any>(
-    url: string,
-    data?: any,
-    config?: HttpServiceConfig
-  ): Promise<T> {
+  async patch<T = any>(url: string, data?: any, config?: HttpServiceConfig): Promise<T> {
     try {
       const response = await this.axiosInstance.patch<T>(url, data, config);
       return response.data;
