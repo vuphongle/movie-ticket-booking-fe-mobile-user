@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { PickButton, PickText, PickView } from "@Components";
+import { PickText, PickView } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
 import { getUserDisplayName } from "@Utils/authHelpers";

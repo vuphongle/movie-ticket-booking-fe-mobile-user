@@ -1,4 +1,4 @@
-import React, { ReactNode, forwardRef, useMemo } from "react";
+import { ReactNode, forwardRef, useMemo } from "react";
 import { View as RNView, StyleProp, LayoutChangeEvent } from "react-native";
 import type { ViewStyle } from "react-native";
 

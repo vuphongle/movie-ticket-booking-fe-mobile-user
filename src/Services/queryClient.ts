@@ -1,5 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
-import { queryClientConfig, makeQueryClient } from "@Constants/Configs";
+import { makeQueryClient } from "@Constants/Configs";
 
 // Create query client using centralized config
 export const queryClient = makeQueryClient();

@@ -9,7 +9,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PickButton, PickText, PickView, PickInput } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
-import { authService } from "@Services/authService";
+import { authService } from "@Services";
 import { loginSchema, type LoginFormData } from "../../Schemas/authSchemas";
 import { useAuth } from "@Contexts/AuthContext";
 import { getErrorMessage } from "@Constants";
