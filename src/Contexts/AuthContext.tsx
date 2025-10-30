@@ -1,7 +1,15 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthState, AuthTokens, UserInfo } from "@Types/authTypes";
 
-// Props for AuthProvider
+const STORAGE_KEYS = {
+  ACCESS_TOKEN: "@gocinema:accessToken",
+  REFRESH_TOKEN: "@gocinema:refreshToken",
+  ID_TOKEN: "@gocinema:idToken",
+  TOKEN_TYPE: "@gocinema:tokenType",
+  USER_INFO: "@gocinema:userInfo",
+};
+
 interface AuthProviderProps {
   children: React.ReactNode;
   onAuthNavigationRequired?: () => void;
@@ -70,23 +78,81 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // fake check status
+  // Check auth status on mount
   useEffect(() => {
     checkAuthStatus();
   }, []);
 
   const checkAuthStatus = async () => {
-    dispatch({ type: "AUTH_LOADING", payload: true });
-    // Ở đây bạn có thể thêm logic đọc token từ AsyncStorage
-    dispatch({ type: "AUTH_LOGOUT" });
+    try {
+      dispatch({ type: "AUTH_LOADING", payload: true });
+
+      // Read stored tokens and user info
+      const [accessToken, refreshToken, idToken, tokenType, userInfoStr] = await Promise.all([
+        AsyncStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN),
+        AsyncStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN),
+        AsyncStorage.getItem(STORAGE_KEYS.ID_TOKEN),
+        AsyncStorage.getItem(STORAGE_KEYS.TOKEN_TYPE),
+        AsyncStorage.getItem(STORAGE_KEYS.USER_INFO),
+      ]);
+
+      if (accessToken && userInfoStr) {
+        const user = JSON.parse(userInfoStr) as UserInfo;
+        const tokens: AuthTokens = {
+          accessToken,
+          refreshToken: refreshToken || "",
+          idToken: idToken || "",
+          tokenType: tokenType || "Bearer",
+          accessTokenExpirationDate: "",
+          scopes: [],
+        };
+
+        dispatch({ type: "AUTH_SUCCESS", payload: { tokens, user } });
+      } else {
+        dispatch({ type: "AUTH_LOGOUT" });
+      }
+    } catch (error) {
+      console.error("Error checking auth status:", error);
+      dispatch({ type: "AUTH_LOGOUT" });
+    }
   };
 
   const updateAuthStatus = async (tokens: AuthTokens, user: UserInfo) => {
-    dispatch({ type: "AUTH_SUCCESS", payload: { tokens, user } });
+    try {
+      // Update state first (optimistic update)
+      dispatch({ type: "AUTH_SUCCESS", payload: { tokens, user } });
+
+      // Then save to AsyncStorage
+      await Promise.all([
+        AsyncStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, tokens.accessToken),
+        AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken || ""),
+        AsyncStorage.setItem(STORAGE_KEYS.ID_TOKEN, tokens.idToken || ""),
+        AsyncStorage.setItem(STORAGE_KEYS.TOKEN_TYPE, tokens.tokenType || "Bearer"),
+        AsyncStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(user)),
+      ]);
+    } catch (error) {
+      console.error("Error saving auth data:", error);
+      // Rollback state if save fails
+      dispatch({ type: "AUTH_LOGOUT" });
+      throw error;
+    }
   };
 
   const logout = async () => {
-    dispatch({ type: "AUTH_LOGOUT" });
+    try {
+      await Promise.all([
+        AsyncStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN),
+        AsyncStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN),
+        AsyncStorage.removeItem(STORAGE_KEYS.ID_TOKEN),
+        AsyncStorage.removeItem(STORAGE_KEYS.TOKEN_TYPE),
+        AsyncStorage.removeItem(STORAGE_KEYS.USER_INFO),
+      ]);
+
+      dispatch({ type: "AUTH_LOGOUT" });
+    } catch (error) {
+      console.error("Error during logout:", error);
+      dispatch({ type: "AUTH_LOGOUT" });
+    }
   };
 
   const refreshTokens = async () => {

@@ -3,6 +3,9 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "baseUrl": ".",
+    // Strict checks for unused code
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "paths": {
       "@Constants": ["src/Constants"],
       "@Constants/*": ["src/Constants/*"],

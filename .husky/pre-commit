@@ -1,0 +1,20 @@
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Use the current node version (if nvm is loaded)
+command -v nvm >/dev/null 2>&1 && nvm use
+
+# Run linting and formatting checks
+npx eslint . && npx prettier --check .
+if [ $? -ne 0 ]; then
+  echo "❌ Pre-commit checks failed: Linting or formatting issues found."
+  exit 1
+fi
+
+# Run TypeScript type checking
+pnpm type-check
+if [ $? -ne 0 ]; then
+  echo "❌ Pre-commit checks failed: TypeScript type errors found."
+  exit 1
+fi

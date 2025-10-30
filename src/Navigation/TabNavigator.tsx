@@ -1,4 +1,3 @@
-import React, { useMemo } from "react";
 import { Animated, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createBottomTabNavigator, BottomTabBarProps } from "@react-navigation/bottom-tabs";
