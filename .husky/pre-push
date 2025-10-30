@@ -1,0 +1,19 @@
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Use the current node version (if nvm is loaded)
+command -v nvm >/dev/null 2>&1 && nvm use
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$branch" = "dev" ] || [ "$branch" = "master" ]; then
+  echo "❌ Direct push to branch '$branch' is not allowed. Please create a pull request!"
+  exit 1
+fi
+
+npx jest
+if [ $? -ne 0 ]; then
+  echo "Pre-push checks failed. Please fix the issues before pushing."
+  exit 1
+fi

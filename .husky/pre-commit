@@ -1,0 +1,12 @@
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Use the current node version (if nvm is loaded)
+command -v nvm >/dev/null 2>&1 && nvm use
+
+npx eslint . && npx prettier --check .
+if [ $? -ne 0 ]; then
+  echo "Pre-commit checks failed. Please fix the issues before committing."
+  exit 1
+fi
