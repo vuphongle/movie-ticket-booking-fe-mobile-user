@@ -7,6 +7,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PickButton, PickText, PickView, PickInput } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { icons } from "@Assets";
+import { Image } from "react-native";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -59,16 +61,14 @@ export const RegisterScreen: React.FC = () => {
                 borderRadius={50}
                 justifyCenter
                 alignCenter
-                backgroundColor="#6d5edc"
-                style={{
-                  shadowColor: "#6d5edc",
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 8,
-                  elevation: 8,
-                }}
+                borderColor={colors.border["border-brand"]}
+                borderWidth={1}
               >
-                <Icon name="person-add-outline" size={48} color="#fff" />
+                <Image
+                  source={icons.logoOnlyIcon}
+                  style={{ width: 80, height: 80 }}
+                  resizeMode="contain"
+                />
               </PickView>
             </PickView>
 

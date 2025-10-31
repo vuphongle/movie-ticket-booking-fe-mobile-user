@@ -1,5 +1,12 @@
 import React from "react";
-import { ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@Types/navigationTypes";
@@ -14,6 +21,7 @@ import { loginSchema, type LoginFormData } from "../../Schemas/authSchemas";
 import { useAuth } from "@Contexts/AuthContext";
 import { getErrorMessage } from "@Constants";
 import { transformLoginResponse, getUserDisplayName } from "@Utils/authHelpers";
+import { icons } from "@Assets";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -110,16 +118,14 @@ export const LoginScreen: React.FC = () => {
                 borderRadius={50}
                 justifyCenter
                 alignCenter
-                backgroundColor="#6d5edc"
-                style={{
-                  shadowColor: "#6d5edc",
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 8,
-                  elevation: 8,
-                }}
+                borderColor={colors.border["border-brand"]}
+                borderWidth={1}
               >
-                <Icon name="film-outline" size={48} color="#fff" />
+                <Image
+                  source={icons.logoOnlyIcon}
+                  style={{ width: 80, height: 80 }}
+                  resizeMode="contain"
+                />
               </PickView>
             </PickView>
 
