@@ -14,7 +14,14 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PickButton, PickText, PickView, PickFormInput, DatePickerModal } from "@Components";
+import {
+  PickButton,
+  PickText,
+  PickView,
+  PickFormInput,
+  DatePickerModal,
+  ScreenHeader,
+} from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { icons } from "@Assets";
 import { registerSchema, type RegisterFormData } from "@Schemas/authSchemas";
@@ -88,6 +95,8 @@ export const RegisterScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
+      <ScreenHeader title="Đăng ký" backgroundColor={colors.background["bg-brand-quaternary"]} />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -100,15 +109,9 @@ export const RegisterScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <PickView paddingHorizontal={20} paddingTop={insets.top}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <PickView width={40} height={40} justifyCenter>
-                <Icon name="arrow-back" size={24} color="#1a1a2e" />
-              </PickView>
-            </TouchableOpacity>
-
+          <PickView>
             {/* Logo */}
-            <PickView alignCenter marginTop={20} marginBottom={30}>
+            <PickView paddingHorizontal={20} alignCenter marginTop={20} marginBottom={30}>
               <PickView
                 width={100}
                 height={100}
@@ -142,7 +145,7 @@ export const RegisterScreen: React.FC = () => {
               </PickText>
             </PickView>
 
-            <PickView>
+            <PickView paddingHorizontal={20}>
               {/* Name Field */}
               <PickFormInput
                 name="name"

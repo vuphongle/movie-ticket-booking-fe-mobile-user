@@ -98,6 +98,53 @@ export const AuthenticatedProfileView: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
+      {/* Fixed Header */}
+      <PickView
+        paddingHorizontal={20}
+        paddingVertical={24}
+        paddingTop={insets.top + 16}
+        backgroundColor={colors.background["bg-brand-quaternary"]}
+      >
+        <PickView row alignCenter gap={16}>
+          <PickView
+            width={80}
+            height={80}
+            borderRadius={40}
+            justifyCenter
+            alignCenter
+            backgroundColor="white"
+          >
+            {user?.picture ? (
+              <Icon name="person" size={40} color="#6d5edc" />
+            ) : (
+              <Icon name="person" size={40} color="#6d5edc" />
+            )}
+          </PickView>
+
+          <PickView flex={1}>
+            <PickText size={24} font="bold" color="body-inverted" numberOfLines={1}>
+              {getUserDisplayName(user)}
+            </PickText>
+            <PickText size={14} color="body-inverted" numberOfLines={1} style={{ marginTop: 4 }}>
+              {user?.email || ""}
+            </PickText>
+          </PickView>
+
+          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+            <PickView
+              width={40}
+              height={40}
+              borderRadius={20}
+              justifyCenter
+              alignCenter
+              backgroundColor="rgba(255,255,255,0.2)"
+            >
+              <Icon name="create-outline" size={20} color="#fff" />
+            </PickView>
+          </TouchableOpacity>
+        </PickView>
+      </PickView>
+
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
@@ -105,52 +152,6 @@ export const AuthenticatedProfileView: React.FC = () => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <PickView
-          paddingHorizontal={20}
-          paddingVertical={24}
-          paddingTop={insets.top + 16}
-          backgroundColor={colors.background["bg-brand-quaternary"]}
-        >
-          <PickView row alignCenter gap={16}>
-            <PickView
-              width={80}
-              height={80}
-              borderRadius={40}
-              justifyCenter
-              alignCenter
-              backgroundColor="white"
-            >
-              {user?.picture ? (
-                <Icon name="person" size={40} color="#6d5edc" />
-              ) : (
-                <Icon name="person" size={40} color="#6d5edc" />
-              )}
-            </PickView>
-
-            <PickView flex={1}>
-              <PickText size={24} font="bold" color="body-inverted" numberOfLines={1}>
-                {getUserDisplayName(user)}
-              </PickText>
-              <PickText size={14} color="body-inverted" numberOfLines={1} style={{ marginTop: 4 }}>
-                {user?.email || ""}
-              </PickText>
-            </PickView>
-
-            <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
-              <PickView
-                width={40}
-                height={40}
-                borderRadius={20}
-                justifyCenter
-                alignCenter
-                backgroundColor="rgba(255,255,255,0.2)"
-              >
-                <Icon name="create-outline" size={20} color="#fff" />
-              </PickView>
-            </TouchableOpacity>
-          </PickView>
-        </PickView>
-
         {/* Menu Items */}
         <PickView
           paddingHorizontal={20}

@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Icon from "react-native-vector-icons/Ionicons";
-import { PickText, PickView, PickFormInput, DatePickerModal } from "@Components";
+import { PickText, PickView, PickFormInput, DatePickerModal, ScreenHeader } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
 import { useUpdateProfile } from "@Hooks";
@@ -104,34 +104,10 @@ export const EditProfileScreen: React.FC = () => {
     >
       <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
         {/* Header */}
-        <PickView
-          paddingHorizontal={20}
-          paddingTop={insets.top + 16}
-          paddingBottom={16}
+        <ScreenHeader
+          title="Chỉnh sửa thông tin"
           backgroundColor={colors.background["bg-brand-quaternary"]}
-          row
-          alignCenter
-          style={{ justifyContent: "space-between" }}
-        >
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <PickView
-              width={40}
-              height={40}
-              borderRadius={20}
-              justifyCenter
-              alignCenter
-              backgroundColor="rgba(255,255,255,0.2)"
-            >
-              <Icon name="arrow-back" size={24} color="#fff" />
-            </PickView>
-          </TouchableOpacity>
-
-          <PickText size={20} font="bold" color="body-inverted">
-            Chỉnh sửa thông tin
-          </PickText>
-
-          <PickView width={40} />
-        </PickView>
+        />
 
         {/* Form Content */}
         <ScrollView

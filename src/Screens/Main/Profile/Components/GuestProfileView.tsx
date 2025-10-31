@@ -67,6 +67,68 @@ export const GuestProfileView: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
+      <PickView
+        paddingHorizontal={16}
+        backgroundColor={colors.background["bg-brand-quaternary"]}
+        paddingVertical={16}
+        alignCenter
+        paddingTop={insets.top}
+      >
+        <PickView
+          width={100}
+          height={100}
+          justifyCenter
+          alignCenter
+          backgroundColor="white"
+          borderRadius={100}
+        >
+          <Icon name="person-outline" size={60} color="#6d5edc" />
+        </PickView>
+
+        <PickView gap={12} marginTop={16} alignCenter justifyCenter>
+          <PickText
+            size={28}
+            font="bold"
+            color="body-inverted"
+            align="center"
+            lineHeight={36}
+            numberOfLines={2}
+            style={{ maxWidth: 250 }}
+          >
+            Chào mừng đến GoCinema
+          </PickText>
+          <PickText
+            size={16}
+            color="body-inverted"
+            align="center"
+            lineHeight={22}
+            style={{
+              marginBottom: 30,
+            }}
+            numberOfLines={2}
+          >
+            Đăng nhập để trải nghiệm đầy đủ tính năng
+          </PickText>
+        </PickView>
+
+        <PickView row gap={16}>
+          <PickButton
+            style={{ marginTop: 8, alignSelf: "center", width: buttonWidth }}
+            type="Tertiary"
+            size="sm"
+            title="Đăng nhập"
+            onPress={handleLogin}
+          />
+          <PickButton
+            style={{ marginTop: 8, alignSelf: "center", width: buttonWidth }}
+            type="Tertiary"
+            size="sm"
+            title="Đăng ký"
+            onPress={handleRegister}
+          />
+        </PickView>
+      </PickView>
+
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{
@@ -75,68 +137,6 @@ export const GuestProfileView: React.FC = () => {
         }}
         showsVerticalScrollIndicator={false}
       >
-        <PickView
-          paddingHorizontal={16}
-          backgroundColor={colors.background["bg-brand-quaternary"]}
-          paddingVertical={16}
-          alignCenter
-          paddingTop={insets.top}
-        >
-          <PickView
-            width={100}
-            height={100}
-            justifyCenter
-            alignCenter
-            backgroundColor="white"
-            borderRadius={100}
-          >
-            <Icon name="person-outline" size={60} color="#6d5edc" />
-          </PickView>
-
-          <PickView gap={12} marginTop={16} alignCenter justifyCenter>
-            <PickText
-              size={28}
-              font="bold"
-              color="body-inverted"
-              align="center"
-              lineHeight={36}
-              numberOfLines={2}
-              style={{ maxWidth: 250 }}
-            >
-              Chào mừng đến GoCinema
-            </PickText>
-            <PickText
-              size={16}
-              color="body-inverted"
-              align="center"
-              lineHeight={22}
-              style={{
-                marginBottom: 30,
-              }}
-              numberOfLines={2}
-            >
-              Đăng nhập để trải nghiệm đầy đủ tính năng
-            </PickText>
-          </PickView>
-
-          <PickView row gap={16}>
-            <PickButton
-              style={{ marginTop: 8, alignSelf: "center", width: buttonWidth }}
-              type="Tertiary"
-              size="sm"
-              title="Đăng nhập"
-              onPress={handleLogin}
-            />
-            <PickButton
-              style={{ marginTop: 8, alignSelf: "center", width: buttonWidth }}
-              type="Tertiary"
-              size="sm"
-              title="Đăng ký"
-              onPress={handleRegister}
-            />
-          </PickView>
-        </PickView>
-
         <PickView paddingHorizontal={20} paddingTop={30}>
           <PickText size={24} font="bold" style={{ color: "#1a1a2e", marginBottom: 8 }}>
             Tính năng khi đăng nhập

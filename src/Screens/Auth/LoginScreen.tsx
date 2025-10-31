@@ -11,10 +11,9 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@Types/navigationTypes";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PickButton, PickText, PickView, PickInput } from "@Components";
+import { PickButton, PickText, PickView, PickInput, ScreenHeader } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { authService } from "@Services";
 import { loginSchema, type LoginFormData } from "../../Schemas/authSchemas";
@@ -27,7 +26,6 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const insets = useSafeAreaInsets();
   const { colors, dimensions } = useThemedStyles();
   const { updateAuthStatus } = useAuth();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -95,6 +93,7 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
+      <ScreenHeader title="Đăng nhập" backgroundColor={colors.background["bg-brand-quaternary"]} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -104,14 +103,8 @@ export const LoginScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <PickView paddingHorizontal={20} paddingTop={insets.top}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <PickView width={40} height={40} justifyCenter>
-                <Icon name="arrow-back" size={24} color="#1a1a2e" />
-              </PickView>
-            </TouchableOpacity>
-
-            <PickView alignCenter marginTop={20} marginBottom={30}>
+          <PickView>
+            <PickView paddingHorizontal={20} alignCenter marginTop={20} marginBottom={30}>
               <PickView
                 width={100}
                 height={100}
@@ -129,7 +122,7 @@ export const LoginScreen: React.FC = () => {
               </PickView>
             </PickView>
 
-            <PickView gap={8} marginBottom={32} alignCenter>
+            <PickView paddingHorizontal={20} gap={8} marginBottom={32} alignCenter>
               <PickText size={32} font="bold" align="center" lineHeight={40}>
                 Đăng nhập
               </PickText>
@@ -138,7 +131,7 @@ export const LoginScreen: React.FC = () => {
               </PickText>
             </PickView>
 
-            <PickView gap={16}>
+            <PickView paddingHorizontal={20} gap={16}>
               <Controller
                 control={control}
                 name="email"

@@ -4,10 +4,9 @@ import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@Types/navigationTypes";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PickButton, PickText, PickView, PickInput } from "@Components";
+import { PickButton, PickText, PickView, PickInput, ScreenHeader } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { authService } from "@Services";
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@Schemas/authSchemas";
@@ -18,7 +17,6 @@ const COOLDOWN_SECONDS = 30;
 
 const ForgotPasswordScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const insets = useSafeAreaInsets();
   const { colors, dimensions } = useThemedStyles();
   const [isLoading, setIsLoading] = React.useState(false);
   const [cooldown, setCooldown] = React.useState<number>(0);
@@ -73,19 +71,17 @@ const ForgotPasswordScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
+      <ScreenHeader
+        title="Quên mật khẩu"
+        backgroundColor={colors.background["bg-brand-quaternary"]}
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-          <PickView paddingHorizontal={20} paddingTop={insets.top}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <PickView width={40} height={40} justifyCenter>
-                <Icon name="arrow-back" size={24} color="#1a1a2e" />
-              </PickView>
-            </TouchableOpacity>
-
-            <PickView alignCenter marginTop={20} marginBottom={30}>
+          <PickView>
+            <PickView paddingHorizontal={20} alignCenter marginTop={20} marginBottom={30}>
               <PickView
                 width={100}
                 height={100}
@@ -99,7 +95,7 @@ const ForgotPasswordScreen: React.FC = () => {
               </PickView>
             </PickView>
 
-            <PickView gap={8} marginBottom={32} alignCenter>
+            <PickView paddingHorizontal={20} gap={8} marginBottom={32} alignCenter>
               <PickText size={24} font="bold" align="center" lineHeight={30}>
                 Quên mật khẩu
               </PickText>
@@ -108,7 +104,7 @@ const ForgotPasswordScreen: React.FC = () => {
               </PickText>
             </PickView>
 
-            <PickView gap={16}>
+            <PickView paddingHorizontal={20} gap={16}>
               <Controller
                 control={control}
                 name="email"
