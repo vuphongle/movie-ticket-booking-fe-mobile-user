@@ -31,7 +31,9 @@
       "@Hooks": ["src/Hooks"],
       "@Hooks/*": ["src/Hooks/*"],
       "@Theme": ["src/Theme"],
-      "@Theme/*": ["src/Theme/*"]
+      "@Theme/*": ["src/Theme/*"],
+      "@Schemas": ["src/Schemas"],
+      "@Schemas/*": ["src/Schemas/*"]
     }
   }
 }

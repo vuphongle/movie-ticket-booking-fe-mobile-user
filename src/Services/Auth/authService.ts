@@ -3,6 +3,13 @@ import type { LoginRequest, LoginResponse } from "@Types/authTypes";
 import endpoints from "@Constants/Endpoints";
 
 /**
+ * Request a password reset email
+ */
+export const forgotPassword = async (email: string): Promise<void> => {
+  await httpService.get<void>(endpoints.AUTH.FORGOT_PASSWORD, { params: { email } });
+};
+
+/**
  * Login with email/phone and password
  */
 export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
@@ -65,4 +72,5 @@ export const authService = {
   register,
   logout,
   refreshToken,
+  forgotPassword,
 };

@@ -18,6 +18,7 @@ export const ERROR_CODES = {
   // Validation errors
   VALIDATION_ERROR: "VALIDATION_ERROR",
   INVALID_INPUT: "INVALID_INPUT",
+  USER_NOT_FOUND: "USER_NOT_FOUND",
 } as const;
 
 export type ErrorCode = keyof typeof ERROR_CODES;
@@ -34,6 +35,7 @@ export const ERROR_MESSAGES: Record<string, string> = {
   [ERROR_CODES.NETWORK_ERROR]: "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.",
   [ERROR_CODES.SERVER_ERROR]: "Lỗi máy chủ. Vui lòng thử lại sau.",
   [ERROR_CODES.UNKNOWN_ERROR]: "Đã xảy ra lỗi. Vui lòng thử lại.",
+  [ERROR_CODES.USER_NOT_FOUND]: "Không tìm thấy tài khoản với email này.",
 };
 
 /**
