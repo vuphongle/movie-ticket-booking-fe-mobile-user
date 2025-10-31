@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   ScrollView,
   TouchableOpacity,
@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,7 +16,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { PickText, PickView, PickFormInput, DatePickerModal, ScreenHeader } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
-import { useUpdateProfile } from "@Hooks";
+import { useUpdateProfile, useGetProfile } from "@Hooks";
 import { updateProfileSchema, type UpdateProfileFormData } from "@Schemas/profileSchemas";
 import {
   toISODate,
@@ -42,6 +43,7 @@ export const EditProfileScreen: React.FC = () => {
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { isDirty },
   } = useForm<UpdateProfileFormData>({
     resolver: zodResolver(updateProfileSchema),
@@ -53,6 +55,31 @@ export const EditProfileScreen: React.FC = () => {
   });
 
   const dobValue = watch("dob");
+
+  const { refetch, isRefetching } = useGetProfile({
+    enabled: false,
+    onSuccess: async (fetchedUser) => {
+      const updatedUserInfo = transformUserToUserInfo(fetchedUser);
+      await updateUser(updatedUserInfo);
+
+      reset({
+        name: updatedUserInfo.name || "",
+        phone: getUserPhone(updatedUserInfo),
+        dob: parseISODate(getUserDob(updatedUserInfo)) || new Date(2000, 0, 1),
+      });
+
+      if (__DEV__) {
+        console.log("✅ Profile refreshed in EditProfileScreen");
+      }
+    },
+    onError: (error) => {
+      Alert.alert("Lỗi", `Không thể tải thông tin: ${error.message}`);
+    },
+  });
+
+  const onRefresh = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   const { mutate: updateProfile, isPending } = useUpdateProfile({
     onSuccess: async (updatedUser) => {
@@ -126,6 +153,14 @@ export const EditProfileScreen: React.FC = () => {
             paddingBottom: insets.bottom + 100,
           }}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={onRefresh}
+              tintColor={colors.background["bg-brand-quaternary"]}
+              colors={[colors.background["bg-brand-quaternary"]]}
+            />
+          }
         >
           {/* Avatar Section */}
           <PickView alignCenter marginBottom={32}>

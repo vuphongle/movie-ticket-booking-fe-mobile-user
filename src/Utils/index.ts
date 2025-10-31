@@ -13,3 +13,5 @@ export {
 } from "./dateUtils";
 
 export { transformUserToUserInfo, getUserPhone, getUserDob } from "./userTransformUtils";
+
+export { getUserDisplayName, getFullAvatarUrl } from "./authHelpers";

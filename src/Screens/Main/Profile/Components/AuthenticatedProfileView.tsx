@@ -1,5 +1,5 @@
-import React from "react";
-import { ScrollView, TouchableOpacity, Alert } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ScrollView, TouchableOpacity, Alert, Image, RefreshControl } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -7,7 +7,8 @@ import type { RootStackNavigationProp } from "@Types/navigationTypes";
 import { PickText, PickView } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
-import { getUserDisplayName } from "@Utils/authHelpers";
+import { useGetProfile } from "@Hooks";
+import { getUserDisplayName, transformUserToUserInfo } from "@Utils";
 
 interface MenuItem {
   icon: string;
@@ -21,8 +22,29 @@ export const AuthenticatedProfileView: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<RootStackNavigationProp>();
   const { colors } = useThemedStyles();
-  const { state, logout } = useAuth();
+  const { state, logout, updateUser } = useAuth();
   const { user } = state;
+
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
+
+  const { refetch, isRefetching } = useGetProfile({
+    enabled: false,
+    onSuccess: async (fetchedUser) => {
+      const updatedUserInfo = transformUserToUserInfo(fetchedUser);
+      await updateUser(updatedUserInfo);
+
+      if (__DEV__) {
+        console.log("✅ Profile refreshed successfully");
+      }
+    },
+    onError: (error) => {
+      Alert.alert("Lỗi", `Không thể tải thông tin: ${error.message}`);
+    },
+  });
+
+  const onRefresh = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
   const handleLogout = async () => {
     // Show confirmation dialog like web
@@ -113,9 +135,21 @@ export const AuthenticatedProfileView: React.FC = () => {
             justifyCenter
             alignCenter
             backgroundColor="white"
+            style={{ overflow: "hidden" }}
           >
-            {user?.picture ? (
-              <Icon name="person" size={40} color="#6d5edc" />
+            {user?.avatar && !user.avatar.includes(".svg") && !avatarLoadError ? (
+              <Image
+                source={{ uri: user.avatar }}
+                style={{ width: 80, height: 80 }}
+                resizeMode="cover"
+                onError={(error) => {
+                  if (__DEV__) {
+                    console.log("⚠️ Avatar load failed:", user.avatar);
+                    console.log("Error:", error.nativeEvent.error);
+                  }
+                  setAvatarLoadError(true);
+                }}
+              />
             ) : (
               <Icon name="person" size={40} color="#6d5edc" />
             )}
@@ -151,6 +185,14 @@ export const AuthenticatedProfileView: React.FC = () => {
           paddingBottom: insets.bottom + 100,
         }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={onRefresh}
+            tintColor={colors.background["bg-brand-quaternary"]}
+            colors={[colors.background["bg-brand-quaternary"]]}
+          />
+        }
       >
         {/* Menu Items */}
         <PickView
