@@ -1,5 +1,5 @@
 import { httpService } from "../httpService";
-import type { LoginRequest, LoginResponse } from "@Types/authTypes";
+import type { LoginRequest, LoginResponse, RegisterRequest } from "@Types/authTypes";
 import endpoints from "@Constants/Endpoints";
 
 /**
@@ -25,21 +25,17 @@ export const login = async (credentials: LoginRequest): Promise<LoginResponse> =
 
 /**
  * Register new user
+ * Note: Do not store tokens as user needs to verify email first
  */
-export const register = async (data: {
-  email: string;
-  phone: string;
-  password: string;
-  name: string;
-}): Promise<LoginResponse> => {
-  const response = await httpService.post<LoginResponse>(endpoints.AUTH.REGISTER, data);
-
-  // Store tokens after successful registration
-  if (response.accessToken) {
-    await httpService.setAuthTokens(response.accessToken, response.refreshToken || undefined);
-  }
-
-  return response;
+export const register = async (data: RegisterRequest): Promise<void> => {
+  await httpService.post<void>(endpoints.AUTH.REGISTER, {
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    password: data.password,
+    confirmPassword: data.confirmPassword,
+    dob: data.dob,
+  });
 };
 
 /**

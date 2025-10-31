@@ -17,6 +17,9 @@ importers:
       '@react-native-async-storage/async-storage':
         specifier: ^2.2.0
         version: 2.2.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))
+      '@react-native-community/datetimepicker':
+        specifier: ^8.5.0
+        version: 8.5.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
       '@react-navigation/bottom-tabs':
         specifier: ^7.4.4
         version: 7.4.6(@react-navigation/native@7.1.17(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native-safe-area-context@5.6.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native-screens@4.14.1(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
@@ -1058,6 +1061,19 @@ packages:
     resolution: {integrity: sha512-DyKptlG78XPFo7tDod+we5a3R+U9qjyhaVFbOPvH4pFNu5Dehewtol/srl44K6Cszq0aEMlAJZ3juk0W4WnOJA==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@react-native-community/datetimepicker@8.5.0':
+    resolution: {integrity: sha512-RMWll1aPppMtzdJz4we4poNzVj9WUw5URHID7D2ICjGZq3KjrwwexvBnzp75EIYE/ihHXCn/OvYKe73fws9Y/g==}
+    peerDependencies:
+      expo: '>=52.0.0'
+      react: '*'
+      react-native: '*'
+      react-native-windows: '*'
+    peerDependenciesMeta:
+      expo:
+        optional: true
+      react-native-windows:
+        optional: true
 
   '@react-native/assets-registry@0.79.2':
     resolution: {integrity: sha512-5h2Z7/+/HL/0h88s0JHOdRCW4CXMCJoROxqzHqxdrjGL6EBD1DdaB4ZqkCOEVSW4Vjhir5Qb97C8i/MPWEYPtg==}
@@ -5378,6 +5394,12 @@ snapshots:
       - supports-color
       - typescript
       - utf-8-validate
+
+  '@react-native-community/datetimepicker@8.5.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      invariant: 2.2.4
+      react: 19.0.0
+      react-native: 0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0)
 
   '@react-native/assets-registry@0.79.2': {}
 

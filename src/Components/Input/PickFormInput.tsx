@@ -12,18 +12,33 @@ interface IProps extends TextInputProps {
   containerStyle?: ViewStyle;
   suffixText?: string;
   suffixTextStyle?: TextStyle;
+  iconBefore?: React.ReactNode;
+  iconAfter?: React.ReactNode;
+  error?: string;
 }
 
 const PickFormInput = React.forwardRef<TextInput, IProps>(
   (
-    { control, name, placeholder, label, disabled = false, suffixText, suffixTextStyle, ...rest },
+    {
+      control,
+      name,
+      placeholder,
+      label,
+      disabled = false,
+      suffixText,
+      suffixTextStyle,
+      iconBefore,
+      iconAfter,
+      error,
+      ...rest
+    },
     ref
   ) => {
     return (
       <Controller
         control={control}
         name={name}
-        render={({ field: { onChange, value }, fieldState: { error } }) => (
+        render={({ field: { onChange, value }, fieldState: { error: fieldError } }) => (
           <PickInput
             ref={ref}
             disabled={disabled}
@@ -33,7 +48,10 @@ const PickFormInput = React.forwardRef<TextInput, IProps>(
             placeholder={placeholder}
             suffixText={suffixText}
             suffixTextStyle={suffixTextStyle}
-            isError={!!error}
+            iconBefore={iconBefore}
+            iconAfter={iconAfter}
+            isError={!!fieldError || !!error}
+            helperText={fieldError?.message || error}
             {...rest}
           />
         )}
