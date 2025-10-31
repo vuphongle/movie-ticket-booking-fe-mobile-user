@@ -58,10 +58,9 @@ export interface UserInfo {
   name?: string;
   given_name?: string;
   family_name?: string;
-  picture?: string;
+  avatar?: string;
   roles?: string[];
   preferred_username?: string;
-  // Additional fields from backend User entity
   phone?: string;
   dob?: string; // ISO date string (YYYY-MM-DD)
 }

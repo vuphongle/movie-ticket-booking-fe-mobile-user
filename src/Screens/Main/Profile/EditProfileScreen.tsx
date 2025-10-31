@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ScrollView, TouchableOpacity, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
@@ -28,6 +35,7 @@ export const EditProfileScreen: React.FC = () => {
   const { user } = state;
 
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
 
   const {
     control,
@@ -71,7 +79,7 @@ export const EditProfileScreen: React.FC = () => {
       name: data.name.trim(),
       phone: data.phone,
       dob: toISODate(data.dob),
-      avatar: user.picture,
+      avatar: user.avatar,
     };
 
     updateProfile(payload);
@@ -122,17 +130,34 @@ export const EditProfileScreen: React.FC = () => {
           {/* Avatar Section */}
           <PickView alignCenter marginBottom={32}>
             <PickView
-              width={100}
-              height={100}
-              borderRadius={50}
-              justifyCenter
-              alignCenter
-              backgroundColor={colors.background["bg-brand-quaternary"]}
-              marginBottom={12}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                backgroundColor: colors.background["bg-brand-quaternary"],
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+              }}
             >
-              <Icon name="person" size={50} color="#6d5edc" />
+              {user?.avatar && !user.avatar.includes(".svg") && !avatarLoadError ? (
+                <Image
+                  source={{ uri: user.avatar }}
+                  style={{ width: 100, height: 100 }}
+                  resizeMode="cover"
+                  onError={(error) => {
+                    if (__DEV__) {
+                      console.log("⚠️ Avatar load failed:", user.avatar);
+                      console.log("Error:", error.nativeEvent.error);
+                    }
+                    setAvatarLoadError(true);
+                  }}
+                />
+              ) : (
+                <Icon name="person" size={50} color="white" />
+              )}
             </PickView>
-            <TouchableOpacity>
+            <TouchableOpacity style={{ marginTop: 12 }}>
               <PickText size={14} font="semibold" style={{ color: "#6d5edc" }}>
                 Thay đổi ảnh đại diện
               </PickText>
