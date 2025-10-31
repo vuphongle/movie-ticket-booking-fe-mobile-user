@@ -20,10 +20,7 @@ export const updateUserProfile = async (data: Partial<User>): Promise<User> => {
  * Upload user avatar
  */
 export const uploadAvatar = async (file: FormData): Promise<{ avatarUrl: string }> => {
-  return httpService.upload<{ avatarUrl: string }>(
-    endpoints.USER.UPLOAD_AVATAR,
-    file
-  );
+  return httpService.upload<{ avatarUrl: string }>(endpoints.USER.UPLOAD_AVATAR, file);
 };
 
 export const userService = {

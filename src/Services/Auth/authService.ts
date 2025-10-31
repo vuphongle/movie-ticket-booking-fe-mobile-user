@@ -6,17 +6,11 @@ import endpoints from "@Constants/Endpoints";
  * Login with email/phone and password
  */
 export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
-  const response = await httpService.post<LoginResponse>(
-    endpoints.AUTH.LOGIN,
-    credentials
-  );
+  const response = await httpService.post<LoginResponse>(endpoints.AUTH.LOGIN, credentials);
 
   // Store tokens after successful login
   if (response.accessToken) {
-    await httpService.setAuthTokens(
-      response.accessToken,
-      response.refreshToken || undefined
-    );
+    await httpService.setAuthTokens(response.accessToken, response.refreshToken || undefined);
   }
 
   return response;
@@ -31,17 +25,11 @@ export const register = async (data: {
   password: string;
   name: string;
 }): Promise<LoginResponse> => {
-  const response = await httpService.post<LoginResponse>(
-    endpoints.AUTH.REGISTER,
-    data
-  );
+  const response = await httpService.post<LoginResponse>(endpoints.AUTH.REGISTER, data);
 
   // Store tokens after successful registration
   if (response.accessToken) {
-    await httpService.setAuthTokens(
-      response.accessToken,
-      response.refreshToken || undefined
-    );
+    await httpService.setAuthTokens(response.accessToken, response.refreshToken || undefined);
   }
 
   return response;
@@ -63,10 +51,8 @@ export const logout = async (): Promise<void> => {
  * Refresh access token
  */
 export const refreshToken = async (): Promise<{ accessToken: string }> => {
-  const response = await httpService.post<{ accessToken: string }>(
-    endpoints.AUTH.REFRESH_TOKEN
-  );
-  
+  const response = await httpService.post<{ accessToken: string }>(endpoints.AUTH.REFRESH_TOKEN);
+
   if (response.accessToken) {
     await httpService.setAuthTokens(response.accessToken);
   }

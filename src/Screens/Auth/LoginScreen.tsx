@@ -40,7 +40,7 @@ export const LoginScreen: React.FC = () => {
   const handleLogin = async (data: LoginFormData) => {
     try {
       setIsLoading(true);
-      const response = await authService.login(data);
+      const response = await authService.login(data as { email: string; password: string });
 
       if (response.isAuthenticated && response.accessToken) {
         const { tokens, userInfo } = transformLoginResponse(response);

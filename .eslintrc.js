@@ -20,41 +20,36 @@ module.exports = {
     },
   },
   rules: {
-    // React 17+ JSX Transform - không cần import React
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
-
-    // ⭐ Error on unused variables and imports - Đây là rule quan trọng nhất
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        argsIgnorePattern: "^_", // Allow unused args starting with _
-        varsIgnorePattern: "^_", // Allow unused vars starting with _
-        caughtErrorsIgnorePattern: "^_", // Allow unused errors starting with _
-        destructuredArrayIgnorePattern: "^_", // Allow unused destructured items starting with _
-        ignoreRestSiblings: true, // Allow unused rest properties
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+        destructuredArrayIgnorePattern: "^_",
+        ignoreRestSiblings: true,
       },
     ],
-    "no-unused-vars": "off", // Turn off base rule as it's covered by @typescript-eslint
+    "no-unused-vars": "off",
 
-    // Additional useful rules
-    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-var-requires": "off", // Allow require in config files
-    "@typescript-eslint/ban-types": "warn", // Warn instead of error for Function type
-    "react/prop-types": "off", // TypeScript handles this
-    "react/display-name": "off", // Allow anonymous components
-    "no-useless-catch": "warn", // Warn instead of error
-    "no-undef": "off", // TypeScript handles this better
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/ban-types": "warn",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "no-useless-catch": "warn",
+    "no-undef": "off",
   },
   env: {
     es2021: true,
     node: true,
-    jest: true, // Enable Jest globals
+    jest: true,
   },
   overrides: [
     {
-      // Config files can use CommonJS
       files: ["*.config.js", ".eslintrc.js", "babel.config.js"],
       rules: {
         "@typescript-eslint/no-var-requires": "off",
