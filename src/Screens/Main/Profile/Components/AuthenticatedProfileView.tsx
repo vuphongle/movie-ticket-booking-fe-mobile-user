@@ -2,6 +2,8 @@ import React from "react";
 import { ScrollView, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import type { RootStackNavigationProp } from "@Types/navigationTypes";
 import { PickText, PickView } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
@@ -17,6 +19,7 @@ interface MenuItem {
 
 export const AuthenticatedProfileView: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<RootStackNavigationProp>();
   const { colors } = useThemedStyles();
   const { state, logout } = useAuth();
   const { user } = state;
@@ -54,7 +57,7 @@ export const AuthenticatedProfileView: React.FC = () => {
       title: "Thông tin cá nhân",
       subtitle: "Cập nhật thông tin tài khoản",
       color: "#6d5edc",
-      onPress: () => console.log("Profile info"),
+      onPress: () => navigation.navigate("EditProfile"),
     },
     {
       icon: "ticket-outline",
@@ -133,7 +136,7 @@ export const AuthenticatedProfileView: React.FC = () => {
               </PickText>
             </PickView>
 
-            <TouchableOpacity onPress={() => console.log("Edit profile")}>
+            <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
               <PickView
                 width={40}
                 height={40}

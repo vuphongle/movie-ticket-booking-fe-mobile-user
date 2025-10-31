@@ -1,5 +1,5 @@
 import { httpService } from "../httpService";
-import { User } from "@Types/authTypes";
+import { User, UpdateProfileRequest } from "@Types/authTypes";
 import endpoints from "@Constants/Endpoints";
 
 /**
@@ -11,8 +11,10 @@ export const fetchUserProfile = async (): Promise<User> => {
 
 /**
  * Update user profile
+ * @param data - Profile data to update (name, phone, dob, avatar)
+ * @returns Updated user object
  */
-export const updateUserProfile = async (data: Partial<User>): Promise<User> => {
+export const updateUserProfile = async (data: UpdateProfileRequest): Promise<User> => {
   return httpService.put<User>(endpoints.USER.UPDATE_PROFILE, data);
 };
 

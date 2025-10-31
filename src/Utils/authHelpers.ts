@@ -1,5 +1,6 @@
 import type { AuthTokens, UserInfo } from "@Types/authTypes";
 import type { LoginResponse } from "@Types/authTypes";
+import { transformUserToUserInfo } from "./userTransformUtils";
 
 /**
  * Transform login response to AuthTokens and UserInfo
@@ -17,15 +18,7 @@ export const transformLoginResponse = (
     scopes: [],
   };
 
-  const userInfo: UserInfo = {
-    sub: response.user.id.toString(),
-    email: response.user.email,
-    email_verified: true,
-    name: response.user.name,
-    picture: response.user.avatar,
-    roles: [response.user.role],
-    preferred_username: response.user.name,
-  };
+  const userInfo = transformUserToUserInfo(response.user);
 
   return { tokens, userInfo };
 };

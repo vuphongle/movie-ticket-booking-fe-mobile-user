@@ -1,1 +1,2 @@
 export { useRegister } from "./auth/useRegister";
+export { useUpdateProfile } from "./user/useUpdateProfile";

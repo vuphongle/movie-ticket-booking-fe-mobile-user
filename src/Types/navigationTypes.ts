@@ -9,6 +9,7 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   ForgotPassword: undefined;
+  EditProfile: undefined;
 };
 
 // Main Tab Param List
