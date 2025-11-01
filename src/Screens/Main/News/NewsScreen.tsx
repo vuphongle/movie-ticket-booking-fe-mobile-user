@@ -1,59 +1,115 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { TouchableOpacity, FlatList } from "react-native";
+import { PickView, PickText } from "@Components";
+import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import BlogList from "./Components/BlogList";
+import { BlogDto, BlogType } from "@Types/blogTypes";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+interface Tab {
+  key: string;
+  label: string;
+}
+
+const TABS: Tab[] = [
+  { key: BlogType.ALL, label: "Tất cả" },
+  { key: BlogType.PHIM_CHIEU_RAP, label: "Phim chiếu rạp" },
+  { key: BlogType.TONG_HOP_PHIM, label: "Tổng hợp phim" },
+  { key: BlogType.PHIM_NEFLIX, label: "Netflix" },
+];
 
 const NewsScreen: React.FC = () => {
+  const { colors, spacing, radius } = useThemedStyles();
+  const [activeTab, setActiveTab] = useState<string>(BlogType.ALL);
+  const insets = useSafeAreaInsets();
+
+  const handleBlogPress = (blog: BlogDto) => {
+    if (__DEV__) {
+      console.log("Blog pressed:", blog.id, blog.slug);
+    }
+  };
+
+  const renderTabItem = ({ item }: { item: Tab }) => (
+    <TouchableOpacity
+      key={item.key}
+      onPress={() => setActiveTab(item.key)}
+      activeOpacity={0.7}
+      style={{
+        paddingHorizontal: spacing.s16,
+        paddingVertical: spacing.s8,
+        marginRight: spacing.s8,
+        borderRadius: radius.r12,
+        backgroundColor:
+          activeTab === item.key
+            ? colors.background["bg-brand-quaternary"]
+            : colors.background["bg-primary"],
+        minWidth: 80,
+        alignItems: "center",
+      }}
+    >
+      <PickText
+        size={14}
+        font="semibold"
+        style={{
+          color: activeTab === item.key ? colors.text["body-inverted"] : colors.text.body,
+        }}
+      >
+        {item.label}
+      </PickText>
+    </TouchableOpacity>
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>📰 Tin Tức</Text>
-        <Text style={styles.description}>Cập nhật tin tức mới nhất về điện ảnh</Text>
-        <Text style={styles.subtitle}>Tin tức nổi bật</Text>
-        <Text style={styles.placeholder}>
-          - Các bài viết tin tức nổi bật sẽ được hiển thị ở đây
-        </Text>
-        <Text style={styles.subtitle}>Đánh giá phim</Text>
-        <Text style={styles.placeholder}>- Các bài đánh giá phim sẽ được hiển thị ở đây</Text>
-        <Text style={styles.subtitle}>Khuyến mãi</Text>
-        <Text style={styles.placeholder}>- Thông tin khuyến mãi sẽ được hiển thị ở đây</Text>
-      </View>
-    </ScrollView>
+    <PickView
+      flex={1}
+      backgroundColor={colors.background["bg-primary"]}
+      style={{ paddingBottom: insets.bottom + 50 }}
+    >
+      {/* Header */}
+      <PickView
+        backgroundColor={colors.background["bg-brand-quaternary"]}
+        paddingHorizontal={spacing.s16}
+        paddingTop={insets.top + spacing.s16}
+        paddingBottom={spacing.s16}
+        centerItems
+        justifyCenter
+        style={{
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border["border-primary"],
+        }}
+      >
+        <PickText size={24} font="bold" color="body-inverted" style={{ marginBottom: spacing.s4 }}>
+          Tin Tức
+        </PickText>
+        <PickText size={14} color="body-inverted">
+          Cập nhật tin tức mới nhất về điện ảnh
+        </PickText>
+      </PickView>
+
+      {/* Tabs (Tối ưu hóa bằng FlatList thay vì ScrollView.map) */}
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={TABS}
+        renderItem={renderTabItem}
+        keyExtractor={(item) => item.key}
+        contentContainerStyle={{
+          paddingHorizontal: spacing.s16,
+          paddingVertical: spacing.s8,
+        }}
+        style={{
+          backgroundColor: colors.background["bg-secondary"],
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border["border-primary"],
+          flexGrow: 0,
+        }}
+      />
+
+      <PickView flex={1}>
+        <BlogList type={activeTab} onBlogPress={handleBlogPress} />
+      </PickView>
+    </PickView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-  content: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  description: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 30,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  placeholder: {
-    fontSize: 14,
-    color: "#888",
-    fontStyle: "italic",
-    marginLeft: 10,
-  },
-});
 
 export default NewsScreen;

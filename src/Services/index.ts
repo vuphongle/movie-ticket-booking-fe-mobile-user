@@ -8,3 +8,4 @@ export {
 export { httpService, useApiService } from "./httpService";
 export { authService, authKeys, register } from "./Auth";
 export { userService, userKeys } from "./User";
+export { blogService } from "./Blog";
