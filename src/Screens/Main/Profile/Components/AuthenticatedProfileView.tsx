@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import type { RootStackNavigationProp } from "@Types/navigationTypes";
-import { PickText, PickView } from "@Components";
+import { PickText, PickView, ScalableButton } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
 import { useGetProfile } from "@Hooks";
@@ -164,7 +164,7 @@ export const AuthenticatedProfileView: React.FC = () => {
             </PickText>
           </PickView>
 
-          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")}>
+          <ScalableButton onPress={() => navigation.navigate("EditProfile")}>
             <PickView
               width={40}
               height={40}
@@ -175,7 +175,7 @@ export const AuthenticatedProfileView: React.FC = () => {
             >
               <Icon name="create-outline" size={20} color="#fff" />
             </PickView>
-          </TouchableOpacity>
+          </ScalableButton>
         </PickView>
       </PickView>
 
@@ -213,13 +213,6 @@ export const AuthenticatedProfileView: React.FC = () => {
                 padding={16}
                 borderRadius={12}
                 marginBottom={12}
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.05,
-                  shadowRadius: 4,
-                  elevation: 2,
-                }}
               >
                 <PickView
                   width={48}
@@ -259,13 +252,6 @@ export const AuthenticatedProfileView: React.FC = () => {
               padding={16}
               borderRadius={12}
               marginTop={20}
-              style={{
-                shadowColor: colors.background["bg-error-quarternary"],
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.2,
-                shadowRadius: 4,
-                elevation: 3,
-              }}
             >
               <Icon name="log-out-outline" size={20} color={colors.icon["icon-on-fill"]} />
               <PickText size={16} font="semibold" color="body-on-brand">
