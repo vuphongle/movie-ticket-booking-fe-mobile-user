@@ -7,16 +7,24 @@ import {
   Platform,
   Image,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Icon from "react-native-vector-icons/Ionicons";
-import { PickText, PickView, PickFormInput, DatePickerModal, ScreenHeader } from "@Components";
+import {
+  PickText,
+  PickView,
+  PickFormInput,
+  DatePickerModal,
+  ScreenHeader,
+  AvatarOptionsBottomSheet,
+} from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
-import { useUpdateProfile, useGetProfile } from "@Hooks";
+import { useUpdateProfile, useGetProfile, useUploadAvatar, useAvatarPicker } from "@Hooks";
 import { updateProfileSchema, type UpdateProfileFormData } from "@Schemas/profileSchemas";
 import {
   toISODate,
@@ -37,6 +45,8 @@ export const EditProfileScreen: React.FC = () => {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [avatarLoadError, setAvatarLoadError] = useState(false);
+  const [showAvatarOptions, setShowAvatarOptions] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   const {
     control,
@@ -117,6 +127,52 @@ export const EditProfileScreen: React.FC = () => {
     setShowDatePicker(false);
   };
 
+  // Avatar upload logic
+  const { mutate: uploadAvatarMutation } = useUploadAvatar({
+    onSuccess: async (uploadResponse) => {
+      if (__DEV__) {
+        console.log("✅ Avatar uploaded, updating profile...");
+      }
+
+      // Update profile with new avatar URL
+      const payload: UpdateProfileRequest = {
+        name: user?.name || "",
+        phone: getUserPhone(user),
+        dob: toISODate(watch("dob")),
+        avatar: uploadResponse.url,
+      };
+
+      updateProfile(payload);
+      setUploadingAvatar(false);
+    },
+    onError: () => {
+      setUploadingAvatar(false);
+    },
+  });
+
+  const handleAvatarSelected = useCallback(
+    (image: { path: string }) => {
+      setUploadingAvatar(true);
+      uploadAvatarMutation(image.path);
+    },
+    [uploadAvatarMutation]
+  );
+
+  const {
+    showImagePickerAlert: _showImagePickerAlert,
+    openCamera,
+    openLibrary,
+  } = useAvatarPicker({
+    onImageSelected: handleAvatarSelected,
+    onError: (error) => {
+      Alert.alert("Lỗi", error);
+    },
+  });
+
+  const handleChangeAvatar = () => {
+    setShowAvatarOptions(true);
+  };
+
   if (!user) {
     return (
       <PickView
@@ -175,7 +231,9 @@ export const EditProfileScreen: React.FC = () => {
                 overflow: "hidden",
               }}
             >
-              {user?.avatar && !user.avatar.includes(".svg") && !avatarLoadError ? (
+              {uploadingAvatar ? (
+                <ActivityIndicator size="large" color="white" />
+              ) : user?.avatar && !user.avatar.includes(".svg") && !avatarLoadError ? (
                 <Image
                   source={{ uri: user.avatar }}
                   style={{ width: 100, height: 100 }}
@@ -192,9 +250,17 @@ export const EditProfileScreen: React.FC = () => {
                 <Icon name="person" size={50} color="white" />
               )}
             </PickView>
-            <TouchableOpacity style={{ marginTop: 12 }}>
-              <PickText size={14} font="semibold" style={{ color: "#6d5edc" }}>
-                Thay đổi ảnh đại diện
+            <TouchableOpacity
+              style={{ marginTop: 12 }}
+              onPress={handleChangeAvatar}
+              disabled={uploadingAvatar}
+            >
+              <PickText
+                size={14}
+                font="semibold"
+                style={{ color: uploadingAvatar ? "#999" : "#6d5edc" }}
+              >
+                {uploadingAvatar ? "Đang tải lên..." : "Thay đổi ảnh đại diện"}
               </PickText>
             </TouchableOpacity>
           </PickView>
@@ -338,6 +404,20 @@ export const EditProfileScreen: React.FC = () => {
           onCancel={() => setShowDatePicker(false)}
           minimumDate={new Date(1900, 0, 1)}
           maximumDate={new Date()}
+        />
+
+        {/* Avatar Options Bottom Sheet */}
+        <AvatarOptionsBottomSheet
+          visible={showAvatarOptions}
+          onClose={() => setShowAvatarOptions(false)}
+          onCamera={() => {
+            setShowAvatarOptions(false);
+            setTimeout(openCamera, 300);
+          }}
+          onUploadImage={() => {
+            setShowAvatarOptions(false);
+            setTimeout(openLibrary, 300);
+          }}
         />
       </PickView>
     </KeyboardAvoidingView>

@@ -33,6 +33,13 @@ export interface UpdateProfileRequest {
   avatar?: string;
 }
 
+export interface UploadResponse {
+  url: string;
+  filename: string | null;
+  size: number;
+  contentType: string | null;
+}
+
 export interface LoginResponse {
   user: User;
   accessToken: string;

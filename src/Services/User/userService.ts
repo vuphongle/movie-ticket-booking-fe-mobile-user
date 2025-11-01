@@ -1,5 +1,5 @@
 import { httpService } from "../httpService";
-import { User, UpdateProfileRequest } from "@Types/authTypes";
+import { User, UpdateProfileRequest, UploadResponse } from "@Types/authTypes";
 import endpoints from "@Constants/Endpoints";
 
 /**
@@ -20,9 +20,11 @@ export const updateUserProfile = async (data: UpdateProfileRequest): Promise<Use
 
 /**
  * Upload user avatar
+ * @param file - FormData containing the avatar file
+ * @returns Upload response with URL, filename, size, and content type
  */
-export const uploadAvatar = async (file: FormData): Promise<{ avatarUrl: string }> => {
-  return httpService.upload<{ avatarUrl: string }>(endpoints.USER.UPLOAD_AVATAR, file);
+export const uploadAvatar = async (file: FormData): Promise<UploadResponse> => {
+  return httpService.upload<UploadResponse>(endpoints.USER.UPLOAD_AVATAR, file);
 };
 
 export const userService = {
