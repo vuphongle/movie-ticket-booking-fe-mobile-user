@@ -4,6 +4,7 @@ import { RootStackParamList } from "@Types/navigationTypes";
 import TabNavigator from "./TabNavigator";
 import { LoginScreen, RegisterScreen, EditProfileScreen, ChangePasswordScreen } from "@Screens";
 import ForgotPasswordScreen from "@Screens/Auth/ForgotPasswordScreen";
+import BlogDetailScreen from "@Screens/Main/BlogDetail/BlogDetailScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -64,6 +65,14 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
       <Stack.Screen
         name="ChangePassword"
         component={ChangePasswordScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
+      <Stack.Screen
+        name="BlogDetail"
+        component={BlogDetailScreen}
         options={{
           animation: "slide_from_right",
           animationDuration: 300,

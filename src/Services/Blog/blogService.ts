@@ -1,5 +1,11 @@
 import { HttpService } from "../httpService";
-import { BlogListParams, BlogListResponse, BlogDto, BlogServiceInterface } from "@Types/blogTypes";
+import {
+  BlogListParams,
+  BlogListResponse,
+  BlogDto,
+  BlogDetailDto,
+  BlogServiceInterface,
+} from "@Types/blogTypes";
 
 class BlogService implements BlogServiceInterface {
   private httpService: HttpService;
@@ -73,8 +79,8 @@ class BlogService implements BlogServiceInterface {
    * @param id - blog id
    * @param slug - blog slug
    */
-  async getBlogDetail(id: number, slug: string): Promise<any> {
-    return this.httpService.get(`/public/blogs/${id}/${slug}`, { skipAuth: true });
+  async getBlogDetail(id: number, slug: string): Promise<BlogDetailDto> {
+    return this.httpService.get<BlogDetailDto>(`/public/blogs/${id}/${slug}`, { skipAuth: true });
   }
 
   /**

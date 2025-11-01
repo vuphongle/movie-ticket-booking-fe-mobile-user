@@ -11,6 +11,10 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   EditProfile: undefined;
   ChangePassword: undefined;
+  BlogDetail: {
+    id: number;
+    slug: string;
+  };
 };
 
 // Main Tab Param List

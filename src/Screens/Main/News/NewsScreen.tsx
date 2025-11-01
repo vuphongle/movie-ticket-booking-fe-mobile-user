@@ -5,6 +5,11 @@ import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import BlogList from "./Components/BlogList";
 import { BlogDto, BlogType } from "@Types/blogTypes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface Tab {
   key: string;
@@ -22,11 +27,13 @@ const NewsScreen: React.FC = () => {
   const { colors, spacing, radius } = useThemedStyles();
   const [activeTab, setActiveTab] = useState<string>(BlogType.ALL);
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<NavigationProp>();
 
   const handleBlogPress = (blog: BlogDto) => {
-    if (__DEV__) {
-      console.log("Blog pressed:", blog.id, blog.slug);
-    }
+    navigation.navigate("BlogDetail", {
+      id: blog.id,
+      slug: blog.slug,
+    });
   };
 
   const renderTabItem = ({ item }: { item: Tab }) => (

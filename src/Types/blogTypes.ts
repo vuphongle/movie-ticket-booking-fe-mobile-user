@@ -14,6 +14,24 @@ export interface BlogDto {
   publishedAt: number[] | string; // Backend returns array [year, month, day, hour, minute, second, nanosecond]
 }
 
+export interface BlogAuthor {
+  id: number;
+  name: string;
+  email: string;
+  avatar: string;
+  role: string;
+}
+
+export interface BlogDetailDto extends BlogDto {
+  content: string; // HTML content
+  status: boolean;
+  viewCount: number;
+  type: string;
+  createdAt: number[] | string;
+  updatedAt: number[] | string;
+  user: BlogAuthor;
+}
+
 export interface BlogListResponse {
   content: BlogDto[];
   pageable: {
@@ -53,4 +71,6 @@ export interface BlogServiceInterface {
   getAllBlogs: (params: BlogListParams) => Promise<BlogListResponse>;
   getBlogsLatest: (params: BlogListParams) => Promise<BlogListResponse>;
   getMostViewBlogs: (params: Omit<BlogListParams, "page">) => Promise<BlogDto[]>;
+  getBlogDetail: (id: number, slug: string) => Promise<BlogDetailDto>;
+  getRecommendBlogs: (id: number, limit?: number) => Promise<BlogDto[]>;
 }
