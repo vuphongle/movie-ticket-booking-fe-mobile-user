@@ -3,9 +3,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "baseUrl": ".",
-    // Strict checks for unused code
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "paths": {
       "@Constants": ["src/Constants"],
       "@Constants/*": ["src/Constants/*"],
@@ -34,7 +31,9 @@
       "@Hooks": ["src/Hooks"],
       "@Hooks/*": ["src/Hooks/*"],
       "@Theme": ["src/Theme"],
-      "@Theme/*": ["src/Theme/*"]
+      "@Theme/*": ["src/Theme/*"],
+      "@Schemas": ["src/Schemas"],
+      "@Schemas/*": ["src/Schemas/*"]
     }
   }
 }

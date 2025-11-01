@@ -1,7 +1,8 @@
 const user = {
-  MY_PROFILE: "/user/profile",
-  UPDATE_PROFILE: "/user/profile",
-  UPLOAD_AVATAR: "/user/avatar",
+  MY_PROFILE: "/users/profile",
+  UPDATE_PROFILE: "/users/update-profile",
+  UPLOAD_AVATAR: "/users/upload-avatar",
+  UPDATE_PASSWORD: "/users/update-password",
 } as const;
 
 export default user;

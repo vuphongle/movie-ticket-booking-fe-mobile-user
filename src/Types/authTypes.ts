@@ -1,4 +1,4 @@
-// Login API Types
+// Login API Types - Synced with backend User entity
 export interface User {
   id: number;
   name: string;
@@ -6,12 +6,44 @@ export interface User {
   phone: string;
   avatar: string;
   role: string;
-  dob: number;
+  dob: string; // ISO date string from backend
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface LoginRequest {
   email: string;
   password: string;
+}
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  dob: Date;
+}
+
+export interface UpdateProfileRequest {
+  name: string;
+  phone: string;
+  dob: string; // ISO date string (YYYY-MM-DD)
+  avatar?: string;
+}
+
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface UploadResponse {
+  url: string;
+  filename: string | null;
+  size: number;
+  contentType: string | null;
 }
 
 export interface LoginResponse {
@@ -39,9 +71,11 @@ export interface UserInfo {
   name?: string;
   given_name?: string;
   family_name?: string;
-  picture?: string;
+  avatar?: string;
   roles?: string[];
   preferred_username?: string;
+  phone?: string;
+  dob?: string; // ISO date string (YYYY-MM-DD)
 }
 
 export interface AuthTokens {

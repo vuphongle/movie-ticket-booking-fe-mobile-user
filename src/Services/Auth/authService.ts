@@ -1,22 +1,23 @@
 import { httpService } from "../httpService";
-import type { LoginRequest, LoginResponse } from "@Types/authTypes";
+import type { LoginRequest, LoginResponse, RegisterRequest } from "@Types/authTypes";
 import endpoints from "@Constants/Endpoints";
+
+/**
+ * Request a password reset email
+ */
+export const forgotPassword = async (email: string): Promise<void> => {
+  await httpService.get<void>(endpoints.AUTH.FORGOT_PASSWORD, { params: { email } });
+};
 
 /**
  * Login with email/phone and password
  */
 export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
-  const response = await httpService.post<LoginResponse>(
-    endpoints.AUTH.LOGIN,
-    credentials
-  );
+  const response = await httpService.post<LoginResponse>(endpoints.AUTH.LOGIN, credentials);
 
   // Store tokens after successful login
   if (response.accessToken) {
-    await httpService.setAuthTokens(
-      response.accessToken,
-      response.refreshToken || undefined
-    );
+    await httpService.setAuthTokens(response.accessToken, response.refreshToken || undefined);
   }
 
   return response;
@@ -24,27 +25,17 @@ export const login = async (credentials: LoginRequest): Promise<LoginResponse> =
 
 /**
  * Register new user
+ * Note: Do not store tokens as user needs to verify email first
  */
-export const register = async (data: {
-  email: string;
-  phone: string;
-  password: string;
-  name: string;
-}): Promise<LoginResponse> => {
-  const response = await httpService.post<LoginResponse>(
-    endpoints.AUTH.REGISTER,
-    data
-  );
-
-  // Store tokens after successful registration
-  if (response.accessToken) {
-    await httpService.setAuthTokens(
-      response.accessToken,
-      response.refreshToken || undefined
-    );
-  }
-
-  return response;
+export const register = async (data: RegisterRequest): Promise<void> => {
+  await httpService.post<void>(endpoints.AUTH.REGISTER, {
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    password: data.password,
+    confirmPassword: data.confirmPassword,
+    dob: data.dob,
+  });
 };
 
 /**
@@ -63,10 +54,8 @@ export const logout = async (): Promise<void> => {
  * Refresh access token
  */
 export const refreshToken = async (): Promise<{ accessToken: string }> => {
-  const response = await httpService.post<{ accessToken: string }>(
-    endpoints.AUTH.REFRESH_TOKEN
-  );
-  
+  const response = await httpService.post<{ accessToken: string }>(endpoints.AUTH.REFRESH_TOKEN);
+
   if (response.accessToken) {
     await httpService.setAuthTokens(response.accessToken);
   }
@@ -79,4 +68,5 @@ export const authService = {
   register,
   logout,
   refreshToken,
+  forgotPassword,
 };

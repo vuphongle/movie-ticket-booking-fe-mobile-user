@@ -22,6 +22,7 @@ module.exports = {
           "@Types": "./src/Types",
           "@Hooks": "./src/Hooks",
           "@Theme": "./src/Theme",
+          "@Schemas": "./src/Schemas",
         },
       },
     ],

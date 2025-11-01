@@ -1,12 +1,33 @@
 import React from "react";
-import { ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@Types/navigationTypes";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { PickButton, PickText, PickView, PickInput } from "@Components";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  PickButton,
+  PickText,
+  PickView,
+  PickFormInput,
+  DatePickerModal,
+  ScreenHeader,
+} from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { icons } from "@Assets";
+import { registerSchema, type RegisterFormData } from "@Schemas/authSchemas";
+import { useRegister } from "@Hooks";
+import { format } from "date-fns";
+import { vi } from "date-fns/locale";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -14,24 +35,68 @@ export const RegisterScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const insets = useSafeAreaInsets();
   const { colors, dimensions } = useThemedStyles();
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [showDatePicker, setShowDatePicker] = React.useState(false);
 
-  const handleRegister = () => {
-    console.log("Register with:", { name, email, phone, password });
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    mode: "onChange",
+  });
+
+  const registerMutation = useRegister();
+
+  const dobValue = watch("dob");
+
+  const handleRegister = (data: RegisterFormData) => {
+    registerMutation.mutate(data, {
+      onSuccess: () => {
+        Alert.alert(
+          "Đăng ký thành công",
+          "Vui lòng kiểm tra email để kích hoạt tài khoản của bạn.",
+          [
+            {
+              text: "OK",
+              onPress: () => navigation.navigate("Login"),
+            },
+          ]
+        );
+      },
+      onError: (error: any) => {
+        const errorCode = error?.code;
+        const errorMessage = error?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";
+
+        let message = errorMessage;
+        if (errorCode === "EMAIL_ALREADY_EXISTS") {
+          message = "Email đã được sử dụng. Vui lòng sử dụng email khác.";
+        } else if (errorCode === "ACCOUNT_NOT_ACTIVATED") {
+          message = "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.";
+        }
+
+        Alert.alert("Đăng ký thất bại", message);
+      },
+    });
   };
 
   const handleLogin = () => {
     navigation.navigate("Login");
   };
 
+  const handleDateConfirm = (date: Date) => {
+    setValue("dob", date, { shouldValidate: true });
+    setShowDatePicker(false);
+  };
+
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
+      <ScreenHeader title="Đăng ký" backgroundColor={colors.background["bg-brand-quaternary"]} />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -44,31 +109,23 @@ export const RegisterScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <PickView paddingHorizontal={20} paddingTop={insets.top}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <PickView width={40} height={40} justifyCenter>
-                <Icon name="arrow-back" size={24} color="#1a1a2e" />
-              </PickView>
-            </TouchableOpacity>
-
+          <PickView>
             {/* Logo */}
-            <PickView alignCenter marginTop={20} marginBottom={30}>
+            <PickView paddingHorizontal={20} alignCenter marginTop={20} marginBottom={30}>
               <PickView
                 width={100}
                 height={100}
                 borderRadius={50}
                 justifyCenter
                 alignCenter
-                backgroundColor="#6d5edc"
-                style={{
-                  shadowColor: "#6d5edc",
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 8,
-                  elevation: 8,
-                }}
+                borderColor={colors.border["border-brand"]}
+                borderWidth={1}
               >
-                <Icon name="person-add-outline" size={48} color="#fff" />
+                <Image
+                  source={icons.logoOnlyIcon}
+                  style={{ width: 80, height: 80 }}
+                  resizeMode="contain"
+                />
               </PickView>
             </PickView>
 
@@ -88,39 +145,84 @@ export const RegisterScreen: React.FC = () => {
               </PickText>
             </PickView>
 
-            <PickView gap={16}>
-              <PickInput
+            <PickView paddingHorizontal={20}>
+              {/* Name Field */}
+              <PickFormInput
+                name="name"
+                control={control}
                 placeholder="Họ và tên"
-                value={name}
-                onChangeText={setName}
                 autoCapitalize="words"
                 iconBefore={<Icon name="person-outline" size={20} color="#666" />}
-                containerStyle={{ marginBottom: 0 }}
+                error={errors.name?.message}
               />
 
-              <PickInput
+              {/* Email Field */}
+              <PickFormInput
+                name="email"
+                control={control}
                 placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
                 iconBefore={<Icon name="mail-outline" size={20} color="#666" />}
-                containerStyle={{ marginBottom: 0 }}
+                error={errors.email?.message}
               />
 
-              <PickInput
+              {/* Phone Field */}
+              <PickFormInput
+                name="phone"
+                control={control}
                 placeholder="Số điện thoại"
-                value={phone}
-                onChangeText={setPhone}
                 keyboardType="phone-pad"
                 iconBefore={<Icon name="call-outline" size={20} color="#666" />}
-                containerStyle={{ marginBottom: 0 }}
+                error={errors.phone?.message}
               />
-              <PickInput
+
+              {/* Date of Birth Field */}
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                style={{ marginBottom: 16 }}
+              >
+                <PickView
+                  style={{
+                    borderWidth: 1,
+                    borderColor: errors.dob ? "#ff4444" : "#e0e0e0",
+                    borderRadius: 12,
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    backgroundColor: "#fff",
+                  }}
+                >
+                  <Icon
+                    name="calendar-outline"
+                    size={20}
+                    color="#666"
+                    style={{ marginRight: 12 }}
+                  />
+                  <PickText
+                    size={16}
+                    style={{
+                      color: dobValue ? "#1a1a2e" : "#999",
+                      flex: 1,
+                    }}
+                  >
+                    {dobValue ? format(dobValue, "dd/MM/yyyy", { locale: vi }) : "Ngày sinh"}
+                  </PickText>
+                </PickView>
+              </TouchableOpacity>
+              {errors.dob && (
+                <PickText size={12} style={{ color: "#ff4444", marginTop: 4 }}>
+                  {errors.dob.message}
+                </PickText>
+              )}
+
+              {/* Password Field */}
+              <PickFormInput
+                name="password"
+                control={control}
                 placeholder="Mật khẩu"
-                value={password}
-                onChangeText={setPassword}
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 iconBefore={<Icon name="lock-closed-outline" size={20} color="#666" />}
@@ -136,13 +238,14 @@ export const RegisterScreen: React.FC = () => {
                     />
                   </TouchableOpacity>
                 }
-                containerStyle={{ marginBottom: 0 }}
+                error={errors.password?.message}
               />
 
-              <PickInput
+              {/* Confirm Password Field */}
+              <PickFormInput
+                name="confirmPassword"
+                control={control}
                 placeholder="Xác nhận mật khẩu"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
                 secureTextEntry={!showConfirmPassword}
                 autoCapitalize="none"
                 iconBefore={<Icon name="lock-closed-outline" size={20} color="#666" />}
@@ -158,7 +261,7 @@ export const RegisterScreen: React.FC = () => {
                     />
                   </TouchableOpacity>
                 }
-                containerStyle={{ marginBottom: 0 }}
+                error={errors.confirmPassword?.message}
               />
 
               {/* Terms */}
@@ -184,8 +287,9 @@ export const RegisterScreen: React.FC = () => {
                 style={{ marginTop: 8, alignSelf: "center", width: dimensions.width - 40 }}
                 type="Tertiary"
                 size="sm"
-                title="Đăng ký"
-                onPress={handleRegister}
+                title={registerMutation.isPending ? "Đang đăng ký..." : "Đăng ký"}
+                onPress={handleSubmit(handleRegister)}
+                disabled={registerMutation.isPending}
               />
 
               {/* Login Link */}
@@ -203,6 +307,16 @@ export const RegisterScreen: React.FC = () => {
           </PickView>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Date Picker Modal */}
+      <DatePickerModal
+        visible={showDatePicker}
+        value={dobValue}
+        minimumDate={new Date(1900, 0, 1)}
+        maximumDate={new Date()}
+        onConfirm={handleDateConfirm}
+        onCancel={() => setShowDatePicker(false)}
+      />
     </PickView>
   );
 };

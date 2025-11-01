@@ -173,24 +173,20 @@ export class HttpService {
   }
 
   private async refreshToken(): Promise<string> {
-    try {
-      const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
-      if (!refreshToken) {
-        throw new Error("No refresh token available");
-      }
-
-      // TODO: Update with your actual refresh endpoint
-      const response = await this.axiosInstance.post("/auth/refresh", {
-        refreshToken,
-      });
-
-      const newToken = response.data.accessToken;
-      await AsyncStorage.setItem(AUTH_TOKEN_KEY, newToken);
-
-      return newToken;
-    } catch (error) {
-      throw error;
+    const refreshToken = await AsyncStorage.getItem(REFRESH_TOKEN_KEY);
+    if (!refreshToken) {
+      throw new Error("No refresh token available");
     }
+
+    // TODO: Update with your actual refresh endpoint
+    const response = await this.axiosInstance.post("/auth/refresh", {
+      refreshToken,
+    });
+
+    const newToken = response.data.accessToken;
+    await AsyncStorage.setItem(AUTH_TOKEN_KEY, newToken);
+
+    return newToken;
   }
 
   /**

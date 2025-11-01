@@ -21,7 +21,8 @@ type AuthAction =
   | { type: "AUTH_SUCCESS"; payload: { tokens: AuthTokens; user: UserInfo } }
   | { type: "AUTH_ERROR"; payload: string }
   | { type: "AUTH_LOGOUT" }
-  | { type: "CLEAR_ERROR" };
+  | { type: "CLEAR_ERROR" }
+  | { type: "UPDATE_USER"; payload: UserInfo };
 
 // Initial state
 const initialState: AuthState = {
@@ -58,6 +59,8 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
       return { ...initialState, isLoading: false };
     case "CLEAR_ERROR":
       return { ...state, error: null };
+    case "UPDATE_USER":
+      return { ...state, user: action.payload };
     default:
       return state;
   }
@@ -71,6 +74,7 @@ interface AuthContextType {
   clearError: () => void;
   checkAuthStatus: () => Promise<void>;
   updateAuthStatus: (tokens: AuthTokens, user: UserInfo) => Promise<void>;
+  updateUser: (user: UserInfo) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -163,6 +167,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const clearError = () => dispatch({ type: "CLEAR_ERROR" });
 
+  /**
+   * Update user info in state and AsyncStorage
+   * Used after profile update
+   */
+  const updateUser = async (user: UserInfo) => {
+    try {
+      // Update state first (optimistic update)
+      dispatch({ type: "UPDATE_USER", payload: user });
+
+      // Then persist to AsyncStorage
+      await AsyncStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(user));
+    } catch (error) {
+      console.error("Error updating user info:", error);
+      throw error;
+    }
+  };
+
   const contextValue: AuthContextType = {
     state,
     logout,
@@ -170,6 +191,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     clearError,
     checkAuthStatus,
     updateAuthStatus,
+    updateUser,
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;

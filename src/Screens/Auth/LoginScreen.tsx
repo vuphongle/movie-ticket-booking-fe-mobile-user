@@ -1,25 +1,31 @@
 import React from "react";
-import { ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import {
+  ScrollView,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+  Image,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@Types/navigationTypes";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PickButton, PickText, PickView, PickInput } from "@Components";
+import { PickButton, PickText, PickView, PickInput, ScreenHeader } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { authService } from "@Services";
 import { loginSchema, type LoginFormData } from "../../Schemas/authSchemas";
 import { useAuth } from "@Contexts/AuthContext";
 import { getErrorMessage } from "@Constants";
 import { transformLoginResponse, getUserDisplayName } from "@Utils/authHelpers";
+import { icons } from "@Assets";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const insets = useSafeAreaInsets();
   const { colors, dimensions } = useThemedStyles();
   const { updateAuthStatus } = useAuth();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -40,7 +46,7 @@ export const LoginScreen: React.FC = () => {
   const handleLogin = async (data: LoginFormData) => {
     try {
       setIsLoading(true);
-      const response = await authService.login(data);
+      const response = await authService.login(data as { email: string; password: string });
 
       if (response.isAuthenticated && response.accessToken) {
         const { tokens, userInfo } = transformLoginResponse(response);
@@ -78,7 +84,7 @@ export const LoginScreen: React.FC = () => {
   };
 
   const handleForgotPassword = () => {
-    console.log("Forgot password");
+    navigation.navigate("ForgotPassword");
   };
 
   const handleRegister = () => {
@@ -87,6 +93,7 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
+      <ScreenHeader title="Đăng nhập" backgroundColor={colors.background["bg-brand-quaternary"]} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -96,34 +103,26 @@ export const LoginScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <PickView paddingHorizontal={20} paddingTop={insets.top}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <PickView width={40} height={40} justifyCenter>
-                <Icon name="arrow-back" size={24} color="#1a1a2e" />
-              </PickView>
-            </TouchableOpacity>
-
-            <PickView alignCenter marginTop={20} marginBottom={30}>
+          <PickView>
+            <PickView paddingHorizontal={20} alignCenter marginTop={20} marginBottom={30}>
               <PickView
                 width={100}
                 height={100}
                 borderRadius={50}
                 justifyCenter
                 alignCenter
-                backgroundColor="#6d5edc"
-                style={{
-                  shadowColor: "#6d5edc",
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 8,
-                  elevation: 8,
-                }}
+                borderColor={colors.border["border-brand"]}
+                borderWidth={1}
               >
-                <Icon name="film-outline" size={48} color="#fff" />
+                <Image
+                  source={icons.logoOnlyIcon}
+                  style={{ width: 80, height: 80 }}
+                  resizeMode="contain"
+                />
               </PickView>
             </PickView>
 
-            <PickView gap={8} marginBottom={32} alignCenter>
+            <PickView paddingHorizontal={20} gap={8} marginBottom={32} alignCenter>
               <PickText size={32} font="bold" align="center" lineHeight={40}>
                 Đăng nhập
               </PickText>
@@ -132,7 +131,7 @@ export const LoginScreen: React.FC = () => {
               </PickText>
             </PickView>
 
-            <PickView gap={16}>
+            <PickView paddingHorizontal={20} gap={16}>
               <Controller
                 control={control}
                 name="email"

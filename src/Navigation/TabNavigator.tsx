@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     left: SPACING.md,
     right: SPACING.md,
     bottom: 0,
+    paddingBottom: Platform.select({ ios: 0, android: SPACING.sm }),
   },
   tabContainer: {
     height: CONTAINER_HEIGHT,
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: Platform.select({ ios: 0, android: SPACING.xs }),
 
     shadowColor: "#000",
     shadowOpacity: 0.08,
