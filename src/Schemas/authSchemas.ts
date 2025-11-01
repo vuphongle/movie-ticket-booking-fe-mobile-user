@@ -1,8 +1,27 @@
 import { z } from "zod";
 
+/**
+ * Shared password validation rule:
+ * - At least 8 characters
+ * - Contains uppercase letter (A-Z)
+ * - Contains lowercase letter (a-z)
+ * - Contains number (0-9)
+ * - Contains special character (@$!%*?&#)
+ */
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+export const passwordValidation = z
+  .string()
+  .min(1, "Mật khẩu là bắt buộc")
+  .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+  .regex(
+    passwordRegex,
+    "Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (@$!%*?&#)"
+  );
+
 export const loginSchema = z.object({
   email: z.string().min(1, "Email là bắt buộc").email("Email không hợp lệ"),
-  password: z.string().min(1, "Mật khẩu là bắt buộc").min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+  password: z.string().min(1, "Mật khẩu là bắt buộc"),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
@@ -67,7 +86,7 @@ export const registerSchema = z
           message: "Ngày sinh không được là ngày trong tương lai",
         }
       ),
-    password: z.string().min(1, "Mật khẩu là bắt buộc").min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
+    password: passwordValidation,
     confirmPassword: z.string().min(1, "Xác nhận mật khẩu là bắt buộc"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -76,3 +95,20 @@ export const registerSchema = z
   });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
+
+/**
+ * Change Password Schema
+ * Validates old password, new password, and confirmation
+ */
+export const changePasswordSchema = z
+  .object({
+    oldPassword: z.string().min(1, "Mật khẩu cũ là bắt buộc"),
+    newPassword: passwordValidation,
+    confirmPassword: z.string().min(1, "Xác nhận mật khẩu mới là bắt buộc"),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Mật khẩu xác nhận không khớp",
+    path: ["confirmPassword"],
+  });
+
+export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;

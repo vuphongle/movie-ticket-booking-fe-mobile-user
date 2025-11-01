@@ -33,6 +33,12 @@ export interface UpdateProfileRequest {
   avatar?: string;
 }
 
+export interface ChangePasswordRequest {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export interface UploadResponse {
   url: string;
   filename: string | null;

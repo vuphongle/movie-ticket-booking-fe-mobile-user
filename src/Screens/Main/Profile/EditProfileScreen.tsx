@@ -24,7 +24,13 @@ import {
 } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
-import { useUpdateProfile, useGetProfile, useUploadAvatar, useAvatarPicker } from "@Hooks";
+import {
+  useUpdateProfile,
+  useGetProfile,
+  useUploadAvatar,
+  useAvatarPicker,
+  useKeyboard,
+} from "@Hooks";
 import { updateProfileSchema, type UpdateProfileFormData } from "@Schemas/profileSchemas";
 import {
   toISODate,
@@ -42,6 +48,7 @@ export const EditProfileScreen: React.FC = () => {
   const { colors } = useThemedStyles();
   const { state, updateUser } = useAuth();
   const { user } = state;
+  const { keyboardShown } = useKeyboard();
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [avatarLoadError, setAvatarLoadError] = useState(false);
@@ -359,7 +366,7 @@ export const EditProfileScreen: React.FC = () => {
         <PickView
           paddingHorizontal={20}
           paddingTop={16}
-          paddingBottom={insets.bottom + 16}
+          paddingBottom={keyboardShown ? 16 : insets.bottom + 16}
           backgroundColor="white"
           style={{
             shadowColor: "#000",

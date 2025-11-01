@@ -82,6 +82,13 @@ export const AuthenticatedProfileView: React.FC = () => {
       onPress: () => navigation.navigate("EditProfile"),
     },
     {
+      icon: "key-outline",
+      title: "Đổi mật khẩu",
+      subtitle: "Thay đổi mật khẩu đăng nhập",
+      color: "#8b5cf6",
+      onPress: () => navigation.navigate("ChangePassword"),
+    },
+    {
       icon: "ticket-outline",
       title: "Lịch sử đặt vé",
       subtitle: "Xem các vé đã đặt",
@@ -156,7 +163,7 @@ export const AuthenticatedProfileView: React.FC = () => {
           </PickView>
 
           <PickView flex={1}>
-            <PickText size={24} font="bold" color="body-inverted" numberOfLines={1}>
+            <PickText size={24} font="bold" color="body-inverted" numberOfLines={1} lineHeight={30}>
               {getUserDisplayName(user)}
             </PickText>
             <PickText size={14} color="body-inverted" numberOfLines={1} style={{ marginTop: 4 }}>

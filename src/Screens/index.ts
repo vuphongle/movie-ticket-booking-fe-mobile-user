@@ -3,3 +3,7 @@ export { default as BookingScreen } from "./Main/Booking/BookingScreen";
 export { default as NewsScreen } from "./Main/News/NewsScreen";
 export { default as ProfileScreen } from "./Main/Profile/ProfileScreen";
 export { EditProfileScreen } from "./Main/Profile/EditProfileScreen";
+export { ChangePasswordScreen } from "./Main/Profile/ChangePasswordScreen";
+export { LoginScreen } from "./Auth/LoginScreen";
+export { RegisterScreen } from "./Auth/RegisterScreen";
+export { default as ForgotPasswordScreen } from "./Auth/ForgotPasswordScreen";

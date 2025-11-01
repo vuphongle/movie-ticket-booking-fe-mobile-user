@@ -1,5 +1,10 @@
 import { httpService } from "../httpService";
-import { User, UpdateProfileRequest, UploadResponse } from "@Types/authTypes";
+import {
+  User,
+  UpdateProfileRequest,
+  UploadResponse,
+  ChangePasswordRequest,
+} from "@Types/authTypes";
 import endpoints from "@Constants/Endpoints";
 
 /**
@@ -27,8 +32,18 @@ export const uploadAvatar = async (file: FormData): Promise<UploadResponse> => {
   return httpService.upload<UploadResponse>(endpoints.USER.UPLOAD_AVATAR, file);
 };
 
+/**
+ * Change user password
+ * @param data - Old password, new password, and confirmation
+ * @returns Success message
+ */
+export const changePassword = async (data: ChangePasswordRequest): Promise<void> => {
+  return httpService.put<void>(endpoints.USER.UPDATE_PASSWORD, data);
+};
+
 export const userService = {
   fetchUserProfile,
   updateUserProfile,
   uploadAvatar,
+  changePassword,
 };
