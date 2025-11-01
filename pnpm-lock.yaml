@@ -68,6 +68,9 @@ importers:
       react-native-nitro-haptics:
         specifier: ^0.1.0
         version: 0.1.0(react-native-nitro-modules@0.31.4(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
+      react-native-nitro-modules:
+        specifier: ^0.31.4
+        version: 0.31.4(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
       react-native-permissions:
         specifier: ^5.4.4
         version: 5.4.4(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
