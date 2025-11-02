@@ -1,10 +1,5 @@
 import { HttpService } from "../httpService";
-import {
-  Movie,
-  MovieDetail,
-  MovieListParams,
-  MovieServiceInterface,
-} from "@Types/movieTypes";
+import { Movie, MovieDetail, MovieListParams, MovieServiceInterface } from "@Types/movieTypes";
 
 class MovieService implements MovieServiceInterface {
   private httpService: HttpService;
@@ -26,11 +21,16 @@ class MovieService implements MovieServiceInterface {
   }
 
   async getMovieByShowtime(showtimeId: number): Promise<Movie> {
-    return this.httpService.get<Movie>(`public/movie-by-showtimeId/${showtimeId}`, { skipAuth: true });
+    return this.httpService.get<Movie>(`public/movie-by-showtimeId/${showtimeId}`, {
+      skipAuth: true,
+    });
   }
 
   async searchMovies(keyword: string): Promise<Movie[]> {
-    return this.httpService.get<Movie[]>(`public/movies/search?keyword=${encodeURIComponent(keyword)}`, { skipAuth: true });
+    return this.httpService.get<Movie[]>(
+      `public/movies/search?keyword=${encodeURIComponent(keyword)}`,
+      { skipAuth: true }
+    );
   }
 }
 

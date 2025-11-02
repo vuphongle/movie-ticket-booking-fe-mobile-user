@@ -1,10 +1,10 @@
 export enum MovieAge {
-  P = 'P',
-  K = 'K',
-  T13 = 'T13',
-  T16 = 'T16',
-  T18 = 'T18',
-  C = 'C',
+  P = "P",
+  K = "K",
+  T13 = "T13",
+  T16 = "T16",
+  T18 = "T18",
+  C = "C",
 }
 
 export interface Genre {

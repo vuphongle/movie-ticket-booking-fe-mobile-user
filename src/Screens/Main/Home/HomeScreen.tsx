@@ -31,7 +31,7 @@ const mockBanners = [
 ];
 
 const HomeScreen: React.FC = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const {
     movies: nowShowing,
@@ -57,31 +57,26 @@ const HomeScreen: React.FC = () => {
     console.log("Error fetching movies:", errorNow || errorComing);
   }
 
-const formatMovies = (movies: typeof nowShowing) => {
-  const formatted = movies.map((m) => ({
-    id: m.id.toString(),
-    title: m.name,
-    genre: m.genres.map((g) => g.name).join(", "),
-    rating: m.rating,
-    age: m.age ?? "P", // dùng default "P" nếu undefined
-    graphics: m.graphics,
-    duration: `${m.duration} phút`,
-    imageUrl: m.poster,
-  }));
+  const formatMovies = (movies: typeof nowShowing) => {
+    const formatted = movies.map((m) => ({
+      id: m.id.toString(),
+      title: m.name,
+      genre: m.genres.map((g) => g.name).join(", "),
+      rating: m.rating,
+      age: m.age ?? "P", // dùng default "P" nếu undefined
+      graphics: m.graphics,
+      duration: `${m.duration} phút`,
+      imageUrl: m.poster,
+    }));
 
-  // In ra console để kiểm chứng
-  console.log("Formatted movies:", formatted);
+    // In ra console để kiểm chứng
+    console.log("Formatted movies:", formatted);
 
-  return formatted;
-};
-
+    return formatted;
+  };
 
   return (
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      bounces={false}
-    >
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} bounces={false}>
       <Header />
       <PickView
         flex={1}
@@ -101,7 +96,6 @@ const formatMovies = (movies: typeof nowShowing) => {
               emptyText: "Không có phim nào đang chiếu",
             })
           }
-
         />
 
         <MovieSection
@@ -114,7 +108,6 @@ const formatMovies = (movies: typeof nowShowing) => {
               emptyText: "Không có phim sắp chiếu",
             })
           }
-
         />
       </PickView>
     </ScrollView>

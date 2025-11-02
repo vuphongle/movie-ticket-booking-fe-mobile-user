@@ -18,12 +18,7 @@ const MovieComingSoonScreen: React.FC = () => {
   // Hiển thị vòng tròn loading khi đang tải phim
   if (isLoading) {
     return (
-      <PickView
-        flex={1}
-        justifyCenter
-        alignCenter
-        backgroundColor={COLORS.primary}
-      >
+      <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
         <ActivityIndicator size="large" color={COLORS.accent} />
         <PickText size={16} style={{ color: "#fff", marginTop: SPACING.md }}>
           Đang tải phim sắp chiếu...
@@ -35,12 +30,7 @@ const MovieComingSoonScreen: React.FC = () => {
   // Hiển thị thông báo lỗi khi không tải được phim
   if (error) {
     return (
-      <PickView
-        flex={1}
-        justifyCenter
-        alignCenter
-        backgroundColor={COLORS.primary}
-      >
+      <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
         <PickText size={16} style={{ color: "#fff", marginBottom: SPACING.sm }}>
           Có lỗi xảy ra khi tải phim
         </PickText>
@@ -55,11 +45,7 @@ const MovieComingSoonScreen: React.FC = () => {
       style={{ backgroundColor: COLORS.primary }}
       contentContainerStyle={{ padding: SPACING.lg }}
     >
-      <PickText
-        size={24}
-        font="bold"
-        style={{ color: "#fff", marginBottom: SPACING.md }}
-      >
+      <PickText size={24} font="bold" style={{ color: "#fff", marginBottom: SPACING.md }}>
         Phim sắp chiếu
       </PickText>
 

@@ -9,7 +9,7 @@ interface MovieCardProps {
   title: string;
   genre: string;
   age: MovieAge;
-  graphics: string[],
+  graphics: string[];
   rating: number;
   duration: string;
   imageUrl?: string;
@@ -49,7 +49,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
           {title}
         </PickText>
         <PickText style={styles.genre}>{genre}</PickText>
-        <PickText style={styles.duration}>🕐 {duration} - {formatGraphicLabel(graphics)}</PickText>
+        <PickText style={styles.duration}>
+          🕐 {duration} - {formatGraphicLabel(graphics)}
+        </PickText>
       </PickView>
     </TouchableOpacity>
   );

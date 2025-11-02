@@ -7,22 +7,24 @@ type MovieListScreenProps = {
 const MovieListScreen: React.FC<MovieListScreenProps> = ({ type, title, emptyText }) => {
   const { movies, isLoading, error } = useMovieList({ type });
 
-  if (isLoading) return (
-    <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
-      <ActivityIndicator size="large" color={COLORS.accent} />
-      <PickText size={16} style={{ color: "#fff", marginTop: SPACING.md }}>
-        Đang tải {title.toLowerCase()}...
-      </PickText>
-    </PickView>
-  );
+  if (isLoading)
+    return (
+      <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
+        <ActivityIndicator size="large" color={COLORS.accent} />
+        <PickText size={16} style={{ color: "#fff", marginTop: SPACING.md }}>
+          Đang tải {title.toLowerCase()}...
+        </PickText>
+      </PickView>
+    );
 
-  if (error) return (
-    <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
-      <PickText size={16} style={{ color: "#fff", marginBottom: SPACING.sm }}>
-        Có lỗi xảy ra khi tải {title.toLowerCase()}
-      </PickText>
-    </PickView>
-  );
+  if (error)
+    return (
+      <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
+        <PickText size={16} style={{ color: "#fff", marginBottom: SPACING.sm }}>
+          Có lỗi xảy ra khi tải {title.toLowerCase()}
+        </PickText>
+      </PickView>
+    );
 
   return (
     <ScrollView

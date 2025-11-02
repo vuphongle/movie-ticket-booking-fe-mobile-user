@@ -83,23 +83,23 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
         }}
       />
 
-                   <Stack.Screen
-                                            name="MovieList"
-                                            component={MovieListScreen}
-                                            options={{
-                                              animation: "slide_from_right",
-                                              animationDuration: 300,
-                                            }}
-                                          />
+      <Stack.Screen
+        name="MovieList"
+        component={MovieListScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
 
-                  <Stack.Screen
-                          name="MovieDetail"
-                          component={MovieDetailScreen}
-                          options={{
-                            animation: "slide_from_right",
-                            animationDuration: 300,
-                          }}
-                        />
+      <Stack.Screen
+        name="MovieDetail"
+        component={MovieDetailScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
     </Stack.Navigator>
   );
 };

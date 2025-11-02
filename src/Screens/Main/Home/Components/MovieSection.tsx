@@ -3,9 +3,7 @@ import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import MovieCard from "./MovieCard";
-import {
-  MovieAge,
-} from "@Types/movieTypes";
+import { MovieAge } from "@Types/movieTypes";
 
 interface Movie {
   id: string;

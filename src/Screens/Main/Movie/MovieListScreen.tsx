@@ -20,12 +20,7 @@ const MovieListScreen = ({ route }: any) => {
 
   if (isLoading)
     return (
-      <PickView
-        flex={1}
-        justifyCenter
-        alignCenter
-        backgroundColor={COLORS.primary}
-      >
+      <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
         <ActivityIndicator size="large" color={COLORS.accent} />
         <PickText size={16} style={{ color: "#fff", marginTop: SPACING.md }}>
           Đang tải {title.toLowerCase()}...
@@ -35,15 +30,10 @@ const MovieListScreen = ({ route }: any) => {
 
   if (error)
     return (
-      <PickView
-        flex={1}
-        justifyCenter
-        alignCenter
-        backgroundColor={COLORS.primary}
-      >
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: spacing.s8 }}>
-            <Icon name="arrow-back" size={24} color={colors.text["heading-primary"]} />
-          </TouchableOpacity>
+      <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: spacing.s8 }}>
+          <Icon name="arrow-back" size={24} color={colors.text["heading-primary"]} />
+        </TouchableOpacity>
 
         <PickText size={16} style={{ color: "#fff", marginBottom: SPACING.sm }}>
           Có lỗi xảy ra khi tải {title.toLowerCase()}
@@ -134,7 +124,7 @@ const styles = {
   },
   card: {
     width: "48%",
-//     backgroundColor: "#1E1E1E",
+    //     backgroundColor: "#1E1E1E",
     borderRadius: 12,
     overflow: "hidden",
     marginBottom: SPACING.md,
