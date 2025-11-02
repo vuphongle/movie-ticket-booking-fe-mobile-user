@@ -5,8 +5,6 @@ import TabNavigator from "./TabNavigator";
 import { LoginScreen, RegisterScreen, EditProfileScreen, ChangePasswordScreen } from "@Screens";
 import ForgotPasswordScreen from "@Screens/Auth/ForgotPasswordScreen";
 import BlogDetailScreen from "@Screens/Main/BlogDetail/BlogDetailScreen";
-// import MovieComingSoonScreen from "@Screens/Main/Movie/MovieComingSoonScreen";
-// import MovieNowShowingScreen from "@Screens/Main/Movie/MovieNowShowingScreen";
 import MovieListScreen from "@Screens/Main/Movie/MovieListScreen";
 import MovieDetailScreen from "@Screens/Main/Movie/MovieDetailScreen";
 

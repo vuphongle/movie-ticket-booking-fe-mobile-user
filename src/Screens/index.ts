@@ -1,6 +1,4 @@
 export { default as HomeScreen } from "./Main/Home/HomeScreen";
-// export { default as MovieComingSoonScreen } from "./Main/Movie/MovieComingSoonScreen";
-// export { default as MovieNowShowingScreen } from "./Main/Movie/MovieNowShowingScreen";
 export { default as MovieListScreen } from "./Main/Movie/MovieListScreen";
 export { default as MovieDetailScreen } from "./Main/Movie/MovieDetailScreen";
 export { default as BookingScreen } from "./Main/Booking/BookingScreen";

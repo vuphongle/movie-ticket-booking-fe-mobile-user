@@ -1,22 +1,19 @@
 import React from "react";
-import {
-  ActivityIndicator,
-  ImageBackground,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  View,
-} from "react-native";
+import { ActivityIndicator, TouchableOpacity, FlatList, Image, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { PickView, PickText } from "@Components";
 import { useMovieList } from "@Hooks/useMovieList";
-import { COLORS, SPACING } from "@Constants/theme";
+import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
+import { ScreenHeader } from "@Components";
+import { formatGraphicLabel } from "@Utils/graphicUtils";
+import useThemedStyles from "@Theme/Hook/useThemedStyles";
 
 const MovieListScreen = ({ route }: any) => {
   const { type, title, emptyText } = route.params;
   const navigation = useNavigation();
   const { movies, isLoading, error } = useMovieList({ type });
+  const { colors, spacing, radius } = useThemedStyles();
 
   if (isLoading)
     return (
@@ -31,8 +28,8 @@ const MovieListScreen = ({ route }: any) => {
   if (error)
     return (
       <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: spacing.s8 }}>
-          <Icon name="arrow-back" size={24} color={colors.text["heading-primary"]} />
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: SPACING.sm }}>
+          <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
 
         <PickText size={16} style={{ color: "#fff", marginBottom: SPACING.sm }}>
@@ -43,44 +40,51 @@ const MovieListScreen = ({ route }: any) => {
 
   const renderMovieItem = ({ item }: any) => (
     <TouchableOpacity
-      style={styles.card}
+      style={styles.container}
       onPress={() => navigation.navigate("MovieDetail", { id: item.id })}
     >
-      <Image source={{ uri: item.poster }} style={styles.poster} />
-      <PickText size={14} font="semibold" style={styles.movieTitle}>
-        {item.name}
-      </PickText>
-      <PickText size={12} style={styles.movieGenre}>
-        {item.genres.map((g: any) => g.name).join(", ")}
-      </PickText>
+      <PickView style={styles.imageContainer}>
+        {item.poster ? (
+          <Image source={{ uri: item.poster }} style={styles.image} />
+        ) : (
+          <PickView style={styles.placeholderImage} justifyCenter alignCenter>
+            <PickText style={styles.placeholderText}>🎬</PickText>
+          </PickView>
+        )}
+        {item.age && (
+          <PickView style={styles.ageBadge}>
+            <PickText style={styles.ageText}>{item.age}</PickText>
+          </PickView>
+        )}
+        {item.rating != null && (
+          <PickView style={styles.ratingBadge}>
+            <PickText style={styles.ratingText}>⭐ {String(item.rating)}</PickText>
+          </PickView>
+        )}
+      </PickView>
+
+      <PickView style={styles.contentContainer}>
+        <PickText style={styles.title} numberOfLines={2}>
+          {item.name}
+        </PickText>
+        <PickText style={styles.genre}>{item.genres?.map((g: any) => g.name).join(", ")}</PickText>
+        <PickText style={styles.duration}>
+          🕐 {String(item.duration || "")} - {String(formatGraphicLabel(item.graphics || ""))}
+        </PickText>
+      </PickView>
     </TouchableOpacity>
   );
 
-  // Giao diện chính
   return (
     <PickView flex={1} backgroundColor={COLORS.primary}>
-      {/* Header */}
-      <ImageBackground
-        source={{
-          uri:
-            type === "nowShowing"
-              ? "https://i.imgur.com/1tMFtOr.jpg"
-              : "https://i.imgur.com/BKHyx6K.jpg",
-        }}
-        style={styles.headerBackground}
-      >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerBack}>
-          <Icon name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-
-        <PickText size={28} font="bold" style={styles.headerTitle}>
-          {title}
-        </PickText>
-      </ImageBackground>
+      <ScreenHeader
+        title={title || ""}
+        backgroundColor={colors.background["bg-brand-quaternary"]}
+      />
 
       {movies && movies.length > 0 ? (
         <FlatList
-          data={movies}
+          data={movies ?? []}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
           columnWrapperStyle={{ justifyContent: "space-between" }}
@@ -100,65 +104,92 @@ const MovieListScreen = ({ route }: any) => {
   );
 };
 
-const styles = {
-  headerBackground: {
-    width: "100%",
-    height: 180,
-    justifyContent: "flex-end" as const,
-    paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING.md,
-  },
-  headerBack: {
-    position: "absolute" as const,
-    top: 50,
-    left: 20,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 10,
-    borderRadius: 50,
-  },
-  headerTitle: {
-    color: "#fff",
-    textShadowColor: "rgba(0,0,0,0.6)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
-  },
-  card: {
-    width: "48%",
-    //     backgroundColor: "#1E1E1E",
-    borderRadius: 12,
-    overflow: "hidden",
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.md,
     marginBottom: SPACING.md,
+    width: "48%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  poster: {
+  imageContainer: {
+    position: "relative",
+    height: 216,
+    borderTopLeftRadius: RADIUS.md,
+    borderTopRightRadius: RADIUS.md,
+    overflow: "hidden",
+  },
+  image: {
     width: "100%",
-    height: 200,
-    resizeMode: "cover" as const,
+    height: "100%",
+    resizeMode: "cover",
   },
-  movieTitle: {
-    color: "#fff",
-    marginTop: 6,
-    marginHorizontal: 8,
+  placeholderImage: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: COLORS.border,
   },
-  movieGenre: {
-    color: "#bbb",
-    marginHorizontal: 8,
-    marginBottom: 8,
+  placeholderText: {
+    fontSize: 40,
   },
-  backButton: {
-    position: "absolute" as const,
-    top: 50,
-    left: 20,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    padding: 10,
-    borderRadius: 50,
+  ratingBadge: {
+    position: "absolute",
+    top: SPACING.sm,
+    right: SPACING.sm,
+    backgroundColor: "rgba(0,0,0,0.8)",
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.sm,
+  },
+  ratingText: {
+    color: COLORS.text.white,
+    fontSize: FONT_SIZE.xs,
+    fontWeight: "600",
+  },
+  contentContainer: {
+    padding: SPACING.md,
+  },
+  title: {
+    color: COLORS.text.primary,
+    fontSize: FONT_SIZE.md,
+    fontWeight: "600",
+    marginBottom: SPACING.xs,
+    lineHeight: 20,
+  },
+  genre: {
+    color: COLORS.text.secondary,
+    fontSize: FONT_SIZE.sm,
+    marginBottom: SPACING.xs,
+  },
+  duration: {
+    color: COLORS.text.light,
+    fontSize: FONT_SIZE.sm,
+  },
+  ageBadge: {
+    position: "absolute",
+    top: SPACING.sm,
+    left: SPACING.sm,
+    backgroundColor: "red",
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xxs,
+    borderRadius: RADIUS.sm,
+  },
+  ageText: {
+    color: COLORS.text.white,
+    fontSize: FONT_SIZE.xs,
+    fontWeight: "700",
   },
   emptyText: {
     color: "#fff",
-    textAlign: "center" as const,
+    textAlign: "center",
     marginTop: SPACING.xl,
-    fontStyle: "italic" as const,
+    fontStyle: "italic",
     opacity: 0.8,
   },
-};
+});
 
 export default MovieListScreen;

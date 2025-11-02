@@ -69,9 +69,6 @@ const HomeScreen: React.FC = () => {
       imageUrl: m.poster,
     }));
 
-    // In ra console để kiểm chứng
-    console.log("Formatted movies:", formatted);
-
     return formatted;
   };
 

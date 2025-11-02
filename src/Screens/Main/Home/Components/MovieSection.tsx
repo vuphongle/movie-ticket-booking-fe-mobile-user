@@ -4,6 +4,7 @@ import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import MovieCard from "./MovieCard";
 import { MovieAge } from "@Types/movieTypes";
+import { useNavigation } from "@react-navigation/native";
 
 interface Movie {
   id: string;
@@ -23,6 +24,7 @@ interface MovieSectionProps {
 }
 
 const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) => {
+  const navigation = useNavigation();
   return (
     <PickView style={styles.container}>
       <PickView row justifySpaceBetween alignCenter style={styles.header}>
@@ -49,7 +51,7 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) 
             rating={movie.rating}
             duration={movie.duration}
             imageUrl={movie.imageUrl}
-            onPress={() => console.log("Movie pressed:", movie.title)}
+            onPress={() => navigation.navigate("MovieDetail", { id: movie.id })}
           />
         ))}
       </ScrollView>
