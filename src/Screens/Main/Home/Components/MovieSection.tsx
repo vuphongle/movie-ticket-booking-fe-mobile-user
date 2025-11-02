@@ -3,11 +3,16 @@ import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import MovieCard from "./MovieCard";
+import {
+  MovieAge,
+} from "@Types/movieTypes";
 
 interface Movie {
   id: string;
   title: string;
   genre: string;
+  age: MovieAge;
+  graphics: string[];
   rating: number;
   duration: string;
   imageUrl?: string;
@@ -41,6 +46,8 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) 
             key={movie.id}
             title={movie.title}
             genre={movie.genre}
+            age={movie.age}
+            graphics={movie.graphics}
             rating={movie.rating}
             duration={movie.duration}
             imageUrl={movie.imageUrl}

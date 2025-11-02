@@ -2,16 +2,8 @@ import React from "react";
 import { Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
-
-export enum MovieAge {
-  P = 'P',
-  K = 'K',
-  T13 = 'T13',
-  T16 = 'T16',
-  T18 = 'T18',
-  C = 'C',
-}
-
+import { MovieAge } from "@Types/movieTypes";
+import { formatGraphicLabel } from "@Utils/graphicUtils";
 
 interface MovieCardProps {
   title: string;
@@ -57,7 +49,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
           {title}
         </PickText>
         <PickText style={styles.genre}>{genre}</PickText>
-        <PickText style={styles.duration}>🕐 {duration}</PickText>
+        <PickText style={styles.duration}>🕐 {duration} - {formatGraphicLabel(graphics)}</PickText>
       </PickView>
     </TouchableOpacity>
   );
@@ -69,7 +61,7 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
     marginRight: SPACING.md,
     marginBottom: SPACING.md,
-    width: 150,
+    width: 162,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -81,7 +73,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "relative",
-    height: 200,
+    height: 216,
     borderTopLeftRadius: RADIUS.md,
     borderTopRightRadius: RADIUS.md,
     overflow: "hidden",
@@ -138,13 +130,13 @@ const styles = StyleSheet.create({
     left: SPACING.sm,
     backgroundColor: "red",
     paddingHorizontal: SPACING.sm,
-    paddingVertical: SPACING.xs,
+    paddingVertical: SPACING.xxs,
     borderRadius: RADIUS.sm,
   },
   ageText: {
     color: COLORS.text.white,
     fontSize: FONT_SIZE.xs,
-    fontWeight: "600",
+    fontWeight: "700",
   },
 });
 

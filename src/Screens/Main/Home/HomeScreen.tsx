@@ -6,6 +6,7 @@ import Header from "./Components/Header";
 import Banner from "./Components/Banner";
 import MovieSection from "./Components/MovieSection";
 import { useMovieList } from "@Hooks/useMovieList";
+import { useNavigation } from "@react-navigation/native";
 
 // Mock banners
 const mockBanners = [
@@ -30,6 +31,8 @@ const mockBanners = [
 ];
 
 const HomeScreen: React.FC = () => {
+    const navigation = useNavigation();
+
   const {
     movies: nowShowing,
     isLoading: loadingNow,
@@ -54,17 +57,24 @@ const HomeScreen: React.FC = () => {
     console.log("Error fetching movies:", errorNow || errorComing);
   }
 
-  const formatMovies = (movies: typeof nowShowing) =>
-    movies.map((m) => ({
-      id: m.id.toString(),
-      title: m.name,
-      genre: m.genres.map((g) => g.name).join(", "),
-      rating: m.rating,
-      age: m.age,
-      graphics : m.graphics,
-      duration: `${m.duration} phút`,
-      imageUrl: m.poster,
-    }));
+const formatMovies = (movies: typeof nowShowing) => {
+  const formatted = movies.map((m) => ({
+    id: m.id.toString(),
+    title: m.name,
+    genre: m.genres.map((g) => g.name).join(", "),
+    rating: m.rating,
+    age: m.age ?? "P", // dùng default "P" nếu undefined
+    graphics: m.graphics,
+    duration: `${m.duration} phút`,
+    imageUrl: m.poster,
+  }));
+
+  // In ra console để kiểm chứng
+  console.log("Formatted movies:", formatted);
+
+  return formatted;
+};
+
 
   return (
     <ScrollView
@@ -84,13 +94,27 @@ const HomeScreen: React.FC = () => {
         <MovieSection
           title="Phim đang chiếu"
           movies={formatMovies(nowShowing)}
-          onSeeAll={() => console.log("See all now showing")}
+          onSeeAll={() =>
+            navigation.navigate("MovieList", {
+              type: "nowShowing",
+              title: "Phim đang chiếu",
+              emptyText: "Không có phim nào đang chiếu",
+            })
+          }
+
         />
 
         <MovieSection
           title="Phim sắp chiếu"
           movies={formatMovies(comingSoon)}
-          onSeeAll={() => console.log("See all coming soon")}
+          onSeeAll={() =>
+            navigation.navigate("MovieList", {
+              type: "comingSoon",
+              title: "Phim sắp chiếu",
+              emptyText: "Không có phim sắp chiếu",
+            })
+          }
+
         />
       </PickView>
     </ScrollView>
