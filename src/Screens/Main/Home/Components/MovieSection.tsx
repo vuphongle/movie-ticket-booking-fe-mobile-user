@@ -52,7 +52,6 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) 
             title={movie.title}
             genre={movie.genre}
             age={movie.age}
-            slug={movie.slug}
             graphics={movie.graphics}
             rating={movie.rating}
             duration={movie.duration}
