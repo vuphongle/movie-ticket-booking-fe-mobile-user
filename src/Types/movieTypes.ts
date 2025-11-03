@@ -17,6 +17,7 @@ export interface Movie {
   id: number;
   name: string;
   slug: string;
+  duration: number;
   description: string;
   poster: string;
   trailer: string;

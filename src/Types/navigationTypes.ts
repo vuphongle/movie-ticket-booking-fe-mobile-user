@@ -15,6 +15,13 @@ export type RootStackParamList = {
     id: number;
     slug: string;
   };
+  MovieList: {
+    type: string;
+    title: string;
+    emptyText: string;
+  };
+
+  MovieDetail: { id: string; slug: string };
 };
 
 // Main Tab Param List

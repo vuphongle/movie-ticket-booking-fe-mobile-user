@@ -7,6 +7,10 @@ import Banner from "./Components/Banner";
 import MovieSection from "./Components/MovieSection";
 import { useMovieList } from "@Hooks/useMovieList";
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
+
+type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
 
 // Mock banners
 const mockBanners = [
@@ -31,7 +35,7 @@ const mockBanners = [
 ];
 
 const HomeScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<MovieSectionNavigationProp>();
 
   const {
     movies: nowShowing,
@@ -61,9 +65,10 @@ const HomeScreen: React.FC = () => {
     const formatted = movies.map((m) => ({
       id: m.id.toString(),
       title: m.name,
+      slug: m.slug,
       genre: m.genres.map((g) => g.name).join(", "),
       rating: m.rating,
-      age: m.age ?? "P", // dùng default "P" nếu undefined
+      age: m.age ?? "P",
       graphics: m.graphics,
       duration: `${m.duration} phút`,
       imageUrl: m.poster,

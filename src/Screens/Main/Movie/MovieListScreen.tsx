@@ -1,6 +1,5 @@
 import React from "react";
 import { ActivityIndicator, TouchableOpacity, FlatList, Image, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { PickView, PickText } from "@Components";
 import { useMovieList } from "@Hooks/useMovieList";
@@ -8,10 +7,15 @@ import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
 import { ScreenHeader } from "@Components";
 import { formatGraphicLabel } from "@Utils/graphicUtils";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
+
+type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieDetail">;
 
 const MovieListScreen = ({ route }: any) => {
   const { type, title, emptyText } = route.params;
-  const navigation = useNavigation();
+  const navigation = useNavigation<MovieSectionNavigationProp>();
   const { movies, isLoading, error } = useMovieList({ type });
   const { colors, spacing, radius } = useThemedStyles();
 
@@ -41,7 +45,7 @@ const MovieListScreen = ({ route }: any) => {
   const renderMovieItem = ({ item }: any) => (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => navigation.navigate("MovieDetail", { id: item.id })}
+      onPress={() => navigation.navigate("MovieDetail", { id: item.id, slug: item.slug })}
     >
       <PickView style={styles.imageContainer}>
         {item.poster ? (
