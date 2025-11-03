@@ -64,7 +64,7 @@ const HomeScreen: React.FC = () => {
   const formatMovies = (movies: typeof nowShowing) => {
     const formatted = movies.map((m) => ({
       id: m.id.toString(),
-      title: m.name,
+      name: m.name,
       slug: m.slug,
       genre: m.genres.map((g) => g.name).join(", "),
       rating: m.rating,
@@ -78,7 +78,12 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} bounces={false}>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+      bounces={false}
+      contentContainerStyle={{ paddingBottom: SPACING.xxl * 2 }}
+    >
       <Header />
       <PickView
         flex={1}

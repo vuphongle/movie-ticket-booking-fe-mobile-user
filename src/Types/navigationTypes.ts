@@ -20,7 +20,6 @@ export type RootStackParamList = {
     title: string;
     emptyText: string;
   };
-
   MovieDetail: { id: string; slug: string };
 };
 

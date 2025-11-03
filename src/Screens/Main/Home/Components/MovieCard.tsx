@@ -6,7 +6,7 @@ import { MovieAge } from "@Types/movieTypes";
 import { formatGraphicLabel } from "@Utils/graphicUtils";
 
 interface MovieCardProps {
-  title: string;
+  name: string;
   genre: string;
   age: MovieAge;
   graphics: string[];
@@ -17,7 +17,7 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({
-  title,
+  name,
   genre,
   rating,
   age,
@@ -46,7 +46,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
       <PickView style={styles.contentContainer}>
         <PickText style={styles.title} numberOfLines={2}>
-          {title}
+          {name}
         </PickText>
         <PickText style={styles.genre}>{genre}</PickText>
         <PickText style={styles.duration}>
