@@ -8,7 +8,6 @@ import { formatGraphicLabel } from "@Utils/graphicUtils";
 interface MovieCardProps {
   title: string;
   genre: string;
-  slug: string;
   age: MovieAge;
   graphics: string[];
   rating: number;
@@ -20,7 +19,6 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({
   title,
   genre,
-  slug,
   rating,
   age,
   graphics,

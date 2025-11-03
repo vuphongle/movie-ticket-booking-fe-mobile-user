@@ -17,7 +17,7 @@ const MovieListScreen = ({ route }: any) => {
   const { type, title, emptyText } = route.params;
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const { movies, isLoading, error } = useMovieList({ type });
-  const { colors, spacing, radius } = useThemedStyles();
+  const { colors } = useThemedStyles();
 
   if (isLoading)
     return (
