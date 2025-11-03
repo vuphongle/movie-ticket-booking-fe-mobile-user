@@ -1,12 +1,18 @@
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import { PickView } from "@Components";
 import { COLORS, SPACING, RADIUS } from "@Constants/theme";
 import Header from "./Components/Header";
 import Banner from "./Components/Banner";
 import MovieSection from "./Components/MovieSection";
+import { useMovieList } from "@Hooks/useMovieList";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
 
-// Mock data for demonstration
+type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
+
+// Mock banners
 const mockBanners = [
   {
     id: "1",
@@ -28,62 +34,49 @@ const mockBanners = [
   },
 ];
 
-const mockNowShowingMovies = [
-  {
-    id: "1",
-    title: "Spider-Man: No Way Home",
-    genre: "Hành động, Phiêu lưu",
-    rating: 8.4,
-    duration: "148 phút",
-  },
-  {
-    id: "2",
-    title: "The Batman",
-    genre: "Hành động, Tội phạm",
-    rating: 7.8,
-    duration: "176 phút",
-  },
-  {
-    id: "3",
-    title: "Doctor Strange 2",
-    genre: "Hành động, Giả tưởng",
-    rating: 6.9,
-    duration: "126 phút",
-  },
-  {
-    id: "4",
-    title: "Top Gun: Maverick",
-    genre: "Hành động, Drama",
-    rating: 8.3,
-    duration: "130 phút",
-  },
-];
-
-const mockComingSoonMovies = [
-  {
-    id: "5",
-    title: "Avatar: The Way of Water",
-    genre: "Khoa học viễn tưởng",
-    rating: 7.6,
-    duration: "192 phút",
-  },
-  {
-    id: "6",
-    title: "Black Panther: Wakanda Forever",
-    genre: "Hành động, Drama",
-    rating: 6.7,
-    duration: "161 phút",
-  },
-  {
-    id: "7",
-    title: "The Flash",
-    genre: "Hành động, Phiêu lưu",
-    rating: 6.4,
-    duration: "144 phút",
-  },
-];
-
 const HomeScreen: React.FC = () => {
+  const navigation = useNavigation<MovieSectionNavigationProp>();
+
+  const {
+    movies: nowShowing,
+    isLoading: loadingNow,
+    error: errorNow,
+  } = useMovieList({ type: "nowShowing", limit: 10 });
+
+  const {
+    movies: comingSoon,
+    isLoading: loadingComing,
+    error: errorComing,
+  } = useMovieList({ type: "comingSoon", limit: 10 });
+
+  if (loadingNow || loadingComing) {
+    return (
+      <PickView flex={1} justifyCenter alignCenter>
+        <ActivityIndicator size="large" color={COLORS.accent} />
+      </PickView>
+    );
+  }
+
+  if (errorNow || errorComing) {
+    console.log("Error fetching movies:", errorNow || errorComing);
+  }
+
+  const formatMovies = (movies: typeof nowShowing) => {
+    const formatted = movies.map((m) => ({
+      id: m.id.toString(),
+      title: m.name,
+      slug: m.slug,
+      genre: m.genres.map((g) => g.name).join(", "),
+      rating: m.rating,
+      age: m.age ?? "P",
+      graphics: m.graphics,
+      duration: `${m.duration} phút`,
+      imageUrl: m.poster,
+    }));
+
+    return formatted;
+  };
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} bounces={false}>
       <Header />
@@ -94,15 +87,29 @@ const HomeScreen: React.FC = () => {
         backgroundColor={COLORS.background}
       >
         <Banner banners={mockBanners} />
+
         <MovieSection
           title="Phim đang chiếu"
-          movies={mockNowShowingMovies}
-          onSeeAll={() => console.log("See all now showing")}
+          movies={formatMovies(nowShowing)}
+          onSeeAll={() =>
+            navigation.navigate("MovieList", {
+              type: "nowShowing",
+              title: "Phim đang chiếu",
+              emptyText: "Không có phim nào đang chiếu",
+            })
+          }
         />
+
         <MovieSection
           title="Phim sắp chiếu"
-          movies={mockComingSoonMovies}
-          onSeeAll={() => console.log("See all coming soon")}
+          movies={formatMovies(comingSoon)}
+          onSeeAll={() =>
+            navigation.navigate("MovieList", {
+              type: "comingSoon",
+              title: "Phim sắp chiếu",
+              emptyText: "Không có phim sắp chiếu",
+            })
+          }
         />
       </PickView>
     </ScrollView>

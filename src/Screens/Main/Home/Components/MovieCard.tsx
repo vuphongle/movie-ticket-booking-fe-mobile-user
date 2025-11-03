@@ -2,10 +2,14 @@ import React from "react";
 import { Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
+import { MovieAge } from "@Types/movieTypes";
+import { formatGraphicLabel } from "@Utils/graphicUtils";
 
 interface MovieCardProps {
   title: string;
   genre: string;
+  age: MovieAge;
+  graphics: string[];
   rating: number;
   duration: string;
   imageUrl?: string;
@@ -16,6 +20,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
   title,
   genre,
   rating,
+  age,
+  graphics,
   duration,
   imageUrl,
   onPress,
@@ -30,6 +36,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
             <Text style={styles.placeholderText}>🎬</Text>
           </PickView>
         )}
+        <PickView style={styles.ageBadge}>
+          <PickText style={styles.ageText}>{age}</PickText>
+        </PickView>
         <PickView style={styles.ratingBadge}>
           <PickText style={styles.ratingText}>⭐ {rating}</PickText>
         </PickView>
@@ -40,7 +49,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
           {title}
         </PickText>
         <PickText style={styles.genre}>{genre}</PickText>
-        <PickText style={styles.duration}>🕐 {duration}</PickText>
+        <PickText style={styles.duration}>
+          🕐 {duration} - {formatGraphicLabel(graphics)}
+        </PickText>
       </PickView>
     </TouchableOpacity>
   );
@@ -51,7 +62,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderRadius: RADIUS.md,
     marginRight: SPACING.md,
-    width: 160,
+    marginBottom: SPACING.md,
+    width: 162,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -63,7 +75,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "relative",
-    height: 200,
+    height: 216,
     borderTopLeftRadius: RADIUS.md,
     borderTopRightRadius: RADIUS.md,
     overflow: "hidden",
@@ -113,6 +125,20 @@ const styles = StyleSheet.create({
   duration: {
     color: COLORS.text.light,
     fontSize: FONT_SIZE.sm,
+  },
+  ageBadge: {
+    position: "absolute",
+    top: SPACING.sm,
+    left: SPACING.sm,
+    backgroundColor: "red",
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xxs,
+    borderRadius: RADIUS.sm,
+  },
+  ageText: {
+    color: COLORS.text.white,
+    fontSize: FONT_SIZE.xs,
+    fontWeight: "700",
   },
 });
 

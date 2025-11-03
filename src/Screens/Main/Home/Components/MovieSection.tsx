@@ -3,11 +3,20 @@ import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import MovieCard from "./MovieCard";
+import { MovieAge } from "@Types/movieTypes";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
+
+type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieDetail">;
 
 interface Movie {
   id: string;
   title: string;
+  slug: string;
   genre: string;
+  age: MovieAge;
+  graphics: string[];
   rating: number;
   duration: string;
   imageUrl?: string;
@@ -20,6 +29,7 @@ interface MovieSectionProps {
 }
 
 const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) => {
+  const navigation = useNavigation<MovieSectionNavigationProp>();
   return (
     <PickView style={styles.container}>
       <PickView row justifySpaceBetween alignCenter style={styles.header}>
@@ -41,10 +51,13 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) 
             key={movie.id}
             title={movie.title}
             genre={movie.genre}
+            age={movie.age}
+            slug={movie.slug}
+            graphics={movie.graphics}
             rating={movie.rating}
             duration={movie.duration}
             imageUrl={movie.imageUrl}
-            onPress={() => console.log("Movie pressed:", movie.title)}
+            onPress={() => navigation.navigate("MovieDetail", { id: movie.id, slug: movie.slug })}
           />
         ))}
       </ScrollView>
