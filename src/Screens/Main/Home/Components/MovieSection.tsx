@@ -12,7 +12,7 @@ type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 
 interface Movie {
   id: string;
-  title: string;
+  name: string;
   slug: string;
   genre: string;
   age: MovieAge;
@@ -49,7 +49,7 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) 
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
-            title={movie.title}
+            name={movie.name}
             genre={movie.genre}
             age={movie.age}
             graphics={movie.graphics}
