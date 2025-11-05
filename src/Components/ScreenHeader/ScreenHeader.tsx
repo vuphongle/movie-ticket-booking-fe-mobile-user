@@ -97,7 +97,15 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
 
       {/* Center: Title */}
       {title && (
-        <PickText size={20} font="bold" color={finalTitleColor} align="center">
+        <PickText
+          size={20}
+          font="bold"
+          color={finalTitleColor}
+          align="center"
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{ flex: 1, marginHorizontal: 8 }}
+        >
           {title}
         </PickText>
       )}
