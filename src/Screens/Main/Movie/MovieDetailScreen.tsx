@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
-import { PickText, PickView, ScreenHeader } from "@Components";
+import { ScrollView, StyleSheet, ActivityIndicator, View } from "react-native";
+import { PickText, PickView, PickButton, ScreenHeader } from "@Components";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
@@ -53,7 +53,6 @@ const MovieDetailScreen: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
         const movieDetail = await movieService.getMovieDetail(Number(id), slug);
         setMovie({
           ...movieDetail,
@@ -110,22 +109,30 @@ const MovieDetailScreen: React.FC = () => {
 
   return (
     <PickView style={styles.container}>
-      <PickView style={{ position: "absolute", top: insets.top, left: 0, right: 0, zIndex: 10 }}>
+      {/* Header */}
+      <PickView
+        style={{
+          position: "absolute",
+          top: insets.top,
+          left: 0,
+          right: 0,
+          zIndex: 10,
+        }}
+      >
         <ScreenHeader
           title="Chi tiết phim"
           backgroundColor={colors.background["bg-brand-quaternary"]}
         />
       </PickView>
 
+      {/* Nội dung */}
       <ScrollView
-        contentContainerStyle={{ paddingTop: 56 + insets.top, paddingBottom: SPACING.xl }}
+        contentContainerStyle={{
+          paddingTop: 56 + insets.top,
+          paddingBottom: 100,
+        }}
       >
         <MovieContent movie={movie} />
-
-        <PickView style={styles.showtimeBlock}>
-          <PickText style={styles.sectionTitle}>Lịch chiếu</PickText>
-          <PickText>Thông tin lịch chiếu sẽ hiển thị tại đây (chưa triển khai).</PickText>
-        </PickView>
 
         <MovieSection
           title="Phim đang chiếu"
@@ -143,6 +150,21 @@ const MovieDetailScreen: React.FC = () => {
           <MovieReviews reviews={reviews} movieId={Number(id)} />
         </PickView>
       </ScrollView>
+
+      {/* Nút Đặt vé */}
+      <View style={[styles.bookingButtonContainer, { bottom: insets.bottom + 12 }]}>
+        <PickButton
+          type="Primary"
+          title="Đặt vé"
+          onPress={() =>
+            navigation.navigate("MovieShowtime", {
+              movieId: Number(id),
+              movieName: movie.name,
+              slug,
+            })
+          }
+        />
+      </View>
     </PickView>
   );
 };
@@ -164,14 +186,10 @@ const styles = StyleSheet.create({
     color: COLORS.error,
     fontSize: FONT_SIZE.md,
   },
-  showtimeBlock: {
-    marginVertical: SPACING.lg,
-    paddingHorizontal: SPACING.md,
-  },
-  sectionTitle: {
-    color: COLORS.text.primary,
-    fontSize: FONT_SIZE.xl,
-    fontWeight: "bold",
-    marginBottom: SPACING.sm,
+  bookingButtonContainer: {
+    position: "absolute",
+    left: SPACING.lg,
+    right: SPACING.lg,
+    zIndex: 20,
   },
 });

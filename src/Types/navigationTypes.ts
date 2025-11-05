@@ -21,6 +21,7 @@ export type RootStackParamList = {
     emptyText: string;
   };
   MovieDetail: { id: string; slug: string };
+  MovieShowtime: { movieId: number; movieName: string; slug: string };
 };
 
 // Main Tab Param List

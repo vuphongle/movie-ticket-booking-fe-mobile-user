@@ -7,6 +7,7 @@ import ForgotPasswordScreen from "@Screens/Auth/ForgotPasswordScreen";
 import BlogDetailScreen from "@Screens/Main/BlogDetail/BlogDetailScreen";
 import MovieListScreen from "@Screens/Main/Movie/MovieListScreen";
 import MovieDetailScreen from "@Screens/Main/Movie/MovieDetailScreen";
+import MovieShowtime from "@Screens/Main/Movie/Components/MovieShowtime";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -93,6 +94,14 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
       <Stack.Screen
         name="MovieDetail"
         component={MovieDetailScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
+      <Stack.Screen
+        name="MovieShowtime"
+        component={MovieShowtime}
         options={{
           animation: "slide_from_right",
           animationDuration: 300,
