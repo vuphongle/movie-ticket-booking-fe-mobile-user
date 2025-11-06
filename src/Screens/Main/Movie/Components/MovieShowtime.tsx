@@ -10,11 +10,17 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DateButton from "./DateButton";
 import ShowtimeButton from "./ShowtimeButton";
 import CinemaHeader from "./CinemaHeader";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
+
+type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "SelectSeat">;
 
 const pad = (n: number) => n.toString().padStart(2, "0");
 
 const MovieShowtime: React.FC = () => {
   const route = useRoute();
+  const navigation = useNavigation<MovieSectionNavigationProp>();
   const { colors, spacing } = useThemedStyles();
   const { movieId, movieName, slug } = route.params as {
     movieId: number;
@@ -95,7 +101,7 @@ const MovieShowtime: React.FC = () => {
     time: string,
     date: string,
     format: string
-  ) =>
+  ) => {
     console.log("🎬 Selected Showtime:", {
       showtimeId,
       cinema,
@@ -105,6 +111,16 @@ const MovieShowtime: React.FC = () => {
       format,
       slug,
     });
+    navigation.navigate("SelectSeat", {
+      showtimeId,
+      cinema,
+      auditorium,
+      time,
+      date,
+      format,
+      slug,
+    });
+  };
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
