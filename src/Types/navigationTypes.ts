@@ -22,6 +22,15 @@ export type RootStackParamList = {
   };
   MovieDetail: { id: string; slug: string };
   MovieShowtime: { movieId: number; movieName: string; slug: string };
+  SelectSeat: {
+    showtimeId: number;
+    cinema: number;
+    auditorium: number;
+    time: string;
+    date: string;
+    format: string;
+    slug: string;
+  };
 };
 
 // Main Tab Param List

@@ -1,0 +1,1 @@
+export { auditoriumService } from "./auditoriumService";
