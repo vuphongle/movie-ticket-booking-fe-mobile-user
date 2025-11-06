@@ -7,17 +7,25 @@ import SeatMap from "./Components/SeatMap";
 import SeatLegend from "./Components/SeatLegend";
 import { Seat, mapSeatStatus, mapSeatType, mapReservationStatus } from "./Components/utils";
 import { useSeats } from "@Hooks/booking/useSeats";
-// import { useBookSeat } from "@Hooks/booking/useReservation";
+import { useBookSeat, useCheckSeatStatus } from "@Hooks/booking/useReservation";
+import { useMovieByShowtime } from "@Hooks";
+import { formatDate } from "@Utils";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import { formatCurrency } from "@Utils/currencyUtils";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
+
+type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "AdditionalService">;
 
 const SelectSeatScreen: React.FC = () => {
   const route = useRoute<any>();
-  //   const navigation = useNavigation<any>();
+  const navigation = useNavigation<MovieSectionNavigationProp>();
   const insets = useSafeAreaInsets();
-  const { showtimeId, auditorium } = route.params;
+  const { showtimeId, cinema, auditorium, time, date, format, slug } = route.params;
   const auditoriumId = auditorium.id;
+  const { movie, isLoading } = useMovieByShowtime(showtimeId);
   const { colors } = useThemedStyles();
 
   const {
@@ -33,10 +41,10 @@ const SelectSeatScreen: React.FC = () => {
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
 
   //   // Hook check trạng thái ghế
-  //   const { refetch: checkSeatStatus } = useCheckSeatStatus({ seatId: 0, showtimeId, enabled: false });
-  //
+    const { refetch: checkSeatStatus } = useCheckSeatStatus({ seatId: 0, showtimeId, enabled: false });
+
   //   // Hook book ghế
-  //   const { mutateAsync: bookSeat } = useBookSeat();
+    const { mutateAsync: bookSeat } = useBookSeat();
 
   useEffect(() => {
     if (!seatDtos.length) return;
@@ -63,11 +71,6 @@ const SelectSeatScreen: React.FC = () => {
     if (seat.status === "booked") return;
 
     try {
-      //       const { status } = await checkSeatStatus({ seatId: seat.id, showtimeId });
-      //       if (status === "HELD") {
-      //         Alert.alert("Ghế đang giữ", "Ghế này đang được giữ bởi người khác");
-      //         return;
-      //       }
 
       const isSelected = selectedSeats.some((s) => s.id === seat.id);
 
@@ -90,12 +93,62 @@ const SelectSeatScreen: React.FC = () => {
 
   // Đặt ghế
   const handleBookSeats = async () => {
+
     if (!selectedSeats.length) {
       Alert.alert("Chọn ghế", "Vui lòng chọn ít nhất 1 ghế.");
       return;
     }
 
-    Alert.alert("Tính năng đang được phát triển tiếp. Xin quý khách thông cảm!");
+    try {
+      // Kiểm tra trạng thái từng ghế
+            const seatStatusResults = await Promise.all(
+              selectedSeats.map((seat) =>
+                checkSeatStatus({ seatId: seat.id, showtimeId })
+              )
+            );
+
+            const heldSeats = seatStatusResults.filter((r) => r.status === "HELD");
+            if (heldSeats.length > 0) {
+              const heldSeatIds = heldSeats.map((h) => h.seatId);
+              setSelectedSeats((prev) => prev.filter((s) => !heldSeatIds.includes(s.id)));
+              Alert.alert("Ghế đang được giữ", "Một số ghế đã bị giữ. Vui lòng chọn lại.");
+              return;
+            }
+
+            // Giữ ghế (bookSeat)
+            const results = await Promise.allSettled(
+              selectedSeats.map((seat) => bookSeat({ seatId: seat.id, showtimeId }))
+            );
+            const failed = results.filter((r) => r.status === "rejected");
+            if (failed.length > 0) {
+              Alert.alert("Lỗi", "Không thể giữ một số ghế. Vui lòng thử lại.");
+              return;
+            }
+
+            const expireAt = Date.now() + 8 * 60 * 1000;
+
+            const seatTotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);
+
+            const bookingData = {
+              showtimeId,
+              format,
+              movie,
+              cinema: cinema.name,
+              auditorium: auditorium.name,
+              showtime: `${time} - ${formatDate(date)}`,
+              seats: selectedSeats,
+              seatTotal,
+            };
+
+            // Điều hướng sang trang additional
+            navigation.navigate("AdditionalService", {
+              expireAt,
+              bookingData,
+            });
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Lỗi", "Không thể giữ ghế, vui lòng thử lại.");
+    }
   };
 
   const totalPrice = selectedSeats.reduce((s, x) => s + x.price, 0);

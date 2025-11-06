@@ -12,6 +12,7 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "@Types/navigationTypes";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useForm, Controller } from "react-hook-form";
+import { useRoute } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PickButton, PickText, PickView, PickInput, ScreenHeader } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
@@ -26,6 +27,9 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
+  const route = useRoute();
+    const redirectTo = (route.params as any)?.redirectTo;
+    const redirectParams = (route.params as any)?.params;
   const { colors, dimensions } = useThemedStyles();
   const { updateAuthStatus } = useAuth();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -54,12 +58,18 @@ export const LoginScreen: React.FC = () => {
         await updateAuthStatus(tokens, userInfo);
 
         Alert.alert("Đăng nhập thành công", `Chào mừng ${getUserDisplayName(userInfo)}!`, [
-          {
-            text: "OK",
-            onPress: () => navigation.navigate("Main"),
-          },
-        ]);
-      } else {
+                  {
+                    text: "OK",
+                    onPress: () => {
+                      if (redirectTo) {
+                        navigation.replace(redirectTo, redirectParams);
+                      } else {
+                        navigation.navigate("Main");
+                      }
+                    },
+                  },
+                ]);
+              } else {
         Alert.alert("Đăng nhập thất bại", "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.");
       }
     } catch (error: any) {

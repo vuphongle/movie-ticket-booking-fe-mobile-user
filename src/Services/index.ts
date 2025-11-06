@@ -12,3 +12,4 @@ export { blogService } from "./Blog";
 export { showtimeService } from "./Showtime";
 export { seatReservationService } from "./SeatReservation";
 export { auditoriumService } from "./Auditorium";
+export { additionalServiceService } from "./AdditionalService";
