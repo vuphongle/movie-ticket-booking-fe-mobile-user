@@ -17,7 +17,7 @@ class AdditionalServiceService implements AdditionalServiceInterface {
    * Get all additional services (metadata)
    */
   async getAllServices(): Promise<AdditionalService[]> {
-    return this.httpService.get<AdditionalService[]>("/additional-services");
+    return this.httpService.get<AdditionalService[]>("public/additional-services");
   }
 
   /**
@@ -25,7 +25,7 @@ class AdditionalServiceService implements AdditionalServiceInterface {
    * @param id - service id
    */
   async getServicePrice(id: number): Promise<AdditionalServicePrice> {
-    return this.httpService.get<AdditionalServicePrice>(`/additional-services/${id}/price`);
+    return this.httpService.get<AdditionalServicePrice>(`public/additional-services/${id}/price`);
   }
 
   /**
@@ -33,7 +33,7 @@ class AdditionalServiceService implements AdditionalServiceInterface {
    * @param id - service id
    */
   async getServiceItems(id: number): Promise<AdditionalServiceItem[]> {
-    return this.httpService.get<AdditionalServiceItem[]>(`/additional-services/${id}/items`);
+    return this.httpService.get<AdditionalServiceItem[]>(`public/additional-services/${id}/items`);
   }
 }
 
