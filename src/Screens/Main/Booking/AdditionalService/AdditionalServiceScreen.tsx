@@ -5,7 +5,6 @@ import { COLORS } from "@Constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAdditionalServices } from "@Hooks/additionalService/useAdditionalService";
 import { useBookingStore } from "@Store/useBookingStore";
-import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
 import { useCancelSeatMulti } from "@Hooks/booking/useReservation";
 
@@ -21,7 +20,6 @@ type SelectScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 const AdditionalServiceScreen: React.FC = () => {
   const navigation = useNavigation<SelectScreenNavigationProp>();
   const insets = useSafeAreaInsets();
-  const { colors } = useThemedStyles();
   const { services: fetchedServices, isLoading } = useAdditionalServices();
   const { showtimeId, seats, services, addService, updateServiceQty, clearAll } = useBookingStore();
   const { mutateAsync: cancelSeatMulti } = useCancelSeatMulti();
@@ -85,11 +83,7 @@ const AdditionalServiceScreen: React.FC = () => {
 
   return (
     <PickView style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <ScreenHeader
-        title="Dịch vụ bổ sung"
-        backgroundColor={colors.background["bg-brand-quaternary"]}
-        onBackPress={handleBackPress}
-      />
+      <ScreenHeader title="Dịch vụ bổ sung" onBackPress={handleBackPress} />
 
       <AdditionalTab openTab={openTab} setOpenTab={setOpenTab} />
 

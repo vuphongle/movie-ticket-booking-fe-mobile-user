@@ -136,9 +136,9 @@ export const AuthenticatedProfileView: React.FC = () => {
       >
         <PickView row alignCenter gap={16}>
           <PickView
-            width={80}
-            height={80}
-            borderRadius={40}
+            width={40}
+            height={40}
+            borderRadius={20}
             justifyCenter
             alignCenter
             backgroundColor="white"
@@ -147,7 +147,7 @@ export const AuthenticatedProfileView: React.FC = () => {
             {user?.avatar && !user.avatar.includes(".svg") && !avatarLoadError ? (
               <Image
                 source={{ uri: user.avatar }}
-                style={{ width: 80, height: 80 }}
+                style={{ width: 40, height: 40 }}
                 resizeMode="cover"
                 onError={(error) => {
                   if (__DEV__) {
@@ -165,9 +165,6 @@ export const AuthenticatedProfileView: React.FC = () => {
           <PickView flex={1}>
             <PickText size={24} font="bold" color="body-inverted" numberOfLines={1} lineHeight={30}>
               {getUserDisplayName(user)}
-            </PickText>
-            <PickText size={14} color="body-inverted" numberOfLines={1} style={{ marginTop: 4 }}>
-              {user?.email || ""}
             </PickText>
           </PickView>
 

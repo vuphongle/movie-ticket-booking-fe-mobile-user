@@ -1,4 +1,3 @@
-import React from "react";
 import { ActivityIndicator, TouchableOpacity, FlatList, Image, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { PickView, PickText } from "@Components";
@@ -6,7 +5,6 @@ import { useMovieList } from "@Hooks/useMovieList";
 import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
 import { ScreenHeader } from "@Components";
 import { formatGraphicLabel } from "@Utils/graphicUtils";
-import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
@@ -17,7 +15,6 @@ const MovieListScreen = ({ route }: any) => {
   const { type, title, emptyText } = route.params;
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const { movies, isLoading, error } = useMovieList({ type });
-  const { colors } = useThemedStyles();
 
   if (isLoading)
     return (
@@ -81,10 +78,7 @@ const MovieListScreen = ({ route }: any) => {
 
   return (
     <PickView flex={1} backgroundColor={COLORS.primary}>
-      <ScreenHeader
-        title={title || ""}
-        backgroundColor={colors.background["bg-brand-quaternary"]}
-      />
+      <ScreenHeader title={title || ""} />
 
       {movies && movies.length > 0 ? (
         <FlatList
