@@ -7,36 +7,22 @@ import SeatMap from "./Components/SeatMap";
 import SeatLegend from "./Components/SeatLegend";
 import { Seat, mapSeatStatus, mapSeatType, mapReservationStatus } from "./Components/utils";
 import { useSeats } from "@Hooks/booking/useSeats";
-// import { useBookSeat } from "@Hooks/booking/useReservation";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import { formatCurrency } from "@Utils/currencyUtils";
-import useThemedStyles from "@Theme/Hook/useThemedStyles";
 
 const SelectSeatScreen: React.FC = () => {
   const route = useRoute<any>();
-  //   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const { showtimeId, auditorium } = route.params;
   const auditoriumId = auditorium.id;
-  const { colors } = useThemedStyles();
 
-  const {
-    seats: seatDtos,
-    isLoading: isSeatsLoading,
-    //       refetch: refetchSeats
-  } = useSeats({
+  const { seats: seatDtos, isLoading: isSeatsLoading } = useSeats({
     auditoriumId,
     showtimeId,
   });
 
   const [seats, setSeats] = useState<Seat[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
-
-  //   // Hook check trạng thái ghế
-  //   const { refetch: checkSeatStatus } = useCheckSeatStatus({ seatId: 0, showtimeId, enabled: false });
-  //
-  //   // Hook book ghế
-  //   const { mutateAsync: bookSeat } = useBookSeat();
 
   useEffect(() => {
     if (!seatDtos.length) return;
@@ -63,12 +49,6 @@ const SelectSeatScreen: React.FC = () => {
     if (seat.status === "booked") return;
 
     try {
-      //       const { status } = await checkSeatStatus({ seatId: seat.id, showtimeId });
-      //       if (status === "HELD") {
-      //         Alert.alert("Ghế đang giữ", "Ghế này đang được giữ bởi người khác");
-      //         return;
-      //       }
-
       const isSelected = selectedSeats.some((s) => s.id === seat.id);
 
       if (isSelected) {
@@ -108,10 +88,10 @@ const SelectSeatScreen: React.FC = () => {
     );
 
   return (
-    <PickView style={styles.container}>
-      <ScreenHeader title="Chọn ghế" backgroundColor={colors.background["bg-brand-quaternary"]} />
+    <PickView>
+      <ScreenHeader title="Chọn ghế" />
 
-      <PickView style={styles.content}>
+      <PickView>
         <PickView style={styles.screen}>
           <PickText style={styles.screenText}>MÀN HÌNH</PickText>
         </PickView>
@@ -149,8 +129,6 @@ const SelectSeatScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
-  content: { flex: 1, justifyContent: "space-between" },
   summary: {
     position: "absolute",
     bottom: 0,

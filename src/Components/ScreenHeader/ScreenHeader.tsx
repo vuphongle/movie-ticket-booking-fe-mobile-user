@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -62,7 +62,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
     <PickView
       paddingHorizontal={20}
       paddingTop={paddingTop !== undefined ? paddingTop : insets.top}
-      paddingBottom={16}
+      paddingBottom={8}
+      borderBottomWidth={StyleSheet.hairlineWidth}
+      borderBottomColor={colors.border["border-solid"]}
       backgroundColor={backgroundColor || colors.background["bg-primary"]}
       row
       alignCenter

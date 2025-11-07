@@ -21,7 +21,7 @@ const pad = (n: number) => n.toString().padStart(2, "0");
 const MovieShowtime: React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation<MovieSectionNavigationProp>();
-  const { colors, spacing } = useThemedStyles();
+  const { spacing } = useThemedStyles();
   const { movieId, movieName, slug } = route.params as {
     movieId: number;
     movieName: string;
@@ -124,7 +124,7 @@ const MovieShowtime: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
-      <ScreenHeader title={movieName} backgroundColor={colors.background["bg-brand-quaternary"]} />
+      <ScreenHeader title={movieName} />
 
       <PickText
         style={{

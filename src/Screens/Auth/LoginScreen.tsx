@@ -93,7 +93,7 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader title="Đăng nhập" backgroundColor={colors.background["bg-brand-quaternary"]} />
+      <ScreenHeader title="Đăng nhập" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
