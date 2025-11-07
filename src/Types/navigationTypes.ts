@@ -6,7 +6,7 @@ import { ROOT_STACK, MAIN_TAB_STACK } from "@Constants";
 // Root Stack Param List
 export type RootStackParamList = {
   [ROOT_STACK.MAIN]: undefined;
-  Login: undefined;
+  Login?: any;
   Register: undefined;
   ForgotPassword: undefined;
   EditProfile: undefined;
@@ -31,6 +31,7 @@ export type RootStackParamList = {
     format: string;
     slug: string;
   };
+  AdditionalService: undefined;
 };
 
 // Main Tab Param List

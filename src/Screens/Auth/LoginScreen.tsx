@@ -28,8 +28,8 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute();
-    const redirectTo = (route.params as any)?.redirectTo;
-    const redirectParams = (route.params as any)?.params;
+  const redirectTo = (route.params as any)?.redirectTo;
+  const redirectParams = (route.params as any)?.params;
   const { colors, dimensions } = useThemedStyles();
   const { updateAuthStatus } = useAuth();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -58,18 +58,18 @@ export const LoginScreen: React.FC = () => {
         await updateAuthStatus(tokens, userInfo);
 
         Alert.alert("Đăng nhập thành công", `Chào mừng ${getUserDisplayName(userInfo)}!`, [
-                  {
-                    text: "OK",
-                    onPress: () => {
-                      if (redirectTo) {
-                        navigation.replace(redirectTo, redirectParams);
-                      } else {
-                        navigation.navigate("Main");
-                      }
-                    },
-                  },
-                ]);
+          {
+            text: "OK",
+            onPress: () => {
+              if (redirectTo) {
+                navigation.replace(redirectTo, redirectParams);
               } else {
+                navigation.navigate("Main");
+              }
+            },
+          },
+        ]);
+      } else {
         Alert.alert("Đăng nhập thất bại", "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.");
       }
     } catch (error: any) {

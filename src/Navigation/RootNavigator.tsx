@@ -120,13 +120,13 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
       />
 
       <Stack.Screen
-              name="AdditionalService"
-              component={AdditionalServiceScreen}
-              options={{
-                animation: "slide_from_right",
-                animationDuration: 300,
-              }}
-            />
+        name="AdditionalService"
+        component={AdditionalServiceScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
     </Stack.Navigator>
   );
 };

@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, ActivityIndicator, Alert } from "react-native";
-import { PickView, PickText, PickButton, ScreenHeader } from "@Components";
-import { useRoute } from "@react-navigation/native";
+import { PickView, PickText, ScreenHeader } from "@Components";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SeatMap from "./Components/SeatMap";
 import SeatLegend from "./Components/SeatLegend";
 import { Seat, mapSeatStatus, mapSeatType, mapReservationStatus } from "./Components/utils";
 import { useSeats } from "@Hooks/booking/useSeats";
-import { useBookSeat, useCheckSeatStatus } from "@Hooks/booking/useReservation";
+import { useBookSeat, useLazyCheckSeatStatus } from "@Hooks/booking/useReservation";
 import { useMovieByShowtime } from "@Hooks";
 import { formatDate } from "@Utils";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
-import { formatCurrency } from "@Utils/currencyUtils";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
-import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
+import { useBookingStore } from "@Store/useBookingStore";
+import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
 
-type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "AdditionalService">;
+type NavProp = NativeStackNavigationProp<RootStackParamList, "AdditionalService">;
 
 const SelectSeatScreen: React.FC = () => {
   const route = useRoute<any>();
-  const navigation = useNavigation<MovieSectionNavigationProp>();
+  const navigation = useNavigation<NavProp>();
   const insets = useSafeAreaInsets();
-  const { showtimeId, cinema, auditorium, time, date, format, slug } = route.params;
+  const { showtimeId, cinema, auditorium, time, date } = route.params;
   const auditoriumId = auditorium.id;
   const { movie, isLoading } = useMovieByShowtime(showtimeId);
   const { colors } = useThemedStyles();
@@ -31,25 +31,30 @@ const SelectSeatScreen: React.FC = () => {
   const {
     seats: seatDtos,
     isLoading: isSeatsLoading,
-    //       refetch: refetchSeats
-  } = useSeats({
-    auditoriumId,
-    showtimeId,
-  });
+    refetch: refetchSeats,
+  } = useSeats({ auditoriumId, showtimeId });
+  const { addSeat, removeSeat, setBookingInfo, seats } = useBookingStore();
+  const checkSeatStatus = useLazyCheckSeatStatus();
+  const { mutateAsync: bookSeat } = useBookSeat();
 
-  const [seats, setSeats] = useState<Seat[]>([]);
-  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+  const [mappedSeats, setMappedSeats] = useState<Seat[]>([]);
 
-  //   // Hook check trạng thái ghế
-    const { refetch: checkSeatStatus } = useCheckSeatStatus({ seatId: 0, showtimeId, enabled: false });
-
-  //   // Hook book ghế
-    const { mutateAsync: bookSeat } = useBookSeat();
+  // Lưu thông tin phim & suất chiếu vào store
+  useEffect(() => {
+    if (movie) {
+      setBookingInfo({
+        movie,
+        showtimeId,
+        cinema: cinema.name,
+        auditorium: auditorium.name,
+        showtime: `${time} - ${formatDate(date)}`,
+      });
+    }
+  }, [movie]);
 
   useEffect(() => {
     if (!seatDtos.length) return;
-
-    const mappedSeats = seatDtos.map((d) => ({
+    const seatsMapped = seatDtos.map((d) => ({
       id: d.id,
       row: d.code?.charAt(0) || "A",
       number: Number(d.code?.slice(1)) || d.colIndex,
@@ -58,145 +63,70 @@ const SelectSeatScreen: React.FC = () => {
       reservationStatus: mapReservationStatus(d.reservationStatus),
       price: d.price,
     }));
-
-    setSeats((prev) => {
-      const isEqual =
-        prev.length === mappedSeats.length &&
-        prev.every((s, i) => s.id === mappedSeats[i].id && s.status === mappedSeats[i].status);
-      return isEqual ? prev : mappedSeats;
-    });
+    setMappedSeats(seatsMapped);
   }, [seatDtos]);
 
   const toggleSeat = async (seat: Seat) => {
     if (seat.status === "booked") return;
+    const selected = seats.some((s) => s.id === seat.id);
 
-    try {
-
-      const isSelected = selectedSeats.some((s) => s.id === seat.id);
-
-      if (isSelected) {
-        setSelectedSeats((prev) => prev.filter((s) => s.id !== seat.id));
-        return;
-      }
-
-      if (selectedSeats.length >= 8) {
-        Alert.alert("Giới hạn", "Bạn chỉ được chọn tối đa 8 ghế.");
-        return;
-      }
-
-      setSelectedSeats((prev) => [...prev, seat]);
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Lỗi", "Không thể kiểm tra trạng thái ghế.");
-    }
+    if (selected) removeSeat(seat.id);
+    else if (seats.length >= 8) Alert.alert("Giới hạn", "Bạn chỉ được chọn tối đa 8 ghế.");
+    else addSeat(seat);
   };
 
-  // Đặt ghế
-  const handleBookSeats = async () => {
-
-    if (!selectedSeats.length) {
+  const handleContinue = async () => {
+    if (!seats.length) {
       Alert.alert("Chọn ghế", "Vui lòng chọn ít nhất 1 ghế.");
       return;
     }
 
     try {
-      // Kiểm tra trạng thái từng ghế
-            const seatStatusResults = await Promise.all(
-              selectedSeats.map((seat) =>
-                checkSeatStatus({ seatId: seat.id, showtimeId })
-              )
-            );
+      const seatStatusResults = await Promise.all(
+        seats.map((seat) => checkSeatStatus(seat.id, showtimeId))
+      );
+      const heldSeats = seatStatusResults.filter((r) => r.status === "HELD");
+      const bookedSeats = seatStatusResults.filter((r) => r.status === "BOOKED");
+      if (heldSeats.length > 0 || bookedSeats.length > 0) {
+        const heldIds = heldSeats.map((h) => h.seatId);
+        const bookedIds = bookedSeats.map((h) => h.seatId);
+        heldIds.forEach((id) => removeSeat(id));
+        bookedIds.forEach((id) => removeSeat(id));
+        await refetchSeats();
+        Alert.alert("Ghế đang được giữ", "Một số ghế đã bị giữ hoặc đã được đặt. Vui lòng chọn lại.");
+        return;
+      }
 
-            const heldSeats = seatStatusResults.filter((r) => r.status === "HELD");
-            if (heldSeats.length > 0) {
-              const heldSeatIds = heldSeats.map((h) => h.seatId);
-              setSelectedSeats((prev) => prev.filter((s) => !heldSeatIds.includes(s.id)));
-              Alert.alert("Ghế đang được giữ", "Một số ghế đã bị giữ. Vui lòng chọn lại.");
-              return;
-            }
+      await Promise.allSettled(seats.map((seat) => bookSeat({ seatId: seat.id, showtimeId })));
 
-            // Giữ ghế (bookSeat)
-            const results = await Promise.allSettled(
-              selectedSeats.map((seat) => bookSeat({ seatId: seat.id, showtimeId }))
-            );
-            const failed = results.filter((r) => r.status === "rejected");
-            if (failed.length > 0) {
-              Alert.alert("Lỗi", "Không thể giữ một số ghế. Vui lòng thử lại.");
-              return;
-            }
-
-            const expireAt = Date.now() + 8 * 60 * 1000;
-
-            const seatTotal = selectedSeats.reduce((sum, s) => sum + s.price, 0);
-
-            const bookingData = {
-              showtimeId,
-              format,
-              movie,
-              cinema: cinema.name,
-              auditorium: auditorium.name,
-              showtime: `${time} - ${formatDate(date)}`,
-              seats: selectedSeats,
-              seatTotal,
-            };
-
-            // Điều hướng sang trang additional
-            navigation.navigate("AdditionalService", {
-              expireAt,
-              bookingData,
-            });
+      navigation.navigate("AdditionalService");
     } catch (err) {
       console.error(err);
       Alert.alert("Lỗi", "Không thể giữ ghế, vui lòng thử lại.");
     }
   };
 
-  const totalPrice = selectedSeats.reduce((s, x) => s + x.price, 0);
-
-  if (isSeatsLoading)
+  if (isSeatsLoading || isLoading)
     return (
-      <PickView style={styles.center}>
+      <PickView style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color={COLORS.accent} />
       </PickView>
     );
 
   return (
-    <PickView style={styles.container}>
+    <PickView style={{ flex: 1 }}>
       <ScreenHeader title="Chọn ghế" backgroundColor={colors.background["bg-brand-quaternary"]} />
 
-      <PickView style={styles.content}>
+      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}>
         <PickView style={styles.screen}>
           <PickText style={styles.screenText}>MÀN HÌNH</PickText>
         </PickView>
 
-        <ScrollView
-          contentContainerStyle={{ paddingBottom: insets.bottom + 80 }}
-          showsVerticalScrollIndicator={false}
-        >
-          <SeatMap seats={seats} selectedSeats={selectedSeats} onSelectSeat={toggleSeat} />
-          <SeatLegend />
-        </ScrollView>
+        <SeatMap seats={mappedSeats} selectedSeats={seats} onSelectSeat={toggleSeat} />
+        <SeatLegend />
+      </ScrollView>
 
-        <PickView style={[styles.summary, { paddingBottom: insets.bottom }]}>
-          <PickView style={styles.summaryLeft}>
-            <PickText style={styles.summaryText}>
-              Ghế đã chọn:{" "}
-              {selectedSeats.length
-                ? selectedSeats.map((s) => `${s.row}${s.number}`).join(", ")
-                : "Chưa có"}
-            </PickText>
-            <PickText style={styles.summaryText}>Tổng: {formatCurrency(totalPrice)}</PickText>
-          </PickView>
-
-          <PickButton
-            title="Tiếp tục"
-            type="Primary"
-            onPress={handleBookSeats}
-            style={styles.continueButton}
-            textStyle={{ fontSize: FONT_SIZE.sm }}
-          />
-        </PickView>
-      </PickView>
+      <BookingSummary onContinue={handleContinue} />
     </PickView>
   );
 };
@@ -251,23 +181,6 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0,0,0,0.3)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
-  },
-
-  summaryLeft: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    maxWidth: "70%",
-  },
-  summaryText: {
-    fontSize: FONT_SIZE.md,
-    fontWeight: "600",
-    marginRight: SPACING.lg,
-  },
-  continueButton: {
-    width: 100,
-    height: 36,
-    borderRadius: 4,
   },
 });
 

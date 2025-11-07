@@ -16,6 +16,8 @@ const SeatItem: React.FC<SeatItemProps> = ({ seat, selected, onPress }) => {
     ? "transparent"
     : seat.status === "booked"
     ? "#d32f2f"
+    : seat.status === "held"
+    ? "#9e9e9e"
     : selected
     ? "#1976d2"
     : seat.type === "vip"
@@ -42,7 +44,7 @@ const SeatItem: React.FC<SeatItemProps> = ({ seat, selected, onPress }) => {
     <TouchableOpacity
       style={[styles.seat, { backgroundColor: bgColor, borderColor }]}
       onPress={() => onPress(seat)}
-      disabled={seat.status === "booked" || inactive}
+      disabled={seat.status === "booked" || seat.status === "held" || inactive}
     >
       <PickView style={styles.center}>
         <PickText style={[styles.seatText, { color: textColor }]}>
