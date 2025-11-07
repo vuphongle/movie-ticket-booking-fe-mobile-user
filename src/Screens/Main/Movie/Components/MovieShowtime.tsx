@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Alert } from "react-native";
 import { PickText, PickView, ScreenHeader } from "@Components";
 import { COLORS, SPACING, FONT_SIZE, RADIUS } from "@Constants/theme";
 import { useShowtimeByMovie } from "@Hooks";
 import { useRoute } from "@react-navigation/native";
+import { useAuth } from "@Contexts/AuthContext";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -14,13 +15,15 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 
-type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "SelectSeat">;
+type SelectScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "SelectSeat">;
 
 const pad = (n: number) => n.toString().padStart(2, "0");
 
 const MovieShowtime: React.FC = () => {
   const route = useRoute();
-  const navigation = useNavigation<MovieSectionNavigationProp>();
+  const { state } = useAuth();
+  const { isAuthenticated } = state;
+  const navigation = useNavigation<SelectScreenNavigationProp>();
   const { colors, spacing } = useThemedStyles();
   const { movieId, movieName, slug } = route.params as {
     movieId: number;
@@ -102,6 +105,23 @@ const MovieShowtime: React.FC = () => {
     date: string,
     format: string
   ) => {
+    if (!isAuthenticated) {
+      Alert.alert("Yêu cầu đăng nhập", "Vui lòng đăng nhập để đặt ghế.", [
+        {
+          text: "Hủy",
+          style: "cancel",
+        },
+        {
+          text: "Đăng nhập",
+          onPress: () =>
+            navigation.navigate("Login", {
+              redirectTo: "MovieShowtime",
+              params: { movieId, movieName, slug },
+            }),
+        },
+      ]);
+      return;
+    }
     console.log("🎬 Selected Showtime:", {
       showtimeId,
       cinema,

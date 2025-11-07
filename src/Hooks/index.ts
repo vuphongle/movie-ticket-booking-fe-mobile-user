@@ -8,3 +8,4 @@ export { useKeyboard } from "./useKeyboard";
 export { useCheckMovieShowtimes } from "./showtime/useCheckMovieShowtimes";
 export { useMoviesShowtimesByCinema } from "./showtime/useMoviesShowtimesByCinema";
 export { useShowtimeByMovie } from "./showtime/useShowtimeByMovie";
+export { useMovieByShowtime } from "./useMovieByShowtime";

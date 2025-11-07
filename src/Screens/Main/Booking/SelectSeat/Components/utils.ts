@@ -1,7 +1,7 @@
 import { SeatDto } from "@Types/auditoriumTypes";
 
 export type SeatType = "normal" | "vip" | "couple";
-export type SeatStatus = "active" | "inactive" | "booked";
+export type SeatStatus = "active" | "inactive" | "booked" | "held";
 export type ReservationStatus = "booked" | "held" | "cancelled";
 
 export interface Seat {
@@ -26,6 +26,7 @@ export const mapSeatStatus = (
 ): SeatStatus => {
   if (!status) return "inactive";
   if (reservation === "BOOKED") return "booked";
+  if (reservation === "HELD") return "held";
   return "active";
 };
 

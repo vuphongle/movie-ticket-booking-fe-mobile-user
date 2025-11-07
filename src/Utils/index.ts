@@ -10,6 +10,7 @@ export {
   isFutureDate,
   getMinimumDate,
   getMaximumDate,
+  formatDate,
 } from "./dateUtils";
 
 export { transformUserToUserInfo, getUserPhone, getUserDob } from "./userTransformUtils";

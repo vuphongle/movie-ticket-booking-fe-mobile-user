@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { seatReservationService } from "@Services/SeatReservation";
 import {
   SeatReservationRequest,
@@ -49,4 +49,19 @@ export const useCheckSeatStatus = ({
   });
 
   return { status: data, isLoading, isError, error, refetch };
+};
+
+export const useLazyCheckSeatStatus = () => {
+  const queryClient = useQueryClient();
+
+  const checkStatus = async (seatId: number, showtimeId: number): Promise<SeatStatusResponse> => {
+    const result = await queryClient.fetchQuery({
+      queryKey: ["seat-status", seatId, showtimeId],
+      queryFn: () => seatReservationService.checkSeatStatus(seatId, showtimeId),
+      staleTime: 0,
+    });
+    return result;
+  };
+
+  return checkStatus;
 };

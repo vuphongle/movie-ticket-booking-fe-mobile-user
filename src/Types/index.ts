@@ -4,3 +4,4 @@ export * from "./movieTypes";
 export * from "./showtimeTypes";
 export * from "./seatReservationTypes";
 export * from "./auditoriumTypes";
+export * from "./additionalServiceTypes";

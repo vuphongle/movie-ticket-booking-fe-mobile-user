@@ -22,6 +22,7 @@
     "clean": "rm -rf ./node_modules && rm -rf ./package-lock.yaml && cd ios && rm -rf ./Pods && rm -rf ./Podfile.lock && cd .. && npm install --legacy-peer-deps && cd ios && pod install && cd .. &&  npm start --reset-cache"
   },
   "dependencies": {
+    "@expo/vector-icons": "^15.0.3",
     "@gorhom/portal": "^1.0.14",
     "@hookform/resolvers": "3.9.1",
     "@react-native-async-storage/async-storage": "^2.2.0",
@@ -60,7 +61,8 @@
     "react-redux": "^9.2.0",
     "redux-thunk": "^3.1.0",
     "yup": "^1.7.1",
-    "zod": "3.23.8"
+    "zod": "3.23.8",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
