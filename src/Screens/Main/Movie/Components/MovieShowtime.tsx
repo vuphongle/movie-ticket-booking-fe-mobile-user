@@ -24,7 +24,7 @@ const MovieShowtime: React.FC = () => {
   const { state } = useAuth();
   const { isAuthenticated } = state;
   const navigation = useNavigation<SelectScreenNavigationProp>();
-  const { colors, spacing } = useThemedStyles();
+  const { spacing } = useThemedStyles();
   const { movieId, movieName, slug } = route.params as {
     movieId: number;
     movieName: string;
@@ -144,7 +144,7 @@ const MovieShowtime: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 80 }} showsVerticalScrollIndicator={false}>
-      <ScreenHeader title={movieName} backgroundColor={colors.background["bg-brand-quaternary"]} />
+      <ScreenHeader title={movieName} />
 
       <PickText
         style={{

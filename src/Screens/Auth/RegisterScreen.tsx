@@ -95,7 +95,7 @@ export const RegisterScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader title="Đăng ký" backgroundColor={colors.background["bg-brand-quaternary"]} />
+      <ScreenHeader title="Đăng ký" />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}

@@ -9,6 +9,7 @@ import { useMovieList } from "@Hooks/useMovieList";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
+import useThemedStyles from "@Theme/Hook/useThemedStyles";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
 
@@ -36,6 +37,7 @@ const mockBanners = [
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<MovieSectionNavigationProp>();
+  const { colors } = useThemedStyles();
 
   const {
     movies: nowShowing,
@@ -79,7 +81,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <ScrollView
-      style={styles.container}
+      style={{ flex: 1, backgroundColor: colors.background["bg-secondary"] }}
       showsVerticalScrollIndicator={false}
       bounces={false}
       contentContainerStyle={{ paddingBottom: SPACING.xxl * 2 }}
@@ -89,7 +91,7 @@ const HomeScreen: React.FC = () => {
         flex={1}
         style={styles.contentContainer}
         borderTopRadius={RADIUS.xl}
-        backgroundColor={COLORS.background}
+        backgroundColor={colors.background["bg-secondary"]}
       >
         <Banner banners={mockBanners} />
 
@@ -122,10 +124,6 @@ const HomeScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.primary,
-  },
   contentContainer: {
     marginTop: -SPACING.lg,
     paddingTop: SPACING.xl,

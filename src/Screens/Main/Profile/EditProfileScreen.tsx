@@ -202,10 +202,7 @@ export const EditProfileScreen: React.FC = () => {
     >
       <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
         {/* Header */}
-        <ScreenHeader
-          title="Chỉnh sửa thông tin"
-          backgroundColor={colors.background["bg-brand-quaternary"]}
-        />
+        <ScreenHeader title="Chỉnh sửa thông tin" />
 
         {/* Form Content */}
         <ScrollView

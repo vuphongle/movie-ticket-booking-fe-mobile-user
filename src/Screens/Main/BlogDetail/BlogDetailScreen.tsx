@@ -157,10 +157,7 @@ const BlogDetailScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader
-        title="Chi tiết bài viết"
-        backgroundColor={colors.background["bg-brand-quaternary"]}
-      />
+      <ScreenHeader title="Chi tiết bài viết" />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Thumbnail */}

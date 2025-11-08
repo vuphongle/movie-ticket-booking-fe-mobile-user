@@ -2,26 +2,15 @@ import { StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
+import useThemedStyles from "@Theme/Hook/useThemedStyles";
 
 const Header = () => {
   const insets = useSafeAreaInsets();
-
+  const { colors } = useThemedStyles();
   return (
-    <PickView paddingHorizontal={SPACING.md} paddingTop={insets.top}>
-      <PickView row justifySpaceBetween alignCenter marginBottom={SPACING.lg}>
-        <PickView flex={1} marginRight={SPACING.md}>
-          <PickText color="body-inverted" size={FONT_SIZE.sm}>
-            Địa điểm hiện tại
-          </PickText>
-          <PickText
-            color="heading-inverted"
-            size={FONT_SIZE.md}
-            numberOfLines={1}
-            style={[{ fontWeight: "500" }]}
-          >
-            TP. Hồ Chí Minh, Việt Nam
-          </PickText>
-        </PickView>
+    <PickView backgroundColor={colors.background["bg-brand-quaternary"]} paddingTop={insets.top}>
+      <PickView paddingHorizontal={16} row justifySpaceBetween alignCenter marginBottom={10}>
+        <PickView></PickView>
         <PickView row gap={SPACING.md}>
           <PickText size={16}>🔍</PickText>
           <PickText size={16}>🔔</PickText>

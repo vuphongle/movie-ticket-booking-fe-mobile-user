@@ -69,10 +69,7 @@ export const ChangePasswordScreen: React.FC = () => {
     >
       <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
         {/* Header */}
-        <ScreenHeader
-          title="Đổi mật khẩu"
-          backgroundColor={colors.background["bg-brand-quaternary"]}
-        />
+        <ScreenHeader title="Đổi mật khẩu" />
         {/* Form Content */}
         <ScrollView
           style={{ flex: 1 }}

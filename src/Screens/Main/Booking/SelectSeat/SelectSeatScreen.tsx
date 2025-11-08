@@ -11,7 +11,6 @@ import { useBookSeat, useLazyCheckSeatStatus } from "@Hooks/booking/useReservati
 import { useMovieByShowtime } from "@Hooks";
 import { formatDate } from "@Utils";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
-import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import { useBookingStore } from "@Store/useBookingStore";
@@ -26,7 +25,6 @@ const SelectSeatScreen: React.FC = () => {
   const { showtimeId, cinema, auditorium, time, date } = route.params;
   const auditoriumId = auditorium.id;
   const { movie, isLoading } = useMovieByShowtime(showtimeId);
-  const { colors } = useThemedStyles();
 
   const {
     seats: seatDtos,
@@ -93,7 +91,10 @@ const SelectSeatScreen: React.FC = () => {
         heldIds.forEach((id) => removeSeat(id));
         bookedIds.forEach((id) => removeSeat(id));
         await refetchSeats();
-        Alert.alert("Ghế đang được giữ", "Một số ghế đã bị giữ hoặc đã được đặt. Vui lòng chọn lại.");
+        Alert.alert(
+          "Ghế đang được giữ",
+          "Một số ghế đã bị giữ hoặc đã được đặt. Vui lòng chọn lại."
+        );
         return;
       }
 
@@ -115,7 +116,7 @@ const SelectSeatScreen: React.FC = () => {
 
   return (
     <PickView style={{ flex: 1 }}>
-      <ScreenHeader title="Chọn ghế" backgroundColor={colors.background["bg-brand-quaternary"]} />
+      <ScreenHeader title="Chọn ghế" />
 
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}>
         <PickView style={styles.screen}>

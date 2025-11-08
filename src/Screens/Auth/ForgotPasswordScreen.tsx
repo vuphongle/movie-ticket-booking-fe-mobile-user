@@ -71,10 +71,7 @@ const ForgotPasswordScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader
-        title="Quên mật khẩu"
-        backgroundColor={colors.background["bg-brand-quaternary"]}
-      />
+      <ScreenHeader title="Quên mật khẩu" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}

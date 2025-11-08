@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet, ActivityIndicator, View } from "react-native";
 import { PickText, PickView, PickButton, ScreenHeader } from "@Components";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 
@@ -40,7 +39,6 @@ const MovieDetailScreen: React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const insets = useSafeAreaInsets();
-  const { colors } = useThemedStyles();
   const { id, slug } = route.params as { id: string; slug: string };
 
   const [movie, setMovie] = useState<MovieContentProps["movie"] | null>(null);
@@ -110,25 +108,11 @@ const MovieDetailScreen: React.FC = () => {
   return (
     <PickView style={styles.container}>
       {/* Header */}
-      <PickView
-        style={{
-          position: "absolute",
-          top: insets.top,
-          left: 0,
-          right: 0,
-          zIndex: 10,
-        }}
-      >
-        <ScreenHeader
-          title="Chi tiết phim"
-          backgroundColor={colors.background["bg-brand-quaternary"]}
-        />
-      </PickView>
+      <ScreenHeader title="Chi tiết phim" />
 
       {/* Nội dung */}
       <ScrollView
         contentContainerStyle={{
-          paddingTop: 56 + insets.top,
           paddingBottom: 100,
         }}
       >

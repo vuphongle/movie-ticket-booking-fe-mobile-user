@@ -62,7 +62,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
     <PickView
       paddingHorizontal={20}
       paddingTop={paddingTop !== undefined ? paddingTop : insets.top}
-      paddingBottom={16}
+      paddingBottom={8}
       backgroundColor={backgroundColor || colors.background["bg-primary"]}
       row
       alignCenter
