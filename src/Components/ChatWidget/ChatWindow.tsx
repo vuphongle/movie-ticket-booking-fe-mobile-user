@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  View,
-  Text,
   TextInput,
   TouchableOpacity,
   FlatList,
@@ -18,6 +16,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useChat } from "@Hooks/useChat";
 import { ChatMessageBubble } from "./ChatMessage";
 import { CHAT_CONFIG } from "@Constants";
+import { PickView, PickText } from "@Components";
 
 interface ChatWindowProps {
   visible: boolean;
@@ -121,12 +120,24 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
             ]}
           >
             {/* Header */}
-            <View style={styles.header}>
-              <View style={styles.headerLeft}>
-                <Text style={styles.title}>Trợ lý AI GoCinema</Text>
-                <Text style={styles.subtitle}>Tìm phim phù hợp với bạn</Text>
-              </View>
-              <View style={styles.headerActions}>
+            <PickView
+              row
+              alignCenter
+              justifySpaceBetween
+              paddingHorizontal={20}
+              paddingVertical={16}
+              borderBottomWidth={1}
+              style={{ borderBottomColor: "rgba(255, 255, 255, 0.08)" }}
+            >
+              <PickView flex={1}>
+                <PickText size={18} style={{ fontWeight: "600", color: "#f8fafc" }}>
+                  Trợ lý AI GoCinema
+                </PickText>
+                <PickText size={12} style={{ color: "rgba(248, 250, 252, 0.7)", marginTop: 2 }}>
+                  Tìm phim phù hợp với bạn
+                </PickText>
+              </PickView>
+              <PickView row gap={8}>
                 <TouchableOpacity
                   style={styles.iconButton}
                   onPress={handleReset}
@@ -137,8 +148,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
                 <TouchableOpacity style={styles.iconButton} onPress={onClose} activeOpacity={0.7}>
                   <Icon name="close" size={20} color="#f1f5f9" />
                 </TouchableOpacity>
-              </View>
-            </View>
+              </PickView>
+            </PickView>
 
             {/* Messages */}
             <FlatList
@@ -157,10 +168,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
 
             {/* Loading indicator */}
             {isLoading && (
-              <View style={styles.loadingContainer}>
+              <PickView row alignCenter justifyCenter paddingVertical={12} gap={8}>
                 <ActivityIndicator color="#60a5fa" size="small" />
-                <Text style={styles.loadingText}>{CHAT_CONFIG.LOADING_TEXT}</Text>
-              </View>
+                <PickText size={12} style={{ color: "rgba(226, 232, 240, 0.8)" }}>
+                  {CHAT_CONFIG.LOADING_TEXT}
+                </PickText>
+              </PickView>
             )}
 
             {/* Input */}
@@ -168,7 +181,17 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
               behavior={Platform.OS === "ios" ? "padding" : undefined}
               keyboardVerticalOffset={0}
             >
-              <View style={styles.inputContainer}>
+              <PickView
+                row
+                paddingHorizontal={16}
+                paddingVertical={12}
+                borderTopWidth={1}
+                gap={10}
+                style={{
+                  borderTopColor: "rgba(255, 255, 255, 0.08)",
+                  backgroundColor: "rgba(15, 23, 42, 0.95)",
+                }}
+              >
                 <TextInput
                   style={styles.input}
                   placeholder={CHAT_CONFIG.INPUT_PLACEHOLDER}
@@ -196,7 +219,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
                     color={!inputValue.trim() || isLoading ? "#94a3b8" : "#f8fafc"}
                   />
                 </TouchableOpacity>
-              </View>
+              </PickView>
             </KeyboardAvoidingView>
           </Animated.View>
         </SafeAreaView>
@@ -221,32 +244,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     paddingBottom: Platform.OS === "ios" ? 20 : 0,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.08)",
-  },
-  headerLeft: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#f8fafc",
-  },
-  subtitle: {
-    fontSize: 12,
-    color: "rgba(226, 232, 240, 0.7)",
-    marginTop: 2,
-  },
-  headerActions: {
-    flexDirection: "row",
-    gap: 8,
-  },
   iconButton: {
     width: 36,
     height: 36,
@@ -259,26 +256,6 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 8,
     flexGrow: 1,
-  },
-  loadingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    gap: 8,
-  },
-  loadingText: {
-    fontSize: 12,
-    color: "rgba(226, 232, 240, 0.8)",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.08)",
-    backgroundColor: "rgba(15, 23, 42, 0.95)",
-    gap: 10,
   },
   input: {
     flex: 1,

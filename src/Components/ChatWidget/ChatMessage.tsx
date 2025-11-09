@@ -1,8 +1,9 @@
 import React from "react";
-import { View, StyleSheet, useWindowDimensions } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import RenderHtml from "react-native-render-html";
 import type { ChatMessage } from "@Types/chatTypes";
 import { ChatMovieCard } from "./ChatMovieCard";
+import { PickView } from "@Components";
 
 interface ChatMessageProps {
   message: ChatMessage;
@@ -39,12 +40,23 @@ export const ChatMessageBubble: React.FC<ChatMessageProps> = ({ message, onMovie
   };
 
   return (
-    <View
-      style={[styles.container, isAssistant ? styles.assistantContainer : styles.userContainer]}
+    <PickView
+      width={"100%"}
+      paddingHorizontal={16}
+      marginBottom={12}
+      style={[isAssistant ? styles.assistantContainer : styles.userContainer]}
     >
-      <View
+      <PickView
+        maxWidth={"92%"}
+        paddingHorizontal={14}
+        paddingVertical={12}
+        borderRadius={16}
+        shadowColor={"#000"}
+        shadowOffset={{ width: 0, height: 2 }}
+        shadowOpacity={0.1}
+        shadowRadius={8}
+        elevation={3}
         style={[
-          styles.bubble,
           isAssistant ? styles.assistantBubble : styles.userBubble,
           isError && styles.errorBubble,
         ]}
@@ -57,39 +69,23 @@ export const ChatMessageBubble: React.FC<ChatMessageProps> = ({ message, onMovie
 
         {/* Render movie cards if available */}
         {isAssistant && message.movies && message.movies.length > 0 && (
-          <View style={styles.moviesContainer}>
+          <PickView gap={12} marginTop={12}>
             {message.movies.map((movie) => (
               <ChatMovieCard key={movie.movieId} movie={movie} onPress={onMoviePress} />
             ))}
-          </View>
+          </PickView>
         )}
-      </View>
-    </View>
+      </PickView>
+    </PickView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    paddingHorizontal: 16,
-    marginBottom: 12,
-  },
   assistantContainer: {
     alignItems: "flex-start",
   },
   userContainer: {
     alignItems: "flex-end",
-  },
-  bubble: {
-    maxWidth: "92%",
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    borderRadius: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
   },
   assistantBubble: {
     backgroundColor: "rgba(99, 102, 241, 0.18)",
@@ -101,9 +97,5 @@ const styles = StyleSheet.create({
   },
   errorBubble: {
     backgroundColor: "rgba(239, 68, 68, 0.12)",
-  },
-  moviesContainer: {
-    marginTop: 12,
-    gap: 12,
   },
 });

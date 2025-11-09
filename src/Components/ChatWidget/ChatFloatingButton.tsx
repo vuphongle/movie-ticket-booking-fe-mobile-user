@@ -113,11 +113,6 @@ export const ChatFloatingButton: React.FC<ChatFloatingButtonProps> = ({ onPress 
       isDragging.current = false;
     });
 
-  if (__DEV__) {
-    console.log("ChatFloatingButton render - Screen:", SCREEN_WIDTH, "x", SCREEN_HEIGHT);
-    console.log("ChatFloatingButton initial:", savedPosition.current);
-  }
-
   /**
    * Handle tap on button (when not dragging)
    */

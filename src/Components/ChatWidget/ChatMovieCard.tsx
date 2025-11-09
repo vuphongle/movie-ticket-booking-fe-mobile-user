@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 import type { RecommendedMovie } from "@Types/chatTypes";
+import { PickView, PickText } from "@Components";
 
 interface ChatMovieCardProps {
   movie: RecommendedMovie;
@@ -20,106 +21,78 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({ movie, onPress }) 
   const rating = typeof movie.rating === "number" ? movie.rating.toFixed(1) : null;
 
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress} activeOpacity={0.7}>
-      <Image source={{ uri: posterUrl }} style={styles.poster} resizeMode="cover" />
+    <TouchableOpacity
+      style={{
+        flexDirection: "row",
+        backgroundColor: "rgba(15, 23, 42, 0.35)",
+        borderRadius: 14,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "rgba(148, 163, 184, 0.15)",
+      }}
+      onPress={handlePress}
+      activeOpacity={0.7}
+    >
+      <Image
+        source={{ uri: posterUrl }}
+        style={{ width: 72, height: 100, borderRadius: 12 }}
+        resizeMode="cover"
+      />
 
-      <View style={styles.info}>
-        <Text style={styles.title} numberOfLines={2}>
+      <PickView flex={1} marginLeft={12} gap={6}>
+        <PickText size={14} variant="body_large" color="body-inverted" numberOfLines={2}>
           {movieName}
-        </Text>
+        </PickText>
 
         {(movie.ageRating || rating) && (
-          <View style={styles.meta}>
-            {movie.ageRating && <Text style={styles.metaText}>{movie.ageRating}</Text>}
-            {rating && <Text style={styles.metaText}>⭐ {rating}</Text>}
-          </View>
+          <PickView row alignCenter gap={8}>
+            {movie.ageRating && (
+              <PickText size={12} color="body-inverted">
+                {movie.ageRating}
+              </PickText>
+            )}
+            {rating && (
+              <PickText size={12} color="body-inverted">
+                ⭐ {rating}
+              </PickText>
+            )}
+          </PickView>
         )}
 
         {movie.genreDisplayNames && movie.genreDisplayNames.length > 0 && (
-          <View style={styles.genres}>
+          <PickView row gap={6} flexWrap="wrap">
             {movie.genreDisplayNames.slice(0, 3).map((genre, index) => (
-              <View key={`${movie.movieId}-${genre}-${index}`} style={styles.genreTag}>
-                <Text style={styles.genreText}>{genre}</Text>
-              </View>
+              <PickView
+                key={`${movie.movieId}-${genre}-${index}`}
+                paddingHorizontal={6}
+                paddingVertical={2}
+                borderRadius={8}
+                style={{
+                  backgroundColor: "rgba(59, 130, 246, 0.15)",
+                }}
+              >
+                <PickText size={11} color="body-inverted">
+                  {genre}
+                </PickText>
+              </PickView>
             ))}
-          </View>
+          </PickView>
         )}
 
         {movie.reasons && movie.reasons.length > 0 && (
-          <View style={styles.reasons}>
+          <PickView gap={4}>
             {movie.reasons.slice(0, 2).map((reason, index) => (
-              <Text key={`${movie.movieId}-reason-${index}`} style={styles.reasonText}>
+              <PickText key={`${movie.movieId}-reason-${index}`} size={12} color="body-on-brand">
                 • {reason}
-              </Text>
+              </PickText>
             ))}
-          </View>
+          </PickView>
         )}
 
-        <Text style={styles.viewDetails}>Xem chi tiết →</Text>
-      </View>
+        <PickText size={12} style={{ color: "#60a5fa", fontWeight: "600", marginTop: 4 }}>
+          Xem chi tiết →
+        </PickText>
+      </PickView>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: "rgba(15, 23, 42, 0.35)",
-    borderRadius: 14,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "rgba(148, 163, 184, 0.15)",
-  },
-  poster: {
-    width: 72,
-    height: 100,
-    borderRadius: 12,
-  },
-  info: {
-    flex: 1,
-    marginLeft: 12,
-    gap: 6,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#f8fafc",
-  },
-  meta: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  metaText: {
-    fontSize: 12,
-    color: "rgba(226, 232, 240, 0.75)",
-  },
-  genres: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 6,
-  },
-  genreTag: {
-    backgroundColor: "rgba(59, 130, 246, 0.15)",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  genreText: {
-    fontSize: 11,
-    color: "#bfdbfe",
-  },
-  reasons: {
-    gap: 4,
-  },
-  reasonText: {
-    fontSize: 12,
-    color: "rgba(226, 232, 240, 0.75)",
-  },
-  viewDetails: {
-    fontSize: 12,
-    color: "#60a5fa",
-    fontWeight: "600",
-    marginTop: 4,
-  },
-});
