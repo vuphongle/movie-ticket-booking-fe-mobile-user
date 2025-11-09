@@ -6,7 +6,7 @@ import { StatusBar } from "react-native";
 import { PortalProvider } from "@gorhom/portal";
 import { enableScreens } from "react-native-screens";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ErrorBoundary } from "@Components/ErrorBoundary";
+import { ErrorBoundary } from "@Components";
 import { Routes } from "@Navigation";
 import { queryClient } from "@Services/queryClient";
 

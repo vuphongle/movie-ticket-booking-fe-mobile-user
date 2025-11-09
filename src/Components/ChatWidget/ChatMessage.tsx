@@ -1,0 +1,109 @@
+import React from "react";
+import { View, StyleSheet, useWindowDimensions } from "react-native";
+import RenderHtml from "react-native-render-html";
+import type { ChatMessage } from "@Types/chatTypes";
+import { ChatMovieCard } from "./ChatMovieCard";
+
+interface ChatMessageProps {
+  message: ChatMessage;
+  onMoviePress?: (movieId: string, slug: string) => void;
+}
+
+export const ChatMessageBubble: React.FC<ChatMessageProps> = ({ message, onMoviePress }) => {
+  const { width } = useWindowDimensions();
+  const isAssistant = message.sender === "assistant";
+  const isError = message.variant === "error";
+
+  // Convert markdown-like text to simple HTML for rendering
+  const htmlContent = message.content
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Bold
+    .replace(/\*(.*?)\*/g, "<em>$1</em>") // Italic
+    .replace(/\n/g, "<br/>"); // Line breaks
+
+  const tagsStyles = {
+    body: {
+      color: isAssistant ? "#e2e8f0" : "#f8fafc",
+      fontSize: 14,
+      lineHeight: 20,
+    },
+    p: {
+      marginBottom: 8,
+    },
+    strong: {
+      fontWeight: "600" as const,
+      color: isAssistant ? "#f8fafc" : "#ffffff",
+    },
+    em: {
+      fontStyle: "italic" as const,
+    },
+  };
+
+  return (
+    <View
+      style={[styles.container, isAssistant ? styles.assistantContainer : styles.userContainer]}
+    >
+      <View
+        style={[
+          styles.bubble,
+          isAssistant ? styles.assistantBubble : styles.userBubble,
+          isError && styles.errorBubble,
+        ]}
+      >
+        <RenderHtml
+          contentWidth={width * 0.92}
+          source={{ html: htmlContent }}
+          tagsStyles={tagsStyles}
+        />
+
+        {/* Render movie cards if available */}
+        {isAssistant && message.movies && message.movies.length > 0 && (
+          <View style={styles.moviesContainer}>
+            {message.movies.map((movie) => (
+              <ChatMovieCard key={movie.movieId} movie={movie} onPress={onMoviePress} />
+            ))}
+          </View>
+        )}
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  assistantContainer: {
+    alignItems: "flex-start",
+  },
+  userContainer: {
+    alignItems: "flex-end",
+  },
+  bubble: {
+    maxWidth: "92%",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  assistantBubble: {
+    backgroundColor: "rgba(99, 102, 241, 0.18)",
+    borderBottomLeftRadius: 4,
+  },
+  userBubble: {
+    backgroundColor: "rgba(96, 165, 250, 0.9)",
+    borderBottomRightRadius: 4,
+  },
+  errorBubble: {
+    backgroundColor: "rgba(239, 68, 68, 0.12)",
+  },
+  moviesContainer: {
+    marginTop: 12,
+    gap: 12,
+  },
+});
