@@ -32,6 +32,7 @@ export type RootStackParamList = {
     slug: string;
   };
   AdditionalService: undefined;
+  TicketConfirm: undefined;
 };
 
 // Main Tab Param List

@@ -104,7 +104,7 @@ const AdditionalServiceScreen: React.FC = () => {
       )}
 
       <SelectedServiceList selectedItems={selectedItems} updateServiceQty={updateServiceQty} />
-      <BookingSummary onContinue={() => console.log("Next to seat screen")} />
+      <BookingSummary onContinue={() => navigation.navigate("TicketConfirm")} />
     </PickView>
   );
 };

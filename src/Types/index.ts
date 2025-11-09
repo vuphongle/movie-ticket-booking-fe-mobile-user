@@ -5,3 +5,5 @@ export * from "./showtimeTypes";
 export * from "./seatReservationTypes";
 export * from "./auditoriumTypes";
 export * from "./additionalServiceTypes";
+export * from "./couponTypes";
+export * from "./paymentTypes";
