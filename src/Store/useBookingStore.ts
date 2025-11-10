@@ -21,11 +21,20 @@ interface ServiceItem {
   type: "COMBO" | "SINGLE";
 }
 
-interface Movie {
+export interface Genre {
   id: number;
   name: string;
   slug: string;
-  duration?: number;
+}
+
+interface Movie {
+  id: number;
+  poster: string;
+  name: string;
+  slug: string;
+  genres: Genre[];
+  age: string;
+  duration: number;
 }
 
 interface BookingState {
@@ -34,6 +43,7 @@ interface BookingState {
   cinema?: string;
   auditorium?: string;
   showtime?: string;
+  format?: string;
   seats: Seat[];
   services: ServiceItem[];
 
@@ -60,6 +70,7 @@ export const useBookingStore = create<BookingState>((set, get) => ({
   cinema: undefined,
   auditorium: undefined,
   showtime: undefined,
+  format: undefined,
   seats: [],
   services: [],
   totalPrice: 0,

@@ -22,7 +22,7 @@ const SelectSeatScreen: React.FC = () => {
   const route = useRoute<any>();
   const navigation = useNavigation<NavProp>();
   const insets = useSafeAreaInsets();
-  const { showtimeId, cinema, auditorium, time, date } = route.params;
+  const { showtimeId, cinema, auditorium, time, date, format } = route.params;
   const auditoriumId = auditorium.id;
   const { movie, isLoading } = useMovieByShowtime(showtimeId);
 
@@ -46,6 +46,7 @@ const SelectSeatScreen: React.FC = () => {
         cinema: cinema.name,
         auditorium: auditorium.name,
         showtime: `${time} - ${formatDate(date)}`,
+        format,
       });
     }
   }, [movie]);

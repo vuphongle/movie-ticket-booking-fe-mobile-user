@@ -14,3 +14,5 @@ export { seatReservationService } from "./SeatReservation";
 export { auditoriumService } from "./Auditorium";
 export { additionalServiceService } from "./AdditionalService";
 export { chatService, chatKeys } from "./Chat";
+export { couponService } from "./Coupon";
+export { paymentService } from "./Payment";
