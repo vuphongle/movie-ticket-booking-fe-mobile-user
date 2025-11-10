@@ -23,7 +23,7 @@ export const ChatMessageBubble: React.FC<ChatMessageProps> = ({ message, onMovie
 
   const tagsStyles = {
     body: {
-      color: isAssistant ? "#e2e8f0" : "#f8fafc",
+      color: isAssistant ? "#333333" : "#ffffff",
       fontSize: 14,
       lineHeight: 20,
     },
@@ -32,7 +32,7 @@ export const ChatMessageBubble: React.FC<ChatMessageProps> = ({ message, onMovie
     },
     strong: {
       fontWeight: "600" as const,
-      color: isAssistant ? "#f8fafc" : "#ffffff",
+      color: isAssistant ? "#1a1a2e" : "#ffffff",
     },
     em: {
       fontStyle: "italic" as const,
@@ -88,14 +88,18 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   assistantBubble: {
-    backgroundColor: "rgba(99, 102, 241, 0.18)",
+    backgroundColor: "#f5f5f5",
     borderBottomLeftRadius: 4,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
   },
   userBubble: {
-    backgroundColor: "rgba(96, 165, 250, 0.9)",
+    backgroundColor: "#6366f1",
     borderBottomRightRadius: 4,
   },
   errorBubble: {
-    backgroundColor: "rgba(239, 68, 68, 0.12)",
+    backgroundColor: "#ffe6e6",
+    borderWidth: 1,
+    borderColor: "#ffcccc",
   },
 });

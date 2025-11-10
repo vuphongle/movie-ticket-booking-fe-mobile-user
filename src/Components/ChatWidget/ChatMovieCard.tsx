@@ -24,11 +24,16 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({ movie, onPress }) 
     <TouchableOpacity
       style={{
         flexDirection: "row",
-        backgroundColor: "rgba(15, 23, 42, 0.35)",
+        backgroundColor: "#ffffff",
         borderRadius: 14,
         padding: 10,
         borderWidth: 1,
-        borderColor: "rgba(148, 163, 184, 0.15)",
+        borderColor: "#e0e0e0",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
       }}
       onPress={handlePress}
       activeOpacity={0.7}
@@ -40,19 +45,19 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({ movie, onPress }) 
       />
 
       <PickView flex={1} marginLeft={12} gap={6}>
-        <PickText size={14} variant="body_large" color="body-inverted" numberOfLines={2}>
+        <PickText size={14} variant="body_large" color="body" numberOfLines={2}>
           {movieName}
         </PickText>
 
         {(movie.ageRating || rating) && (
           <PickView row alignCenter gap={8}>
             {movie.ageRating && (
-              <PickText size={12} color="body-inverted">
+              <PickText size={12} color="body">
                 {movie.ageRating}
               </PickText>
             )}
             {rating && (
-              <PickText size={12} color="body-inverted">
+              <PickText size={12} color="body">
                 ⭐ {rating}
               </PickText>
             )}
@@ -68,10 +73,12 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({ movie, onPress }) 
                 paddingVertical={2}
                 borderRadius={8}
                 style={{
-                  backgroundColor: "rgba(59, 130, 246, 0.15)",
+                  backgroundColor: "#f5f5f5",
+                  borderWidth: 1,
+                  borderColor: "#e0e0e0",
                 }}
               >
-                <PickText size={11} color="body-inverted">
+                <PickText size={11} color="body">
                   {genre}
                 </PickText>
               </PickView>
@@ -82,14 +89,14 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({ movie, onPress }) 
         {movie.reasons && movie.reasons.length > 0 && (
           <PickView gap={4}>
             {movie.reasons.slice(0, 2).map((reason, index) => (
-              <PickText key={`${movie.movieId}-reason-${index}`} size={12} color="body-on-brand">
+              <PickText key={`${movie.movieId}-reason-${index}`} size={12} color="body">
                 • {reason}
               </PickText>
             ))}
           </PickView>
         )}
 
-        <PickText size={12} style={{ color: "#60a5fa", fontWeight: "600", marginTop: 4 }}>
+        <PickText size={12} style={{ color: "#6366f1", fontWeight: "600", marginTop: 4 }}>
           Xem chi tiết →
         </PickText>
       </PickView>

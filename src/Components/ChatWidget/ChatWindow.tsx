@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  TextInput,
   TouchableOpacity,
   FlatList,
   StyleSheet,
@@ -11,12 +10,12 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useChat } from "@Hooks/useChat";
 import { ChatMessageBubble } from "./ChatMessage";
 import { CHAT_CONFIG } from "@Constants";
-import { PickView, PickText } from "@Components";
+import { PickView, PickText, PickInput } from "@Components";
 
 interface ChatWindowProps {
   visible: boolean;
@@ -29,6 +28,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
   const [inputValue, setInputValue] = useState("");
   const flatListRef = useRef<FlatList>(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   /**
    * Animate modal slide in/out with opacity
@@ -127,13 +127,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
               paddingHorizontal={20}
               paddingVertical={16}
               borderBottomWidth={1}
-              style={{ borderBottomColor: "rgba(255, 255, 255, 0.08)" }}
+              style={{ borderBottomColor: "#e0e0e0" }}
             >
               <PickView flex={1}>
-                <PickText size={18} style={{ fontWeight: "600", color: "#f8fafc" }}>
+                <PickText size={18} style={{ fontWeight: "600", color: "#1a1a2e" }}>
                   Trợ lý AI GoCinema
                 </PickText>
-                <PickText size={12} style={{ color: "rgba(248, 250, 252, 0.7)", marginTop: 2 }}>
+                <PickText size={12} style={{ color: "#666666", marginTop: 2 }}>
                   Tìm phim phù hợp với bạn
                 </PickText>
               </PickView>
@@ -143,10 +143,10 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
                   onPress={handleReset}
                   activeOpacity={0.7}
                 >
-                  <Icon name="refresh" size={20} color="#f1f5f9" />
+                  <Icon name="refresh" size={20} color="#1a1a2e" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconButton} onPress={onClose} activeOpacity={0.7}>
-                  <Icon name="close" size={20} color="#f1f5f9" />
+                  <Icon name="close" size={20} color="#1a1a2e" />
                 </TouchableOpacity>
               </PickView>
             </PickView>
@@ -169,8 +169,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
             {/* Loading indicator */}
             {isLoading && (
               <PickView row alignCenter justifyCenter paddingVertical={12} gap={8}>
-                <ActivityIndicator color="#60a5fa" size="small" />
-                <PickText size={12} style={{ color: "rgba(226, 232, 240, 0.8)" }}>
+                <ActivityIndicator color="#6366f1" size="small" />
+                <PickText size={12} style={{ color: "#666666" }}>
                   {CHAT_CONFIG.LOADING_TEXT}
                 </PickText>
               </PickView>
@@ -179,31 +179,31 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
             {/* Input */}
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : undefined}
-              keyboardVerticalOffset={0}
+              keyboardVerticalOffset={Platform.OS === "ios" ? insets.bottom + 20 : 0}
             >
               <PickView
                 row
+                alignCenter
                 paddingHorizontal={16}
                 paddingVertical={12}
-                borderTopWidth={1}
-                gap={10}
                 style={{
-                  borderTopColor: "rgba(255, 255, 255, 0.08)",
-                  backgroundColor: "rgba(15, 23, 42, 0.95)",
+                  borderTopWidth: 1,
+                  borderTopColor: "#e0e0e0",
+                  gap: 12,
                 }}
               >
-                <TextInput
-                  style={styles.input}
-                  placeholder={CHAT_CONFIG.INPUT_PLACEHOLDER}
-                  placeholderTextColor="rgba(148, 163, 184, 0.7)"
-                  value={inputValue}
-                  onChangeText={setInputValue}
-                  onSubmitEditing={handleSend}
-                  editable={!isLoading}
-                  maxLength={CHAT_CONFIG.MAX_MESSAGE_LENGTH}
-                  multiline
-                  numberOfLines={3}
-                />
+                <PickView flex={1}>
+                  <PickInput
+                    placeholder={CHAT_CONFIG.INPUT_PLACEHOLDER}
+                    placeholderTextColor="#999999"
+                    value={inputValue}
+                    onChangeText={setInputValue}
+                    onSubmitEditing={handleSend}
+                    editable={!isLoading}
+                    maxLength={CHAT_CONFIG.MAX_MESSAGE_LENGTH}
+                    containerStyle={{ marginBottom: 0 }}
+                  />
+                </PickView>
                 <TouchableOpacity
                   style={[
                     styles.sendButton,
@@ -216,7 +216,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
                   <Icon
                     name="send"
                     size={20}
-                    color={!inputValue.trim() || isLoading ? "#94a3b8" : "#f8fafc"}
+                    color={!inputValue.trim() || isLoading ? "#999999" : "#ffffff"}
                   />
                 </TouchableOpacity>
               </PickView>
@@ -231,14 +231,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   safeContainer: {
     flex: 1,
   },
   container: {
     flex: 1,
-    backgroundColor: "rgba(15, 23, 42, 0.98)",
+    backgroundColor: "#ffffff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: "hidden",
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: "rgba(148, 163, 184, 0.15)",
+    backgroundColor: "#f5f5f5",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -257,27 +257,16 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     flexGrow: 1,
   },
-  input: {
-    flex: 1,
-    backgroundColor: "rgba(15, 23, 42, 0.6)",
-    borderWidth: 1,
-    borderColor: "rgba(148, 163, 184, 0.2)",
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 14,
-    color: "#e2e8f0",
-    maxHeight: 100,
-  },
   sendButton: {
     width: 46,
     height: 46,
     borderRadius: 12,
-    backgroundColor: "rgba(96, 165, 250, 0.9)",
+    backgroundColor: "#6366f1",
     alignItems: "center",
     justifyContent: "center",
+    alignSelf: "flex-end",
   },
   sendButtonDisabled: {
-    backgroundColor: "rgba(148, 163, 184, 0.3)",
+    backgroundColor: "#e0e0e0",
   },
 });
