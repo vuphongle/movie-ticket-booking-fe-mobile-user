@@ -48,7 +48,10 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({ paymentMethod, setPayme
         }}
         onPress={() => setPaymentMethod("PAYOS")}
       >
-        <Image source={require("@Assets/images/payos-icon.png")} style={{ width: 32, height: 32 }} />
+        <Image
+          source={require("@Assets/images/payos-icon.png")}
+          style={{ width: 32, height: 32 }}
+        />
         <PickText style={{ fontWeight: "700" }}>Thanh toán bằng QR</PickText>
       </TouchableOpacity>
 
@@ -66,7 +69,10 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({ paymentMethod, setPayme
         }}
         onPress={() => setPaymentMethod("VNPAY")}
       >
-        <Image source={require("@Assets/images/VNPAY-icon.png")} style={{ width: 32, height: 32 }} />
+        <Image
+          source={require("@Assets/images/VNPAY-icon.png")}
+          style={{ width: 32, height: 32 }}
+        />
         <PickText style={{ fontWeight: "700" }}>Ví điện tử VNPAY</PickText>
       </TouchableOpacity>
     </PickView>

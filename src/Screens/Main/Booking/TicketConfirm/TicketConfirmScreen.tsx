@@ -8,10 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import {
-  CouponDto,
-  CouponPreviewResponse,
-} from "@Types/couponTypes";
+import { CouponDto, CouponPreviewResponse } from "@Types/couponTypes";
 import { FONT_SIZE, SPACING } from "@Constants/theme";
 import { PickView, PickText, PickButton, ScreenHeader } from "@Components";
 import MovieInfoCard from "./Components/MovieInfoCard";
@@ -22,17 +19,23 @@ import PaymentSection from "./Components/PaymentSection";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { useBookingStore } from "@Store/useBookingStore";
 import { useCreateOrder } from "@Hooks/Payment/useCreateOrder";
-import {
-  useCouponByCode,
-  usePreviewCoupon,
-  usePreviewAllCoupons,
-} from "@Hooks/coupon/useCoupon";
+import { useCouponByCode, usePreviewCoupon, usePreviewAllCoupons } from "@Hooks/coupon/useCoupon";
 import VoucherModal from "./Modals/VoucherModal";
 import PromoModal from "./Modals/PromoModal";
 
 const TicketConfirmScreen = () => {
-  const { showtimeId, movie, cinema, auditorium, showtime, format, seats, services, totalPrice, clearAll } =
-    useBookingStore();
+  const {
+    showtimeId,
+    movie,
+    cinema,
+    auditorium,
+    showtime,
+    format,
+    seats,
+    services,
+    totalPrice,
+    clearAll,
+  } = useBookingStore();
 
   const { mutate: createOrder, isPending } = useCreateOrder();
 
