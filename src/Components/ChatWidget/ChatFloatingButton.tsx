@@ -1,5 +1,12 @@
-import React, { useEffect, useRef } from "react";
-import { Animated, StyleSheet, Dimensions, Platform, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, Dimensions, Platform, TouchableOpacity } from "react-native";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  withSequence,
+} from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -12,58 +19,36 @@ interface ChatFloatingButtonProps {
 }
 
 export const ChatFloatingButton: React.FC<ChatFloatingButtonProps> = ({ onPress }) => {
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(1);
 
-  // Position tracking
-  const translateX = useRef(new Animated.Value(SCREEN_WIDTH - BUTTON_SIZE - PADDING)).current;
-  const translateY = useRef(
-    new Animated.Value(SCREEN_HEIGHT - BUTTON_SIZE - PADDING - 100)
-  ).current;
+  const translateX = useSharedValue(SCREEN_WIDTH - BUTTON_SIZE - PADDING);
+  const translateY = useSharedValue(SCREEN_HEIGHT - BUTTON_SIZE - PADDING - 100);
 
-  const savedPosition = useRef({
-    x: SCREEN_WIDTH - BUTTON_SIZE - PADDING,
-    y: SCREEN_HEIGHT - BUTTON_SIZE - PADDING - 100,
-  });
+  const startX = useSharedValue(0);
+  const startY = useSharedValue(0);
+  const isDragging = useSharedValue(false);
 
-  const isDragging = useRef(false);
-
-  /**
-   * Pulse animation loop
-   */
   useEffect(() => {
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ])
+    scale.value = withRepeat(
+      withSequence(withTiming(1.1, { duration: 1000 }), withTiming(1, { duration: 1000 })),
+      -1,
+      false
     );
-
-    animation.start();
-
-    return () => {
-      animation.stop();
-    };
-  }, [pulseAnim]);
+  }, [scale]);
 
   /**
    * Pan gesture handler
    */
   const panGesture = Gesture.Pan()
     .onStart(() => {
-      isDragging.current = false;
+      isDragging.value = false;
+      startX.value = translateX.value;
+      startY.value = translateY.value;
     })
     .onUpdate((event) => {
-      // Update position during drag
-      const newX = savedPosition.current.x + event.translationX;
-      const newY = savedPosition.current.y + event.translationY;
+      "worklet";
+      const newX = startX.value + event.translationX;
+      const newY = startY.value + event.translationY;
 
       // Boundaries
       const minX = PADDING;
@@ -72,18 +57,19 @@ export const ChatFloatingButton: React.FC<ChatFloatingButtonProps> = ({ onPress 
       const maxY = SCREEN_HEIGHT - BUTTON_SIZE - PADDING - 100;
 
       // Clamp and update
-      translateX.setValue(Math.max(minX, Math.min(maxX, newX)));
-      translateY.setValue(Math.max(minY, Math.min(maxY, newY)));
+      translateX.value = Math.max(minX, Math.min(maxX, newX));
+      translateY.value = Math.max(minY, Math.min(maxY, newY));
 
       // Mark as dragging if moved more than 10px
       const totalMovement = Math.sqrt(
         event.translationX * event.translationX + event.translationY * event.translationY
       );
       if (totalMovement > 10) {
-        isDragging.current = true;
+        isDragging.value = true;
       }
     })
     .onEnd((event) => {
+      "worklet";
       // Calculate total movement
       const totalMovement = Math.sqrt(
         event.translationX * event.translationX + event.translationY * event.translationY
@@ -91,47 +77,35 @@ export const ChatFloatingButton: React.FC<ChatFloatingButtonProps> = ({ onPress 
 
       // If movement is less than 10, it's a tap
       if (totalMovement < 10) {
-        onPress();
-        isDragging.current = false;
+        isDragging.value = false;
         return;
       }
 
-      // Save final position after drag
-      const newX = savedPosition.current.x + event.translationX;
-      const newY = savedPosition.current.y + event.translationY;
-
-      // Boundaries
-      const minX = PADDING;
-      const maxX = SCREEN_WIDTH - BUTTON_SIZE - PADDING;
-      const minY = PADDING + (Platform.OS === "ios" ? 50 : 20);
-      const maxY = SCREEN_HEIGHT - BUTTON_SIZE - PADDING - 100;
-
-      // Clamp and save
-      savedPosition.current.x = Math.max(minX, Math.min(maxX, newX));
-      savedPosition.current.y = Math.max(minY, Math.min(maxY, newY));
-
-      isDragging.current = false;
+      isDragging.value = false;
     });
 
   /**
    * Handle tap on button (when not dragging)
    */
   const handlePress = () => {
-    if (!isDragging.current) {
+    if (!isDragging.value) {
       onPress();
     }
   };
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { translateY: translateY.value },
+        { scale: scale.value },
+      ],
+    };
+  });
+
   return (
     <GestureDetector gesture={panGesture}>
-      <Animated.View
-        style={[
-          styles.container,
-          {
-            transform: [{ translateX }, { translateY }, { scale: pulseAnim }],
-          },
-        ]}
-      >
+      <Animated.View style={[styles.container, animatedStyle]}>
         <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={handlePress}>
           <Icon name="robot" size={26} color="#0f172a" />
         </TouchableOpacity>
