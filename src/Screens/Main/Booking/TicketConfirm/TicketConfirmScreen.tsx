@@ -18,7 +18,7 @@ import VoucherPromoSection from "./Components/VoucherPromoSection";
 import PaymentSection from "./Components/PaymentSection";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { useBookingStore } from "@Store/useBookingStore";
-import { useCreateOrder } from "@Hooks/Payment/useCreateOrder";
+import { useCreateOrder } from "@Hooks/payment/useCreateOrder";
 import { useCouponByCode, usePreviewCoupon, usePreviewAllCoupons } from "@Hooks/coupon/useCoupon";
 import VoucherModal from "./Modals/VoucherModal";
 import PromoModal from "./Modals/PromoModal";
