@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, ScrollView, TouchableOpacity, Alert, Image } from "react-native";
-import { PickButton} from "@Components";
+import { PickButton } from "@Components";
 import { SPACING, FONT_SIZE } from "@Constants/theme";
 import { formatCurrency } from "@Utils/currencyUtils";
 
@@ -77,9 +77,11 @@ const PromoModal: React.FC<PromoModalProps> = ({
           showsVerticalScrollIndicator={false}
         >
           {promoPreview.detailResults
-             .sort((a: DetailType, b: DetailType) => (b.lineDiscount || 0) - (a.lineDiscount || 0))
-             .map((detail: DetailType, index: number) => {
-              const gift = promoPreview.gifts?.find((g: GiftType) => g.serviceId === detail.giftServiceId);
+            .sort((a: DetailType, b: DetailType) => (b.lineDiscount || 0) - (a.lineDiscount || 0))
+            .map((detail: DetailType, index: number) => {
+              const gift = promoPreview.gifts?.find(
+                (g: GiftType) => g.serviceId === detail.giftServiceId
+              );
               const isSelected = selectedPromo?.detailId === detail.detailId;
 
               return (

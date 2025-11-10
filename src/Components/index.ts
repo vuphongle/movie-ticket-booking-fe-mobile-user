@@ -6,3 +6,4 @@ export { PickInput, PickFormInput } from "./Input";
 export { DatePickerModal } from "./DatePicker";
 export { ScreenHeader } from "./ScreenHeader";
 export { AvatarOptionsBottomSheet } from "./AvatarOptionsBottomSheet";
+export { ChatWidget } from "./ChatWidget";

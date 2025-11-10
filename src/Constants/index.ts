@@ -29,3 +29,4 @@ export {
 export * from "./theme";
 export * from "./errorCodes";
 export * from "./api";
+export * from "./Chat";

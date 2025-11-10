@@ -29,7 +29,6 @@ interface GiftType {
   quantity: number;
 }
 
-
 const VoucherModal: React.FC<VoucherModalProps> = ({
   visible,
   voucherPreview,
@@ -60,7 +59,9 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
               (d: DetailType) => !d.reason.startsWith("Áp dụng thành công")
             ),
           ].map((d: DetailType, index: number) => {
-            const gift = voucherPreview.gifts.find((g: GiftType) => g.serviceId === d.giftServiceId);
+            const gift = voucherPreview.gifts.find(
+              (g: GiftType) => g.serviceId === d.giftServiceId
+            );
             const isSelected = d.applied && selectedDetails.includes(d.detailId);
             const canSelect = d.applied;
 
