@@ -5,6 +5,7 @@ export interface AdditionalService {
   name: string;
   description: string;
   price: number;
+  priceId?: number;
   thumbnail?: string;
   type: AdditionalServiceType;
   productId?: number;

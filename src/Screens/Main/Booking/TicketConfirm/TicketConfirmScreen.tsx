@@ -7,6 +7,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Linking,
 } from "react-native";
 import { CouponDto, CouponPreviewResponse } from "@Types/couponTypes";
 import { FONT_SIZE, SPACING } from "@Constants/theme";
@@ -172,7 +173,7 @@ const TicketConfirmScreen = () => {
     }
   };
 
-  const handleConfirmPayment = () => {
+  const handleConfirmPayment = async () => {
     if (!isAgree) {
       Alert.alert("Điều khoản", "Vui lòng đồng ý với điều khoản sử dụng trước khi thanh toán.");
       return;
@@ -183,25 +184,90 @@ const TicketConfirmScreen = () => {
       return;
     }
 
-    createOrder(
-      {
+    try {
+      const totalDiscount = (voucherDiscount || 0) + (promoDiscount || 0);
+
+      // Chuẩn hóa danh sách voucher/promo áp dụng
+      const coupons = [
+        ...(voucherPreview?.detailResults
+          ?.filter((d) => d.applied && selectedDetails.includes(d.detailId))
+          ?.map((d) => ({
+            detailId: d.detailId,
+            code: selectedCoupon?.code || "DEFAULT_VOUCHER",
+            discount: d.lineDiscount || 0,
+            type: "voucher",
+            gifts:
+              voucherPreview?.gifts
+                ?.filter((g) => g.serviceId === d.giftServiceId)
+                ?.map((g) => ({
+                  serviceId: g.serviceId,
+                  serviceName: g.serviceName,
+                  quantity: g.quantity,
+                  thumbnail: g.thumbnail,
+                })) || [],
+          })) || []),
+        ...(selectedPromo
+          ? [
+              {
+                detailId: selectedPromo.detailId,
+                code: "AUTO_PROMO",
+                discount: selectedPromo.lineDiscount || 0,
+                type: "promo",
+                gifts:
+                  promoPreview?.gifts
+                    ?.filter((g) => g.serviceId === selectedPromo.giftServiceId)
+                    ?.map((g) => ({
+                      serviceId: g.serviceId,
+                      serviceName: g.serviceName,
+                      quantity: g.quantity,
+                      thumbnail: g.thumbnail,
+                    })) || [],
+              },
+            ]
+          : []),
+      ];
+
+      // Gửi yêu cầu tạo đơn hàng
+      const body = {
         showtimeId: showtimeId || 0,
-        ticketItems: seats.map((seat) => ({ seatId: seat.id, price: seat.price })),
-        serviceItems: services.map((s) => ({
-          additionalServiceId: s.id,
-          quantity: s.quantity,
-          price: s.price,
+        ticketItems: seats.map((seat: any) => ({
+          seatId: seat.id,
+          price: seat.price,
+          priceId: seat.priceId || 0,
         })),
-        paymentMethod,
-      },
-      {
-        onSuccess: (res) => {
-          Alert.alert("Thanh toán", `Đi đến: ${res.url}`);
-          clearAll();
+        serviceItems: services
+          .filter((s: any) => s.quantity > 0)
+          .map((s: any) => ({
+            additionalServiceId: s.id,
+            quantity: s.quantity,
+            price: s.price,
+            priceId: s.priceId || 0,
+          })),
+        discounts: {
+          totalDiscount,
+          coupons,
         },
-        onError: (err) => Alert.alert("Lỗi", err.message),
-      }
-    );
+        paymentMethod: paymentMethod,
+        expireSeconds: 500,
+        platform: "app",
+      };
+
+      createOrder(body, {
+        onSuccess: (res) => {
+          if (res?.url) {
+            Linking.openURL(res.url);
+            clearAll();
+          } else {
+            Alert.alert("Thông báo", "Không nhận được URL thanh toán từ hệ thống.");
+          }
+        },
+        onError: (err: any) => {
+          Alert.alert("Lỗi thanh toán", err?.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+        },
+      });
+    } catch (error: any) {
+      Alert.alert("Lỗi", error?.message || "Không thể thực hiện thanh toán.");
+    }
   };
 
   const finalTotalPrice = totalPrice - voucherDiscount - promoDiscount;

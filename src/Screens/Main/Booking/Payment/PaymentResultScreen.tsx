@@ -1,128 +1,175 @@
-import React from "react";
-import { ScrollView, TouchableOpacity, StyleSheet } from "react-native";
-import { PickView, PickText } from "@Components";
-import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Image, Linking, StyleSheet, Animated } from "react-native";
+import { useRoute, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "@Types/navigationTypes";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { FONT_SIZE, SPACING } from "@Constants/theme";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { FileText } from "lucide-react-native";
 
-const PaymentResultScreen: React.FC = () => {
-  const { colors } = useThemedStyles();
+const PaymentResultScreen = () => {
+  const route = useRoute<any>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const paymentStatus = "success";
+  const { status, pdfUrl } = route.params || {};
+  const [scaleAnim] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    if (status === "success") {
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 5,
+        tension: 100,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [status]);
+
+  const handleDownloadTicket = () => {
+    if (pdfUrl) Linking.openURL(pdfUrl);
+  };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{ flex: 1, backgroundColor: colors.background["bg-brand-quaternary"] }}
-    >
-      <PickView alignCenter justifyCenter style={{ padding: 24, flex: 1 }}>
-        {/* Tiêu đề */}
-        <PickText
-          variant="h3"
-          font="bold"
-          color="heading-primary"
-          align="center"
-          style={{ marginBottom: 10 }}
-        >
-          💳 Kết Quả Thanh Toán
-        </PickText>
-
-        {paymentStatus === "success" ? (
+    <View style={styles.overlay}>
+      <View style={styles.card}>
+        {status === "success" ? (
           <>
-            <PickText
-              variant="h4"
-              font="semibold"
-              color="sub-headline-brand"
-              align="center"
-              style={{ marginBottom: 8 }}
+            <Animated.View style={[styles.iconWrapper, { transform: [{ scale: scaleAnim }] }]}>
+              <View style={styles.successCircle}>
+                <Ionicons name="checkmark" size={60} color="#22c55e" />
+              </View>
+            </Animated.View>
+
+            <Text style={styles.title}>Thanh toán thành công!</Text>
+            <Text style={styles.subtitle}>
+              Thông tin vé và mã QR đã được gửi qua email của bạn.
+            </Text>
+
+            {pdfUrl && (
+              <TouchableOpacity onPress={handleDownloadTicket} style={styles.actionButton}>
+                <FileText size={18} color="#fff" />
+                <Text style={styles.actionButtonText}>Xem vé của bạn</Text>
+              </TouchableOpacity>
+            )}
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Main")}
+              style={[styles.primaryButton, { backgroundColor: "#012e6e" }]}
             >
-              🎉 Thanh toán thành công!
-            </PickText>
-            <PickText variant="body_large" align="center" color="body" style={{ marginBottom: 24 }}>
-              Cảm ơn bạn đã đặt vé. Kiểm tra thông tin vé trong mục “Vé của tôi”.
-            </PickText>
+              <Text style={styles.primaryButtonText}>Quay về trang chủ</Text>
+            </TouchableOpacity>
           </>
         ) : (
           <>
-            <PickText
-              variant="h4"
-              font="semibold"
-              color="error-primary"
-              align="center"
-              style={{ marginBottom: 8 }}
+            <Image
+              source={require("@Assets/images/booking-fail.png")}
+              style={styles.failImage}
+              resizeMode="contain"
+            />
+            <Text style={[styles.title, { color: "#b91c1c" }]}>Thanh toán thất bại</Text>
+            <Text style={styles.subtitle}>Giao dịch đã bị hủy, hết hạn hoặc không thành công.</Text>
+            <Text style={styles.subtitle}>Vui lòng thử lại sau.</Text>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Main")}
+              style={[styles.primaryButton, { backgroundColor: "#012e6e" }]}
             >
-              ❌ Thanh toán thất bại
-            </PickText>
-            <PickText variant="body_large" align="center" color="body" style={{ marginBottom: 24 }}>
-              Giao dịch không thành công. Vui lòng thử lại hoặc chọn phương thức thanh toán khác.
-            </PickText>
+              <Text style={styles.primaryButtonText}>Quay về trang chủ</Text>
+            </TouchableOpacity>
           </>
         )}
-
-        {/* Nút hành động */}
-        <TouchableOpacity
-          style={[
-            styles.button,
-            {
-              backgroundColor:
-                paymentStatus === "success"
-                  ? colors.background["bg-brand-quaternary"]
-                  : colors.background["bg-brand-tertiary"],
-            },
-          ]}
-        >
-          <PickText color="body-on-brand" font="semibold" align="center" variant="body_large">
-            {paymentStatus === "success" ? "Về trang chủ" : "Thử lại"}
-          </PickText>
-        </TouchableOpacity>
-
-        <PickView
-          style={[styles.summaryBox, { backgroundColor: colors.background["bg-brand-quaternary"] }]}
-        >
-          <PickText
-            variant="h5"
-            font="semibold"
-            color="heading-primary"
-            style={{ marginBottom: 10 }}
-          >
-            Chi tiết giao dịch
-          </PickText>
-
-          <PickText variant="body_small" color="body">
-            - Mã giao dịch: #ABC123456
-          </PickText>
-          <PickText variant="body_small" color="body">
-            - Phim: Avengers: Endgame
-          </PickText>
-          <PickText variant="body_small" color="body">
-            - Suất chiếu: 19:30 - 06/11/2025
-          </PickText>
-          <PickText variant="body_small" color="body">
-            - Rạp: CGV Vincom Bà Triệu
-          </PickText>
-          <PickText variant="body_small" color="body">
-            - Tổng tiền: 280.000đ
-          </PickText>
-        </PickView>
-      </PickView>
-    </ScrollView>
+      </View>
+    </View>
   );
 };
 
+export default PaymentResultScreen;
+
 const styles = StyleSheet.create({
-  button: {
-    width: 200,
-    borderRadius: 8,
-    paddingVertical: 12,
-    marginBottom: 32,
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.05)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: SPACING.lg,
   },
-  summaryBox: {
-    width: "100%",
-    borderRadius: 10,
-    padding: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: SPACING.lg,
+    width: "90%",
+    alignItems: "center",
+    shadowColor: "#00000025",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
     shadowRadius: 8,
+    elevation: 5,
+  },
+  iconWrapper: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: "#dcfce7",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: SPACING.md,
+  },
+  successCircle: {
+    width: 95,
+    height: 95,
+    borderRadius: 48,
+    borderWidth: 5,
+    borderColor: "#22c55e",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: FONT_SIZE.xl,
+    fontWeight: "700",
+    color: "#012e6e",
+    textAlign: "center",
+    marginBottom: 6,
+  },
+  subtitle: {
+    fontSize: FONT_SIZE.md,
+    color: "#555",
+    textAlign: "center",
+    marginBottom: 6,
+  },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#ff8c42",
+    borderRadius: 30,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginTop: SPACING.md,
+  },
+  actionButtonText: {
+    color: "#fff",
+    fontSize: FONT_SIZE.md,
+    fontWeight: "600",
+    marginLeft: 8,
+  },
+  primaryButton: {
+    marginTop: SPACING.lg,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    shadowColor: "#00000030",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
     elevation: 2,
   },
+  primaryButtonText: {
+    color: "#fff",
+    fontSize: FONT_SIZE.md,
+    fontWeight: "700",
+  },
+  failImage: {
+    width: 100,
+    height: 100,
+    marginBottom: SPACING.md,
+  },
 });
-
-export default PaymentResultScreen;

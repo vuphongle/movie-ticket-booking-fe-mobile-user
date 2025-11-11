@@ -37,6 +37,7 @@ const AdditionalServiceScreen: React.FC = () => {
           type: s.type as "COMBO" | "SINGLE",
           quantity: 0,
           price: s.price || 0,
+          priceId: s.priceId || 0,
         })
       );
     }
