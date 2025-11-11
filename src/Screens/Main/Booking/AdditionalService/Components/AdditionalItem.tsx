@@ -15,7 +15,7 @@ const AdditionalItem = ({ item, updateServiceQty }: any) => {
 
   useEffect(() => {
     if (price?.price && item.price !== price.price) {
-      updateServicePrice(item.id, price.price);
+      updateServicePrice(item.id, price.price, price.priceId);
     }
   }, [price]);
 

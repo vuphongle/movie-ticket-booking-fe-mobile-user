@@ -61,6 +61,7 @@ const SelectSeatScreen: React.FC = () => {
       status: mapSeatStatus(d.status, d.reservationStatus),
       reservationStatus: mapReservationStatus(d.reservationStatus),
       price: d.price,
+      priceId: d.priceId,
     }));
     setMappedSeats(seatsMapped);
   }, [seatDtos]);

@@ -4,7 +4,7 @@ import { hideSplash } from "react-native-splash-view";
 import RootNavigator from "./RootNavigator";
 import { ROOT_STACK } from "@Constants";
 import { AuthProvider, useAuth } from "@Contexts/AuthContext";
-import { ChatWidget } from "@Components";
+// import { ChatWidget } from "@Components";
 
 const AppNavigator = () => {
   const { state } = useAuth();
@@ -23,7 +23,6 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <RootNavigator initialRouteName={ROOT_STACK.MAIN} />
-      <ChatWidget />
     </NavigationContainer>
   );
 };

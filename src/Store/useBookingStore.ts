@@ -16,6 +16,7 @@ interface ServiceItem {
   name: string;
   description: string;
   price: number;
+  priceId: number;
   quantity: number;
   thumbnail?: string;
   type: "COMBO" | "SINGLE";
@@ -58,7 +59,7 @@ interface BookingState {
 
   addService: (service: ServiceItem) => void;
   updateServiceQty: (id: number, quantity: number) => void;
-  updateServicePrice: (id: number, price: number) => void;
+  updateServicePrice: (id: number, price: number, priceId: number) => void;
   removeService: (id: number) => void;
   clearServices: () => void;
   clearAll: () => void;
@@ -115,8 +116,8 @@ export const useBookingStore = create<BookingState>((set, get) => ({
     set({ services: updated, totalPrice: total });
   },
 
-  updateServicePrice: (id, price) => {
-    const updated = get().services.map((s) => (s.id === id ? { ...s, price } : s));
+  updateServicePrice: (id: number, price: number, priceId: number) => {
+    const updated = get().services.map((s) => (s.id === id ? { ...s, price, priceId } : s));
 
     const total =
       get().seats.reduce((sum, s) => sum + s.price, 0) +
