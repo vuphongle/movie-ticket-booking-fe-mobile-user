@@ -93,7 +93,7 @@ export const AuthenticatedProfileView: React.FC = () => {
       title: "Lịch sử đặt vé",
       subtitle: "Xem các vé đã đặt",
       color: "#2193b0",
-      onPress: () => console.log("Order history"),
+      onPress: () => navigation.navigate("OrderHistory"),
     },
     {
       icon: "star-outline",
