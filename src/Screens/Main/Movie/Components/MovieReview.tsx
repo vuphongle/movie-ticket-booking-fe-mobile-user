@@ -32,7 +32,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews }) => {
   );
 
   return (
-    <PickView padding={SPACING.md} style={{ marginTop: -50 }}>
+    <PickView padding={SPACING.md}>
       <PickText
         font="bold"
         size={FONT_SIZE.xl}

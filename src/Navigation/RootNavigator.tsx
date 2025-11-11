@@ -8,6 +8,7 @@ import BlogDetailScreen from "@Screens/Main/BlogDetail/BlogDetailScreen";
 import MovieListScreen from "@Screens/Main/Movie/MovieListScreen";
 import MovieDetailScreen from "@Screens/Main/Movie/MovieDetailScreen";
 import MovieShowtime from "@Screens/Main/Movie/Components/MovieShowtime";
+import MovieRatingScreen from "@Screens/Main/Movie/MovieRatingScreen";
 import SelectSeatScreen from "@Screens/Main/Booking/SelectSeat/SelectSeatScreen";
 import AdditionalServiceScreen from "@Screens/Main/Booking/AdditionalService/AdditionalServiceScreen";
 import TicketConfirmScreen from "@Screens/Main/Booking/TicketConfirm/TicketConfirmScreen";
@@ -102,6 +103,15 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
           animationDuration: 300,
         }}
       />
+      <Stack.Screen
+        name="MovieRating"
+        component={MovieRatingScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
+
       <Stack.Screen
         name="MovieShowtime"
         component={MovieShowtime}

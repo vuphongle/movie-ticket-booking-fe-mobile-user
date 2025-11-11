@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, ActivityIndicator, Alert } from "react-native";
+import { ScrollView, StyleSheet, ActivityIndicator, Alert, ImageBackground } from "react-native";
 import { PickView, PickText, ScreenHeader } from "@Components";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -118,20 +118,26 @@ const SelectSeatScreen: React.FC = () => {
     );
 
   return (
-    <PickView style={{ flex: 1 }}>
-      <ScreenHeader title="Chọn ghế" />
+    <ImageBackground
+      source={movie?.poster ? { uri: movie.poster } : undefined}
+      style={{ flex: 1 }}
+      resizeMode="cover"
+    >
+      <PickView style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.3)" }}>
+        <ScreenHeader title="Chọn ghế" />
 
-      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}>
-        <PickView style={styles.screen}>
-          <PickText style={styles.screenText}>MÀN HÌNH</PickText>
-        </PickView>
+        <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}>
+          <PickView style={styles.screen}>
+            <PickText style={styles.screenText}>MÀN HÌNH</PickText>
+          </PickView>
 
-        <SeatMap seats={mappedSeats} selectedSeats={seats} onSelectSeat={toggleSeat} />
-        <SeatLegend />
-      </ScrollView>
+          <SeatMap seats={mappedSeats} selectedSeats={seats} onSelectSeat={toggleSeat} />
+          <SeatLegend />
+        </ScrollView>
 
-      <BookingSummary onContinue={handleContinue} />
-    </PickView>
+        <BookingSummary onContinue={handleContinue} />
+      </PickView>
+    </ImageBackground>
   );
 };
 

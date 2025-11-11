@@ -7,7 +7,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 export interface Person {
   id: number;
   name: string;
-  avatar: string;
 }
 export interface Genre {
   id: number;
@@ -28,44 +27,45 @@ export interface MovieContentProps {
     actors: Person[];
     trailer?: string;
     country: { id: number; name: string; slug: string };
+    description?: string;
   };
 }
 
 const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
-  const { colors, spacing, radius } = useThemedStyles();
+  const { colors, spacing } = useThemedStyles();
 
   const openTrailer = () => {
     if (movie.trailer) {
-      const youtubeUrl = movie.trailer.startsWith("http")
+      const url = movie.trailer.startsWith("http")
         ? movie.trailer
         : `https://www.youtube.com/watch?v=${movie.trailer}`;
-      Linking.openURL(youtubeUrl);
+      Linking.openURL(url);
     }
   };
+
+  const infoBoxes = [
+    { label: "⏱", value: `${movie.duration} phút` },
+    { label: "⭐", value: `${movie.rating}` },
+    { label: "🎞", value: movie.genres.map((g) => g.name).join(", ") },
+  ];
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Poster */}
         <PickView>
           <Image
             source={{ uri: movie.poster }}
-            style={{
-              width: "100%",
-              height: 400,
-              resizeMode: "cover",
-            }}
+            style={{ width: "100%", height: 180, resizeMode: "cover" }}
           />
-
           {movie.trailer && (
             <TouchableOpacity
               onPress={openTrailer}
               activeOpacity={0.8}
               style={{
                 position: "absolute",
-                top: "40%",
+                top: "30%",
                 left: "42%",
-                backgroundColor: "rgba(0, 0, 0, 0.6)",
+                backgroundColor: "rgba(0,0,0,0.6)",
                 borderRadius: 50,
                 width: 80,
                 height: 80,
@@ -84,193 +84,57 @@ const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
           )}
         </PickView>
 
-        {/* Movie Info */}
         <PickView padding={spacing.s16}>
-          <PickText
-            size={22}
-            font="bold"
-            style={{
-              color: colors.text["heading-primary"],
-              marginBottom: spacing.s8,
-            }}
-          >
-            {movie.name}
-          </PickText>
+          <PickView marginBottom={6}>
+            <PickText size={22} font="bold" style={{ color: colors.text["heading-primary"] }}>
+              {movie.name}
+            </PickText>
+            <PickText
+              size={15}
+              style={{ color: colors.text.body, fontStyle: "italic", marginBottom: 12 }}
+            >
+              {movie.nameEn}
+            </PickText>
 
-          <PickText
-            size={16}
-            style={{
-              color: colors.text.body,
-              fontStyle: "italic",
-              marginBottom: spacing.s8,
-            }}
-          >
-            {movie.nameEn}
-          </PickText>
-
-          {/* Quốc gia */}
-          {movie.country && (
-            <PickView row alignCenter gap={spacing.s8} marginBottom={spacing.s16}>
-              <MaterialCommunityIcons
-                name="earth"
-                size={18}
-                color={colors.background["bg-brand-quaternary"]}
-              />
-              <PickText size={14} style={{ color: colors.text.body }}>
-                Nước sản xuất: {movie.country.name}
-              </PickText>
-            </PickView>
-          )}
-
-          {/* Meta Info */}
-          <PickView
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              gap: spacing.s16,
-              marginBottom: spacing.s16,
-            }}
-          >
-            <PickView row alignCenter gap={spacing.s8}>
-              <MaterialCommunityIcons
-                name="clock-outline"
-                size={18}
-                color={colors.background["bg-brand-quaternary"]}
-              />
-              <PickText size={14} style={{ color: colors.text.body }}>
-                {movie.duration} phút
-              </PickText>
-            </PickView>
-
-            <PickView row alignCenter gap={spacing.s8}>
-              <MaterialCommunityIcons
-                name="star"
-                size={18}
-                color={colors.background["bg-brand-quaternary"]}
-              />
-              <PickText size={14} style={{ color: colors.text.body }}>
-                {movie.rating}
-              </PickText>
-            </PickView>
-
-            <PickView row alignCenter gap={spacing.s8}>
-              <MaterialCommunityIcons
-                name="filmstrip"
-                size={18}
-                color={colors.background["bg-brand-quaternary"]}
-              />
-              <PickText size={14} style={{ color: colors.text.body }}>
-                {movie.genres.map((g) => g.name).join(", ")}
-              </PickText>
-            </PickView>
-
-            <PickView row alignCenter gap={spacing.s8}>
-              <MaterialCommunityIcons
-                name="calendar"
-                size={18}
-                color={colors.background["bg-brand-quaternary"]}
-              />
-              <PickText size={14} style={{ color: colors.text.body }}>
-                {new Date(movie.showDate).toLocaleDateString()}
-              </PickText>
+            <PickView row gap={6} flexWrap="wrap">
+              {infoBoxes.map((box, i) => (
+                <PickView
+                  key={i}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#000",
+                    borderRadius: 6,
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    marginBottom: 6,
+                  }}
+                >
+                  <PickText size={13}>
+                    {box.label}: {box.value}
+                  </PickText>
+                </PickView>
+              ))}
             </PickView>
           </PickView>
+
           <PickView
-            row
-            gap={spacing.s16}
-            marginTop={spacing.s16}
-            marginBottom={spacing.s32}
             style={{
-              backgroundColor: "#F9F9FB",
-              padding: spacing.s8,
-              borderRadius: radius.r12,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.08,
-              shadowRadius: 4,
-              elevation: 2,
+              borderTopWidth: 1,
+              borderBottomWidth: 1,
+              borderColor: "#000",
+              paddingVertical: 8,
             }}
           >
-            <PickView flex={1}>
-              <PickText
-                size={18}
-                font="semibold"
-                style={{
-                  color: colors.text["heading-primary"],
-                  marginBottom: spacing.s8,
-                  borderBottomWidth: 1,
-                  borderBottomColor: colors.border["border-primary"],
-                  paddingBottom: spacing.s4,
-                }}
-              >
-                🎬 Đạo diễn
+            <PickText size={13} style={{ marginBottom: 2 }}>
+              Đạo diễn: {movie.directors.map((d) => d.name).join(", ")}
+            </PickText>
+            <PickText size={13} style={{ marginBottom: 2 }}>
+              Diễn viên: {movie.actors.map((a) => a.name).join(", ")}
+            </PickText>
+            <PickView style={{ marginBottom: 2 }}>
+              <PickText size={13} numberOfLines={2} ellipsizeMode="tail" lineHeight={20}>
+                Mô tả: {movie.description}
               </PickText>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {movie.directors.map((d) => (
-                  <PickView key={d.id} alignCenter marginRight={spacing.s8} width={70}>
-                    <Image
-                      source={{ uri: d.avatar }}
-                      style={{
-                        width: 64,
-                        height: 96,
-                        borderRadius: radius.r8,
-                        marginBottom: spacing.s4,
-                      }}
-                    />
-                    <PickText
-                      size={11}
-                      numberOfLines={1}
-                      style={{
-                        color: colors.text.body,
-                        textAlign: "center",
-                      }}
-                    >
-                      {d.name}
-                    </PickText>
-                  </PickView>
-                ))}
-              </ScrollView>
-            </PickView>
-
-            <PickView flex={2}>
-              <PickText
-                size={18}
-                font="semibold"
-                style={{
-                  color: colors.text["heading-primary"],
-                  marginBottom: spacing.s8,
-                  borderBottomWidth: 1,
-                  borderBottomColor: colors.border["border-primary"],
-                  paddingBottom: spacing.s4,
-                }}
-              >
-                🎭 Diễn viên
-              </PickText>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {movie.actors.map((a) => (
-                  <PickView key={a.id} alignCenter marginRight={spacing.s8} width={70}>
-                    <Image
-                      source={{ uri: a.avatar }}
-                      style={{
-                        width: 64,
-                        height: 96,
-                        borderRadius: radius.r8,
-                        marginBottom: spacing.s4,
-                      }}
-                    />
-                    <PickText
-                      size={11}
-                      numberOfLines={1}
-                      style={{
-                        color: colors.text.body,
-                        textAlign: "center",
-                      }}
-                    >
-                      {a.name}
-                    </PickText>
-                  </PickView>
-                ))}
-              </ScrollView>
             </PickView>
           </PickView>
         </PickView>
