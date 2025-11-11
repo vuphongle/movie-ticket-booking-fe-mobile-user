@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Linking,
-} from "react-native";
+import { View, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "@Types/navigationTypes";
 import { CouponDto, CouponPreviewResponse } from "@Types/couponTypes";
 import { FONT_SIZE, SPACING } from "@Constants/theme";
-import { PickView, PickText, PickButton, ScreenHeader } from "@Components";
+import { PickView, PickText, PickButton, ScreenHeader, PickCheckbox } from "@Components";
 import MovieInfoCard from "./Components/MovieInfoCard";
 import TicketList from "./Components/TicketList";
 import ServiceList from "./Components/ServiceList";
@@ -26,6 +20,7 @@ import PromoModal from "./Modals/PromoModal";
 import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
 
 const TicketConfirmScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {
     showtimeId,
     movie,
@@ -37,7 +32,6 @@ const TicketConfirmScreen = () => {
     services,
     totalPrice,
     expireAt,
-    clearAll,
   } = useBookingStore();
 
   const { mutate: createOrder, isPending } = useCreateOrder();
@@ -259,8 +253,10 @@ const TicketConfirmScreen = () => {
       createOrder(body, {
         onSuccess: (res) => {
           if (res?.url) {
-            Linking.openURL(res.url);
-            clearAll();
+            // Navigate đến WebView screen thay vì mở browser
+            navigation.navigate("PaymentWebView", {
+              paymentUrl: res.url,
+            });
           } else {
             Alert.alert("Thông báo", "Không nhận được URL thanh toán từ hệ thống.");
           }
@@ -343,29 +339,9 @@ const TicketConfirmScreen = () => {
           <PaymentSection paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
 
           {/* Checkbox xác nhận */}
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "flex-start",
-              marginTop: SPACING.lg,
-              gap: SPACING.sm,
-            }}
-            onPress={() => setIsAgree((prev) => !prev)}
-          >
-            <View
-              style={{
-                width: 22,
-                height: 22,
-                borderWidth: 1,
-                borderColor: "#C4C4C4",
-                borderRadius: 6,
-                marginTop: 3,
-                backgroundColor: isAgree ? "#012e6e" : "#FFF",
-              }}
-            />
+          <PickCheckbox checked={isAgree} onToggle={setIsAgree} style={{ marginTop: SPACING.lg }}>
             <PickText
               style={{
-                flex: 1,
                 color: "#5A5A5A",
                 fontSize: FONT_SIZE.sm,
                 lineHeight: 20,
@@ -376,7 +352,7 @@ const TicketConfirmScreen = () => {
               <Text style={{ textDecorationLine: "underline" }}>Chính sách bảo mật</Text> & của Go
               Cinema.
             </PickText>
-          </TouchableOpacity>
+          </PickCheckbox>
         </ScrollView>
 
         {/* Footer */}

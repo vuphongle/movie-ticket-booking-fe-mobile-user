@@ -12,6 +12,7 @@ import MovieRatingScreen from "@Screens/Main/Movie/MovieRatingScreen";
 import SelectSeatScreen from "@Screens/Main/Booking/SelectSeat/SelectSeatScreen";
 import AdditionalServiceScreen from "@Screens/Main/Booking/AdditionalService/AdditionalServiceScreen";
 import TicketConfirmScreen from "@Screens/Main/Booking/TicketConfirm/TicketConfirmScreen";
+import PaymentWebViewScreen from "@Screens/Main/Payment/PaymentWebViewScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -141,6 +142,14 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
       <Stack.Screen
         name="TicketConfirm"
         component={TicketConfirmScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
+      <Stack.Screen
+        name="PaymentWebView"
+        component={PaymentWebViewScreen}
         options={{
           animation: "slide_from_right",
           animationDuration: 300,

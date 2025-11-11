@@ -7,3 +7,4 @@ export { DatePickerModal } from "./DatePicker";
 export { ScreenHeader } from "./ScreenHeader";
 export { AvatarOptionsBottomSheet } from "./AvatarOptionsBottomSheet";
 export { ChatWidget } from "./ChatWidget";
+export { PickCheckbox } from "./Checkbox";

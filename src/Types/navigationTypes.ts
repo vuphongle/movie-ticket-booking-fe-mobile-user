@@ -34,6 +34,9 @@ export type RootStackParamList = {
   };
   AdditionalService: undefined;
   TicketConfirm: undefined;
+  PaymentWebView: {
+    paymentUrl: string;
+  };
   MovieRating: {
     movieId: number;
     movieName: string;
