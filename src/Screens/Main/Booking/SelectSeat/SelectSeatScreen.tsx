@@ -31,7 +31,7 @@ const SelectSeatScreen: React.FC = () => {
     isLoading: isSeatsLoading,
     refetch: refetchSeats,
   } = useSeats({ auditoriumId, showtimeId });
-  const { addSeat, removeSeat, setBookingInfo, seats } = useBookingStore();
+  const { addSeat, removeSeat, setBookingInfo, seats, setExpireTime } = useBookingStore();
   const checkSeatStatus = useLazyCheckSeatStatus();
   const { mutateAsync: bookSeat } = useBookSeat();
 
@@ -102,6 +102,7 @@ const SelectSeatScreen: React.FC = () => {
 
       await Promise.allSettled(seats.map((seat) => bookSeat({ seatId: seat.id, showtimeId })));
 
+      setExpireTime(8 * 60);
       navigation.navigate("AdditionalService");
     } catch (err) {
       console.error(err);

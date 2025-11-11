@@ -23,6 +23,7 @@ import { useCreateOrder } from "@Hooks/payment/useCreateOrder";
 import { useCouponByCode, usePreviewCoupon, usePreviewAllCoupons } from "@Hooks/coupon/useCoupon";
 import VoucherModal from "./Modals/VoucherModal";
 import PromoModal from "./Modals/PromoModal";
+import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
 
 const TicketConfirmScreen = () => {
   const {
@@ -35,6 +36,7 @@ const TicketConfirmScreen = () => {
     seats,
     services,
     totalPrice,
+    expireAt,
     clearAll,
   } = useBookingStore();
 
@@ -186,6 +188,8 @@ const TicketConfirmScreen = () => {
 
     try {
       const totalDiscount = (voucherDiscount || 0) + (promoDiscount || 0);
+      const diffMs = expireAt ? expireAt - Date.now() : 0;
+      const expireSeconds = Math.max(0, Math.floor(diffMs / 1000));
 
       // Chuẩn hóa danh sách voucher/promo áp dụng
       const coupons = [
@@ -248,7 +252,7 @@ const TicketConfirmScreen = () => {
           coupons,
         },
         paymentMethod: paymentMethod,
-        expireSeconds: 500,
+        expireSeconds: expireSeconds,
         platform: "app",
       };
 
@@ -275,6 +279,7 @@ const TicketConfirmScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: "#F2F3F5" }}>
       <ScreenHeader title="Thanh toán" />
+      <BookingTimer />
 
       <MovieInfoCard
         movie={movie}

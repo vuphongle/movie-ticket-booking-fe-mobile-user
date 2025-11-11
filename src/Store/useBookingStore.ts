@@ -62,6 +62,11 @@ interface BookingState {
   updateServicePrice: (id: number, price: number, priceId: number) => void;
   removeService: (id: number) => void;
   clearServices: () => void;
+
+  expireAt?: number; // timestamp khi hết hạn giữ ghế
+  setExpireTime: (seconds: number) => void;
+  clearExpireTime: () => void;
+
   clearAll: () => void;
 }
 
@@ -136,5 +141,14 @@ export const useBookingStore = create<BookingState>((set, get) => ({
 
   clearServices: () => set({ services: [] }),
 
-  clearAll: () => set({ seats: [], services: [], totalPrice: 0 }),
+  expireAt: undefined,
+
+  setExpireTime: (seconds) => {
+    const expireAt = Date.now() + seconds * 1000;
+    set({ expireAt });
+  },
+
+  clearExpireTime: () => set({ expireAt: undefined }),
+
+  clearAll: () => set({ seats: [], services: [], totalPrice: 0, expireAt: undefined }),
 }));
