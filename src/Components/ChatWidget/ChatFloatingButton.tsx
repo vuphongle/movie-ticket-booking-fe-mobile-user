@@ -105,7 +105,7 @@ export const ChatFloatingButton: React.FC<ChatFloatingButtonProps> = ({ onPress 
 
   return (
     <GestureDetector gesture={panGesture}>
-      <Animated.View style={[styles.container, animatedStyle]}>
+      <Animated.View style={[styles.container, animatedStyle]} pointerEvents="auto">
         <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={handlePress}>
           <Icon name="robot" size={26} color="#0f172a" />
         </TouchableOpacity>

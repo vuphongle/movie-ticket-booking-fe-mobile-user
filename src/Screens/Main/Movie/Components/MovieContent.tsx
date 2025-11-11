@@ -1,8 +1,8 @@
 import React from "react";
-import { ScrollView, Image, TouchableOpacity, Linking } from "react-native";
+import { ScrollView, Dimensions } from "react-native";
 import { PickView, PickText } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export interface Person {
   id: number;
@@ -33,15 +33,20 @@ export interface MovieContentProps {
 
 const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
   const { colors, spacing } = useThemedStyles();
+  const screenWidth = Dimensions.get("window").width;
 
-  const openTrailer = () => {
-    if (movie.trailer) {
-      const url = movie.trailer.startsWith("http")
-        ? movie.trailer
-        : `https://www.youtube.com/watch?v=${movie.trailer}`;
-      Linking.openURL(url);
-    }
+  // Extract YouTube video ID from URL
+  const getYouTubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+
+    // Handle various YouTube URL formats
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+
+    return match && match[2].length === 11 ? match[2] : url;
   };
+
+  const videoId = movie.trailer ? getYouTubeVideoId(movie.trailer) : null;
 
   const infoBoxes = [
     { label: "⏱", value: `${movie.duration} phút` },
@@ -52,37 +57,22 @@ const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <PickView>
-          <Image
-            source={{ uri: movie.poster }}
-            style={{ width: "100%", height: 180, resizeMode: "cover" }}
-          />
-          {movie.trailer && (
-            <TouchableOpacity
-              onPress={openTrailer}
-              activeOpacity={0.8}
-              style={{
-                position: "absolute",
-                top: "30%",
-                left: "42%",
-                backgroundColor: "rgba(0,0,0,0.6)",
-                borderRadius: 50,
-                width: 80,
-                height: 80,
-                justifyContent: "center",
-                alignItems: "center",
-                borderWidth: 2,
-                borderColor: colors.background["bg-brand-quaternary"],
-              }}
-            >
-              <MaterialCommunityIcons
-                name="play"
-                size={48}
-                color={colors.background["bg-brand-quaternary"]}
-              />
-            </TouchableOpacity>
-          )}
-        </PickView>
+        {movie.trailer && videoId && (
+          <PickView
+            style={{
+              backgroundColor: "#000",
+              width: "100%",
+              aspectRatio: 16 / 9, // YouTube standard aspect ratio
+            }}
+          >
+            <YoutubePlayer
+              height={(screenWidth * 9) / 16} // Maintain 16:9 aspect ratio
+              width={screenWidth}
+              play={false}
+              videoId={videoId}
+            />
+          </PickView>
+        )}
 
         <PickView padding={spacing.s16}>
           <PickView marginBottom={6}>
