@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 
 import MovieContent, { MovieContentProps } from "./Components/MovieContent";
-import MovieReviews, { Review } from "./Components/MovieReview";
+import { Review } from "./Components/MovieReview";
 import MovieSection from "@Screens/Main/Home/Components/MovieSection";
 import { movieService } from "@Services/movie/movieService";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
@@ -107,16 +107,29 @@ const MovieDetailScreen: React.FC = () => {
 
   return (
     <PickView style={styles.container}>
-      {/* Header */}
       <ScreenHeader title="Chi tiết phim" />
 
-      {/* Nội dung */}
       <ScrollView
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 50,
         }}
       >
         <MovieContent movie={movie} />
+
+        <PickView paddingHorizontal={SPACING.md} marginBottom={SPACING.md}>
+          <PickButton
+            title={`Đánh giá phim (${reviews.length})`}
+            type="Secondary"
+            size="sm"
+            onPress={() =>
+              navigation.navigate("MovieRating", {
+                movieId: Number(id),
+                movieName: movie.name,
+                reviews,
+              })
+            }
+          />
+        </PickView>
 
         <MovieSection
           title="Phim đang chiếu"
@@ -129,10 +142,6 @@ const MovieDetailScreen: React.FC = () => {
             })
           }
         />
-
-        <PickView style={{ marginTop: SPACING.lg }}>
-          <MovieReviews reviews={reviews} movieId={Number(id)} />
-        </PickView>
       </ScrollView>
 
       {/* Nút Đặt vé */}

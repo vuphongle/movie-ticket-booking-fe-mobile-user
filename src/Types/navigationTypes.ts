@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { ROOT_STACK, MAIN_TAB_STACK } from "@Constants";
+import { Review } from "@Screens/Main/Movie/Components/MovieReview";
 
 // Root Stack Param List
 export type RootStackParamList = {
@@ -33,6 +34,11 @@ export type RootStackParamList = {
   };
   AdditionalService: undefined;
   TicketConfirm: undefined;
+  MovieRating: {
+    movieId: number;
+    movieName: string;
+    reviews: Review[];
+  };
 };
 
 // Main Tab Param List
