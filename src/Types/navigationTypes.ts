@@ -12,6 +12,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   EditProfile: undefined;
   ChangePassword: undefined;
+  OrderHistory: undefined;
   BlogDetail: {
     id: number;
     slug: string;

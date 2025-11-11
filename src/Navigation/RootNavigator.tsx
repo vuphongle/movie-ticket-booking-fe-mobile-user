@@ -4,6 +4,7 @@ import { RootStackParamList } from "@Types/navigationTypes";
 import TabNavigator from "./TabNavigator";
 import { LoginScreen, RegisterScreen, EditProfileScreen, ChangePasswordScreen } from "@Screens";
 import ForgotPasswordScreen from "@Screens/Auth/ForgotPasswordScreen";
+import { OrderHistoryScreen } from "@Screens/Main/Profile/OrderHistoryScreen";
 import BlogDetailScreen from "@Screens/Main/BlogDetail/BlogDetailScreen";
 import MovieListScreen from "@Screens/Main/Movie/MovieListScreen";
 import MovieDetailScreen from "@Screens/Main/Movie/MovieDetailScreen";
@@ -73,6 +74,14 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
       <Stack.Screen
         name="ChangePassword"
         component={ChangePasswordScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
+      <Stack.Screen
+        name="OrderHistory"
+        component={OrderHistoryScreen}
         options={{
           animation: "slide_from_right",
           animationDuration: 300,

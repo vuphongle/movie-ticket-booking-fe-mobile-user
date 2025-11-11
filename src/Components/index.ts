@@ -8,3 +8,5 @@ export { ScreenHeader } from "./ScreenHeader";
 export { AvatarOptionsBottomSheet } from "./AvatarOptionsBottomSheet";
 export { ChatWidget } from "./ChatWidget";
 export { PickCheckbox } from "./Checkbox";
+export { OrderCard } from "./OrderCard";
+export { OrderStatusBadge } from "./OrderStatusBadge";
