@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAdditionalServices } from "@Hooks/additionalService/useAdditionalService";
 import { useBookingStore } from "@Store/useBookingStore";
 import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
+import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
 import { useCancelSeatMulti } from "@Hooks/booking/useReservation";
 
 import AdditionalTab from "./Components/AdditionalTab";
@@ -85,6 +86,7 @@ const AdditionalServiceScreen: React.FC = () => {
   return (
     <PickView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <ScreenHeader title="Dịch vụ bổ sung" onBackPress={handleBackPress} />
+      <BookingTimer />
 
       <AdditionalTab openTab={openTab} setOpenTab={setOpenTab} />
 
