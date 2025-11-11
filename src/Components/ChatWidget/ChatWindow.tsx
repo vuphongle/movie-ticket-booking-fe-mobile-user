@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useChat } from "@Hooks/useChat";
 import { ChatMessageBubble } from "./ChatMessage";
@@ -102,127 +102,122 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
           },
         ]}
       >
-        <SafeAreaView style={styles.safeContainer} edges={["top"]}>
-          <Animated.View
-            style={[
-              styles.container,
-              {
-                opacity: slideAnim,
-                transform: [
-                  {
-                    translateY: slideAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [50, 0],
-                    }),
-                  },
-                ],
-              },
-            ]}
+        <Animated.View
+          style={[
+            styles.container,
+            {
+              opacity: slideAnim,
+              marginTop: insets.top,
+              transform: [
+                {
+                  translateY: slideAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [50, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          {/* Header */}
+          <PickView
+            row
+            alignCenter
+            justifySpaceBetween
+            paddingHorizontal={20}
+            paddingVertical={16}
+            borderBottomWidth={1}
+            style={{ borderBottomColor: "#e0e0e0" }}
           >
-            {/* Header */}
+            <PickView flex={1}>
+              <PickText size={18} style={{ fontWeight: "600", color: "#1a1a2e" }}>
+                Trợ lý AI GoCinema
+              </PickText>
+              <PickText size={12} style={{ color: "#666666", marginTop: 2 }}>
+                Tìm phim phù hợp với bạn
+              </PickText>
+            </PickView>
+            <PickView row gap={8}>
+              <TouchableOpacity style={styles.iconButton} onPress={handleReset} activeOpacity={0.7}>
+                <Icon name="refresh" size={20} color="#1a1a2e" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.iconButton} onPress={onClose} activeOpacity={0.7}>
+                <Icon name="close" size={20} color="#1a1a2e" />
+              </TouchableOpacity>
+            </PickView>
+          </PickView>
+
+          {/* Messages */}
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <ChatMessageBubble message={item} onMoviePress={onMoviePress} />
+            )}
+            contentContainerStyle={styles.messagesList}
+            showsVerticalScrollIndicator={false}
+            onContentSizeChange={() => {
+              flatListRef.current?.scrollToEnd({ animated: true });
+            }}
+          />
+
+          {/* Loading indicator */}
+          {isLoading && (
+            <PickView row alignCenter justifyCenter paddingVertical={12} gap={8}>
+              <ActivityIndicator color="#6366f1" size="small" />
+              <PickText size={12} style={{ color: "#666666" }}>
+                {CHAT_CONFIG.LOADING_TEXT}
+              </PickText>
+            </PickView>
+          )}
+
+          {/* Input */}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
+            keyboardVerticalOffset={Platform.OS === "ios" ? insets.bottom + 20 : 0}
+          >
             <PickView
               row
               alignCenter
-              justifySpaceBetween
-              paddingHorizontal={20}
-              paddingVertical={16}
-              borderBottomWidth={1}
-              style={{ borderBottomColor: "#e0e0e0" }}
+              paddingHorizontal={16}
+              paddingVertical={12}
+              style={{
+                borderTopWidth: 1,
+                borderTopColor: "#e0e0e0",
+                gap: 12,
+              }}
             >
               <PickView flex={1}>
-                <PickText size={18} style={{ fontWeight: "600", color: "#1a1a2e" }}>
-                  Trợ lý AI GoCinema
-                </PickText>
-                <PickText size={12} style={{ color: "#666666", marginTop: 2 }}>
-                  Tìm phim phù hợp với bạn
-                </PickText>
+                <PickInput
+                  placeholder={CHAT_CONFIG.INPUT_PLACEHOLDER}
+                  placeholderTextColor="#999999"
+                  value={inputValue}
+                  onChangeText={setInputValue}
+                  onSubmitEditing={handleSend}
+                  editable={!isLoading}
+                  maxLength={CHAT_CONFIG.MAX_MESSAGE_LENGTH}
+                  containerStyle={{ marginBottom: 0 }}
+                />
               </PickView>
-              <PickView row gap={8}>
-                <TouchableOpacity
-                  style={styles.iconButton}
-                  onPress={handleReset}
-                  activeOpacity={0.7}
-                >
-                  <Icon name="refresh" size={20} color="#1a1a2e" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={onClose} activeOpacity={0.7}>
-                  <Icon name="close" size={20} color="#1a1a2e" />
-                </TouchableOpacity>
-              </PickView>
-            </PickView>
-
-            {/* Messages */}
-            <FlatList
-              ref={flatListRef}
-              data={messages}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <ChatMessageBubble message={item} onMoviePress={onMoviePress} />
-              )}
-              contentContainerStyle={styles.messagesList}
-              showsVerticalScrollIndicator={false}
-              onContentSizeChange={() => {
-                flatListRef.current?.scrollToEnd({ animated: true });
-              }}
-            />
-
-            {/* Loading indicator */}
-            {isLoading && (
-              <PickView row alignCenter justifyCenter paddingVertical={12} gap={8}>
-                <ActivityIndicator color="#6366f1" size="small" />
-                <PickText size={12} style={{ color: "#666666" }}>
-                  {CHAT_CONFIG.LOADING_TEXT}
-                </PickText>
-              </PickView>
-            )}
-
-            {/* Input */}
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : undefined}
-              keyboardVerticalOffset={Platform.OS === "ios" ? insets.bottom + 20 : 0}
-            >
-              <PickView
-                row
-                alignCenter
-                paddingHorizontal={16}
-                paddingVertical={12}
-                style={{
-                  borderTopWidth: 1,
-                  borderTopColor: "#e0e0e0",
-                  gap: 12,
-                }}
+              <TouchableOpacity
+                style={[
+                  styles.sendButton,
+                  (!inputValue.trim() || isLoading) && styles.sendButtonDisabled,
+                ]}
+                onPress={handleSend}
+                disabled={!inputValue.trim() || isLoading}
+                activeOpacity={0.7}
               >
-                <PickView flex={1}>
-                  <PickInput
-                    placeholder={CHAT_CONFIG.INPUT_PLACEHOLDER}
-                    placeholderTextColor="#999999"
-                    value={inputValue}
-                    onChangeText={setInputValue}
-                    onSubmitEditing={handleSend}
-                    editable={!isLoading}
-                    maxLength={CHAT_CONFIG.MAX_MESSAGE_LENGTH}
-                    containerStyle={{ marginBottom: 0 }}
-                  />
-                </PickView>
-                <TouchableOpacity
-                  style={[
-                    styles.sendButton,
-                    (!inputValue.trim() || isLoading) && styles.sendButtonDisabled,
-                  ]}
-                  onPress={handleSend}
-                  disabled={!inputValue.trim() || isLoading}
-                  activeOpacity={0.7}
-                >
-                  <Icon
-                    name="send"
-                    size={20}
-                    color={!inputValue.trim() || isLoading ? "#999999" : "#ffffff"}
-                  />
-                </TouchableOpacity>
-              </PickView>
-            </KeyboardAvoidingView>
-          </Animated.View>
-        </SafeAreaView>
+                <Icon
+                  name="send"
+                  size={20}
+                  color={!inputValue.trim() || isLoading ? "#999999" : "#ffffff"}
+                />
+              </TouchableOpacity>
+            </PickView>
+          </KeyboardAvoidingView>
+        </Animated.View>
       </Animated.View>
     </Modal>
   );
