@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import type { RootStackNavigationProp } from "@Types/navigationTypes";
 import { ChatFloatingButton } from "./ChatFloatingButton";
@@ -34,16 +32,9 @@ export const ChatWidget: React.FC = () => {
   };
 
   return (
-    <GestureHandlerRootView style={styles.container} pointerEvents="box-none">
+    <>
       <ChatFloatingButton onPress={handleOpen} />
       <ChatWindow visible={isVisible} onClose={handleClose} onMoviePress={handleMoviePress} />
-    </GestureHandlerRootView>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 999,
-  },
-});
