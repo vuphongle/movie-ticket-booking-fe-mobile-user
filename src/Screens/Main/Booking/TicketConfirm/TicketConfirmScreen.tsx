@@ -14,7 +14,12 @@ import PaymentSection from "./Components/PaymentSection";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { useBookingStore } from "@Store/useBookingStore";
 import { useCreateOrder } from "@Hooks/payment/useCreateOrder";
-import { useCouponByCode, usePreviewCoupon, usePreviewAllCoupons } from "@Hooks/coupon/useCoupon";
+import {
+  useCouponByCode,
+  usePreviewCoupon,
+  usePreviewAllCoupons,
+  useCoupons,
+} from "@Hooks/coupon/useCoupon";
 import VoucherModal from "./Modals/VoucherModal";
 import PromoModal from "./Modals/PromoModal";
 import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
@@ -51,13 +56,15 @@ const TicketConfirmScreen = () => {
   const [promoDiscount, setPromoDiscount] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState<"PAYOS" | "VNPAY" | null>(null);
 
+  const couponsQuery = useCoupons();
   const previewAllCoupons = usePreviewAllCoupons();
   const couponByCodeQuery = useCouponByCode(voucherCode, false);
   const previewCouponMutation = usePreviewCoupon();
 
   useEffect(() => {
     const fetchPromo = async () => {
-      if (!seats.length) return;
+      if (!seats.length || !couponsQuery.data) return; // Chỉ chạy khi có coupons
+
       setIsLoadingPromo(true);
       try {
         const preview = await previewAllCoupons.mutateAsync({
@@ -77,12 +84,34 @@ const TicketConfirmScreen = () => {
           },
         });
 
-        setPromoPreview(preview);
+        // Enrich dữ liệu với số lượng giới hạn và đã dùng
+        const enrichedDetails = preview.detailResults.map((detail: any) => {
+          let couponDetail = null;
 
-        if (preview.detailResults.length > 0) {
-          const bestPromo = preview.detailResults.reduce((best, current) => {
+          for (const coupon of couponsQuery.data) {
+            const foundDetail = coupon.details.find((d: any) => d.id === detail.detailId);
+            if (foundDetail) {
+              couponDetail = foundDetail.terms;
+              break;
+            }
+          }
+
+          return {
+            ...detail,
+            limitQuantityApplied: couponDetail?.limitQuantityApplied as number | null,
+            detailUsedCount: couponDetail?.detailUsedCount ?? 0,
+          };
+        });
+
+        setPromoPreview({
+          ...preview,
+          detailResults: enrichedDetails,
+        });
+
+        if (enrichedDetails.length > 0) {
+          const bestPromo = enrichedDetails.reduce((best, current) => {
             return (current.lineDiscount || 0) > (best.lineDiscount || 0) ? current : best;
-          }, preview.detailResults[0]);
+          }, enrichedDetails[0]);
 
           setSelectedPromo(bestPromo);
           setPromoDiscount(bestPromo.lineDiscount || 0);
@@ -94,10 +123,14 @@ const TicketConfirmScreen = () => {
       }
     };
 
-    fetchPromo();
-  }, []);
+    if (couponsQuery.data) {
+      fetchPromo();
+    }
+  }, [seats, services, couponsQuery.data]);
 
   const handlePreviewDisplay = async () => {
+    if (!seats.length || !couponsQuery.data) return;
+
     setIsLoadingPromo(true);
     try {
       const preview = await previewAllCoupons.mutateAsync({
@@ -117,7 +150,35 @@ const TicketConfirmScreen = () => {
         },
       });
 
-      setPromoPreview(preview);
+      // enrich dữ liệu ngay trước khi set
+      const enrichedDetails = preview.detailResults.map((detail: any) => {
+        let couponDetail = null;
+        for (const coupon of couponsQuery.data) {
+          const foundDetail = coupon.details.find((d: any) => d.id === detail.detailId);
+          if (foundDetail) {
+            couponDetail = foundDetail.terms;
+            break;
+          }
+        }
+        return {
+          ...detail,
+          limitQuantityApplied: couponDetail?.limitQuantityApplied as number | null,
+          detailUsedCount: couponDetail?.detailUsedCount ?? 0,
+        };
+      });
+
+      setPromoPreview({ ...preview, detailResults: enrichedDetails });
+
+      if (enrichedDetails.length > 0) {
+        const bestPromo = enrichedDetails.reduce(
+          (best, current) =>
+            (current.lineDiscount || 0) > (best.lineDiscount || 0) ? current : best,
+          enrichedDetails[0]
+        );
+        setSelectedPromo(bestPromo);
+        setPromoDiscount(bestPromo.lineDiscount || 0);
+      }
+
       setShowPromoModal(true);
     } catch (err: any) {
       Alert.alert("Lỗi", err.message);
