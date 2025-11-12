@@ -26,6 +26,7 @@ export interface CouponDetailDto {
     giftServiceId?: number | null;
     giftQuantity?: number | null;
     limitQuantityApplied?: number;
+    detailUsedCount?: number;
   };
 }
 
