@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, ActivityIndicator, Alert, ImageBackground } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+  ImageBackground,
+  View,
+} from "react-native";
 import { PickView, PickText, ScreenHeader } from "@Components";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import SeatMap from "./Components/SeatMap";
 import SeatLegend from "./Components/SeatLegend";
+import SeatMapZoomable from "./Components/SeatMapZoomable";
 import { Seat, mapSeatStatus, mapSeatType, mapReservationStatus } from "./Components/utils";
 import { useSeats } from "@Hooks/booking/useSeats";
 import { useBookSeat, useLazyCheckSeatStatus } from "@Hooks/booking/useReservation";
 import { useMovieByShowtime } from "@Hooks";
 import { formatDate } from "@Utils";
-import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
+import { COLORS, SPACING } from "@Constants/theme";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import { useBookingStore } from "@Store/useBookingStore";
 import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
+import Svg, { Path } from "react-native-svg";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList, "AdditionalService">;
 
@@ -36,6 +45,7 @@ const SelectSeatScreen: React.FC = () => {
   const { mutateAsync: bookSeat } = useBookSeat();
 
   const [mappedSeats, setMappedSeats] = useState<Seat[]>([]);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   // Lưu thông tin phim & suất chiếu vào store
   useEffect(() => {
@@ -126,13 +136,30 @@ const SelectSeatScreen: React.FC = () => {
       <PickView style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.3)" }}>
         <ScreenHeader title="Chọn ghế" />
 
-        <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}>
-          <PickView style={styles.screen}>
-            <PickText style={styles.screenText}>MÀN HÌNH</PickText>
-          </PickView>
-
-          <SeatMap seats={mappedSeats} selectedSeats={seats} onSelectSeat={toggleSeat} />
-          <SeatLegend />
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}
+          onLayout={(e) => {
+            const { width, height } = e.nativeEvent.layout;
+            setContainerSize({ width, height });
+          }}
+        >
+          <SeatMapZoomable watchDeps={[mappedSeats, seats]} containerSize={containerSize}>
+            <PickView style={{ alignItems: "center", justifyContent: "center" }}>
+              <View style={styles.screenWrapper}>
+                <Svg height="40" width="300">
+                  <Path
+                    d="M 0 20 Q 150 0 300 20"
+                    stroke="#ff0080"
+                    strokeWidth="8"
+                    fill="transparent"
+                  />
+                </Svg>
+                <PickText style={styles.screenLabel}>MÀN HÌNH</PickText>
+              </View>
+              <SeatMap seats={mappedSeats} selectedSeats={seats} onSelectSeat={toggleSeat} />
+              <SeatLegend />
+            </PickView>
+          </SeatMapZoomable>
         </ScrollView>
 
         <BookingSummary onContinue={handleContinue} />
@@ -161,36 +188,19 @@ const styles = StyleSheet.create({
   },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
 
-  screen: {
-    height: 50,
-    marginHorizontal: SPACING.md,
-    marginVertical: 12,
-    borderRadius: 30,
-    backgroundColor: "#e0e0e0",
-    justifyContent: "center",
+  screenWrapper: {
+    width: 350,
     alignItems: "center",
-
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 6,
-
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
-    borderTopColor: "rgba(255,255,255,0.7)",
-    borderBottomColor: "rgba(0,0,0,0.15)",
-
-    transform: [{ perspective: 500 }, { rotateX: "10deg" }],
+    marginTop: 10,
+    marginBottom: 50,
   },
-  screenText: {
-    fontWeight: "700",
-    color: "#222",
-    letterSpacing: 1,
-    fontSize: FONT_SIZE.md,
-    textShadowColor: "rgba(0,0,0,0.3)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+
+  screenLabel: {
+    fontSize: 18,
+    color: "white",
+    fontWeight: "bold",
+    letterSpacing: 2,
+    marginTop: -4,
   },
 });
 

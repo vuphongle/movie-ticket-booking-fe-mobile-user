@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { PickView, PickText } from "@Components";
 import SeatItem from "./SeatItem";
 import { Seat } from "./utils";
@@ -17,32 +17,29 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, selectedSeats, onSelectSeat })
   }, [rows, seats]);
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <PickView style={styles.container}>
-        {rows.map((row) => {
-          const seatsInRow = seats.filter((s) => s.row === row).sort((a, b) => a.number - b.number);
+    <PickView style={styles.container}>
+      {rows.map((row) => {
+        const seatsInRow = seats.filter((s) => s.row === row).sort((a, b) => a.number - b.number);
+        const emptySpaces = maxSeatsInRow - seatsInRow.length;
+        const sideMargin = (emptySpaces * 34) / 2;
 
-          const emptySpaces = maxSeatsInRow - seatsInRow.length;
-          const sideMargin = (emptySpaces * 34) / 2;
-
-          return (
-            <PickView key={row} style={styles.row}>
-              <PickText style={styles.rowLabel}>{row}</PickText>
-              <View style={{ flexDirection: "row", marginLeft: sideMargin }}>
-                {seatsInRow.map((seat) => (
-                  <SeatItem
-                    key={seat.id}
-                    seat={seat}
-                    selected={selectedSeats.some((s) => s.id === seat.id)}
-                    onPress={onSelectSeat}
-                  />
-                ))}
-              </View>
-            </PickView>
-          );
-        })}
-      </PickView>
-    </ScrollView>
+        return (
+          <PickView key={row} style={styles.row}>
+            <PickText style={styles.rowLabel}>{row}</PickText>
+            <View style={{ flexDirection: "row", marginLeft: sideMargin }}>
+              {seatsInRow.map((seat) => (
+                <SeatItem
+                  key={seat.id}
+                  seat={seat}
+                  selected={selectedSeats.some((s) => s.id === seat.id)}
+                  onPress={onSelectSeat}
+                />
+              ))}
+            </View>
+          </PickView>
+        );
+      })}
+    </PickView>
   );
 };
 

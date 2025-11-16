@@ -8,8 +8,8 @@ const SeatLegend: React.FC = () => {
     { color: "#7e57c2", label: "Ghế thường", borderColor: "#5e35b1" },
     { color: "#fbc02d", label: "Ghế VIP", borderColor: "#f9a825" },
     { color: "#ff4081", label: "Ghế đôi", borderColor: "#f50057" },
-    { color: "#1976d2", label: "Ghế đang chọn", borderColor: "#115293" },
     { color: "#d32f2f", label: "Ghế đã đặt", borderColor: "#9a0007" },
+    { color: "#1976d2", label: "Ghế bạn chọn", borderColor: "#115293" },
   ];
 
   return (
@@ -33,12 +33,13 @@ const styles = StyleSheet.create({
   legend: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     marginVertical: 5,
-    backgroundColor: COLORS.surface,
+    backgroundColor: "transparent",
     borderRadius: 8,
+    width: 440,
   },
   legendItem: {
     flexDirection: "row",
@@ -47,16 +48,16 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.sm,
   },
   legendColor: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 18,
+    height: 18,
     borderWidth: 2,
     marginRight: 6,
   },
 
   legendLabel: {
     fontSize: FONT_SIZE.sm,
-    color: COLORS.text.primary,
+    fontWeight: "bold",
+    color: COLORS.text.white,
   },
 });
 export default SeatLegend;
