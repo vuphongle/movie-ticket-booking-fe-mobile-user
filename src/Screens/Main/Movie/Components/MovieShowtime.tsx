@@ -99,8 +99,15 @@ const MovieShowtime: React.FC = () => {
     );
   const handleTimeClick = (
     showtimeId: number,
-    cinema: number,
-    auditorium: number,
+    cinema: { id: number; name: string; location: string },
+    auditorium: {
+      id: number;
+      name: string;
+      type: string;
+      totalSeats: number;
+      totalRows: number;
+      totalColumns: number;
+    },
     time: string,
     date: string,
     format: string

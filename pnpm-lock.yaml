@@ -23,6 +23,9 @@ importers:
       '@react-native-community/datetimepicker':
         specifier: ^8.5.0
         version: 8.5.0(expo@54.0.21(@babel/core@7.28.3)(react-native-webview@13.16.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
+      '@react-native-community/geolocation':
+        specifier: ^3.4.0
+        version: 3.4.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
       '@react-navigation/bottom-tabs':
         specifier: ^7.4.4
         version: 7.4.6(@react-navigation/native@7.1.17(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native-safe-area-context@5.6.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native-screens@4.14.1(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
@@ -1483,6 +1486,13 @@ packages:
         optional: true
       react-native-windows:
         optional: true
+
+  '@react-native-community/geolocation@3.4.0':
+    resolution: {integrity: sha512-bzZH89/cwmpkPMKKveoC72C4JH0yF4St5Ceg/ZM9pA1SqX9MlRIrIrrOGZ/+yi++xAvFDiYfihtn9TvXWU9/rA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
 
   '@react-native/assets-registry@0.79.2':
     resolution: {integrity: sha512-5h2Z7/+/HL/0h88s0JHOdRCW4CXMCJoROxqzHqxdrjGL6EBD1DdaB4ZqkCOEVSW4Vjhir5Qb97C8i/MPWEYPtg==}
@@ -7569,6 +7579,11 @@ snapshots:
       react-native: 0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0)
     optionalDependencies:
       expo: 54.0.21(@babel/core@7.28.3)(react-native-webview@13.16.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0))(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)
+
+  '@react-native-community/geolocation@3.4.0(react-native@0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
+      react-native: 0.79.2(@babel/core@7.28.3)(@react-native-community/cli@18.0.0(typescript@5.9.2))(@types/react@19.1.10)(react@19.0.0)
 
   '@react-native/assets-registry@0.79.2': {}
 

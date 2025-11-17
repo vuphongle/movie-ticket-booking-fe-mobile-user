@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createBottomTabNavigator, BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { MAIN_TAB_STACK, COLORS, SPACING, FONT_SIZE } from "@Constants";
 import { MainTabParamList } from "@Types/navigationTypes";
-import { HomeScreen, BookingScreen, NewsScreen, ProfileScreen } from "@Screens";
+import { HomeScreen, QuicklyBookingScreen, NewsScreen, ProfileScreen } from "@Screens";
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -99,7 +99,7 @@ const TabNavigator = () => {
       }}
     >
       <Tab.Screen name={MAIN_TAB_STACK.HOME} component={HomeScreen} />
-      <Tab.Screen name={MAIN_TAB_STACK.BOOKING} component={BookingScreen} />
+      <Tab.Screen name={MAIN_TAB_STACK.BOOKING} component={QuicklyBookingScreen} />
       <Tab.Screen name={MAIN_TAB_STACK.NEWS} component={NewsScreen} />
       <Tab.Screen name={MAIN_TAB_STACK.PROFILE} component={ProfileScreen} />
     </Tab.Navigator>

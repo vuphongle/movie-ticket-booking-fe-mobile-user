@@ -213,9 +213,20 @@ export const formatRelativeTime = (date: Date | number[] | string | null | undef
   });
 };
 
-export const formatDate = (dateStr?: string | number): string => {
-  if (!dateStr) return "N/A";
-  const date = new Date(dateStr);
+export const formatDate = (
+  dateInput?: string | number | Date | [number, number, number]
+): string => {
+  if (!dateInput) return "N/A";
+
+  let date: Date;
+
+  if (Array.isArray(dateInput)) {
+    const [year, month, day] = dateInput;
+    date = new Date(year, month - 1, day);
+  } else {
+    date = new Date(dateInput);
+  }
+
   if (isNaN(date.getTime())) return "N/A";
 
   const day = String(date.getDate()).padStart(2, "0");

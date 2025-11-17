@@ -20,3 +20,8 @@ export { useOrderHistory } from "./order/useOrderHistory";
 export { useOrderDetails } from "./order/useOrderDetails";
 export { useOrderPdf } from "./order/useOrderPdf";
 export { useOrderUtils } from "./order/useOrderUtils";
+export { useAllCinemas } from "./cinema/useAllCinemas";
+export { useAuditoriumsByCinema } from "./cinema/useAuditoriumsByCinema";
+export { useCinemaCities } from "./cinema/useCinemaCities";
+export { useCinemaDetail } from "./cinema/useCinemaDetail";
+export { useCinemaNames } from "./cinema/useCinemaNames";

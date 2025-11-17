@@ -8,3 +8,4 @@ export * from "./auditoriumTypes";
 export * from "./additionalServiceTypes";
 export * from "./couponTypes";
 export * from "./paymentTypes";
+export * from "./cinemaTypes";

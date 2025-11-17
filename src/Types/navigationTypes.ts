@@ -26,13 +26,25 @@ export type RootStackParamList = {
   MovieShowtime: { movieId: number; movieName: string; slug: string };
   SelectSeat: {
     showtimeId: number;
-    cinema: number;
-    auditorium: number;
+    cinema: {
+      id: number;
+      name: string;
+      location: string;
+    };
+    auditorium: {
+      id: number;
+      name: string;
+      type: string;
+      totalSeats: number;
+      totalRows: number;
+      totalColumns: number;
+    };
     time: string;
     date: string;
     format: string;
     slug: string;
   };
+
   AdditionalService: undefined;
   TicketConfirm: undefined;
   PaymentWebView: {
@@ -43,6 +55,7 @@ export type RootStackParamList = {
     movieName: string;
     reviews: Review[];
   };
+  CinemaShowtime: { cinemaId: number; cinemaName: string };
 };
 
 // Main Tab Param List
