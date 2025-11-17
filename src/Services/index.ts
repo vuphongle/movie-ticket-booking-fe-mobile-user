@@ -16,4 +16,5 @@ export { additionalServiceService } from "./AdditionalService";
 export { chatService, chatKeys } from "./Chat";
 export { couponService } from "./Coupon";
 export { paymentService } from "./Payment";
+export { cinemaService } from "./Cinema";
 export { orderService, orderKeys } from "./Order";

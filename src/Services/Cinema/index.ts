@@ -1,0 +1,1 @@
+export { cinemaService } from "./cinemaService";
