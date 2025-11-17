@@ -31,8 +31,8 @@ export const useCinemaDistances = (cinemas: any[]) => {
 
             const a =
               Math.sin(dLat / 2) ** 2 +
-              Math.cos(latitude * Math.PI / 180) *
-                Math.cos(lat * Math.PI / 180) *
+              Math.cos((latitude * Math.PI) / 180) *
+                Math.cos((lat * Math.PI) / 180) *
                 Math.sin(dLon / 2) ** 2;
 
             const cc = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));

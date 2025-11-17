@@ -29,8 +29,7 @@ const StaticMap: React.FC<Props> = ({ lat, lng, zoom = 15, size = 110, distanceK
     return arr;
   }, [x, y, zoom]);
 
-  const distanceLabel =
-    typeof distanceKm === "number" ? `${distanceKm.toFixed(1)} km` : null;
+  const distanceLabel = typeof distanceKm === "number" ? `${distanceKm.toFixed(1)} km` : null;
 
   return (
     <View
@@ -41,10 +40,7 @@ const StaticMap: React.FC<Props> = ({ lat, lng, zoom = 15, size = 110, distanceK
         borderRadius: 12,
       }}
     >
-      <ImageBackground
-        source={{ uri: tiles[4]?.url }}
-        style={{ width: size, height: size }}
-      >
+      <ImageBackground source={{ uri: tiles[4]?.url }} style={{ width: size, height: size }}>
         {/* GHÉP 3×3 tiles */}
         <View
           style={{

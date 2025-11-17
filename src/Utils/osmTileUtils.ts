@@ -5,11 +5,7 @@ export const latLngToTile = (lat: number, lng: number, zoom: number) => {
 
   const y = Math.floor(
     ((1 -
-      Math.log(
-        Math.tan((lat * Math.PI) / 180) +
-          1 / Math.cos((lat * Math.PI) / 180)
-      ) /
-        Math.PI) /
+      Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) /
       2) *
       tileCount
   );

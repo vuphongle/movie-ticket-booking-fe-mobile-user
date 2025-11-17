@@ -103,23 +103,22 @@ const QuicklyBookingScreen = () => {
                 })
               }
             >
-<PickView
-  style={{
-    flexDirection: "row",
-    padding: SPACING.sm,
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.lg,
-    marginBottom: SPACING.md,
+              <PickView
+                style={{
+                  flexDirection: "row",
+                  padding: SPACING.sm,
+                  backgroundColor: COLORS.surface,
+                  borderRadius: RADIUS.lg,
+                  marginBottom: SPACING.md,
 
-    shadowColor: "#000",
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+                  shadowColor: "#000",
+                  shadowOpacity: 0.25,
+                  shadowRadius: 6,
+                  shadowOffset: { width: 0, height: 3 },
 
-    elevation: 6,
-  }}
->
-
+                  elevation: 6,
+                }}
+              >
                 {/* MAP IMAGE + distance overlay */}
                 <TouchableOpacity onPress={openMap} activeOpacity={0.8}>
                   <StaticMap

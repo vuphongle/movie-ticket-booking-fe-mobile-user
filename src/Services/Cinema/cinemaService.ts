@@ -1,9 +1,5 @@
 import { HttpService } from "../httpService";
-import {
-  Cinema,
-  Auditorium,
-  CinemaServiceInterface,
-} from "@Types/cinemaTypes";
+import { Cinema, Auditorium, CinemaServiceInterface } from "@Types/cinemaTypes";
 
 class CinemaService implements CinemaServiceInterface {
   private httpService: HttpService;

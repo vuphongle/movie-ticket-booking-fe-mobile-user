@@ -43,7 +43,7 @@ export type RootStackParamList = {
     movieName: string;
     reviews: Review[];
   };
-CinemaShowtime: { cinemaId: number; cinemaName: string };
+  CinemaShowtime: { cinemaId: number; cinemaName: string };
 };
 
 // Main Tab Param List
