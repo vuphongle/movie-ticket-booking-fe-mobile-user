@@ -102,6 +102,7 @@ const QuicklyBookingScreen = () => {
                   cinemaName: c.name,
                 })
               }
+              activeOpacity={0.9}
             >
               <PickView
                 style={{
