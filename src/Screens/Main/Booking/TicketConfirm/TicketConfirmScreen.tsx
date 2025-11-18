@@ -23,6 +23,7 @@ import {
 import VoucherModal from "./Modals/VoucherModal";
 import PromoModal from "./Modals/PromoModal";
 import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
+import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 
 const TicketConfirmScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -54,6 +55,9 @@ const TicketConfirmScreen = () => {
   const [isLoadingPromo, setIsLoadingPromo] = useState(false);
   const [voucherDiscount, setVoucherDiscount] = useState(0);
   const [promoDiscount, setPromoDiscount] = useState(0);
+  const [showVoucherErrorModal, setShowVoucherErrorModal] = useState(false);
+  const [voucherErrorTitle, setVoucherErrorTitle] = useState("");
+  const [voucherErrorMessage, setVoucherErrorMessage] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"PAYOS" | "VNPAY" | null>(null);
 
   const couponsQuery = useCoupons();
@@ -128,6 +132,12 @@ const TicketConfirmScreen = () => {
     }
   }, [seats, services, couponsQuery.data]);
 
+  const openVoucherModal = (title: string, message: string) => {
+    setVoucherErrorTitle(title);
+    setVoucherErrorMessage(message);
+    setShowVoucherErrorModal(true);
+  };
+
   const handlePreviewDisplay = async () => {
     if (!seats.length || !couponsQuery.data) return;
 
@@ -189,7 +199,7 @@ const TicketConfirmScreen = () => {
 
   const handleCheckVoucher = async () => {
     if (!voucherCode) {
-      Alert.alert("Voucher", "Vui lòng nhập mã voucher");
+      openVoucherModal("Voucher", "Vui lòng nhập mã voucher");
       return;
     }
 
@@ -197,7 +207,7 @@ const TicketConfirmScreen = () => {
     try {
       const coupon = await couponByCodeQuery.refetch();
       if (!coupon.data) {
-        Alert.alert("Không hợp lệ", "Không tìm thấy voucher này.");
+        openVoucherModal("Voucher không hợp lệ", "Không tìm thấy voucher này.");
         return;
       }
 
@@ -232,12 +242,15 @@ const TicketConfirmScreen = () => {
 
   const handleConfirmPayment = async () => {
     if (!isAgree) {
-      Alert.alert("Điều khoản", "Vui lòng đồng ý với điều khoản sử dụng trước khi thanh toán.");
+      openVoucherModal(
+        "Điều khoản",
+        "Vui lòng đồng ý với điều khoản sử dụng trước khi thanh toán."
+      );
       return;
     }
 
     if (!paymentMethod) {
-      Alert.alert("Phương thức thanh toán", "Vui lòng chọn phương thức thanh toán.");
+      openVoucherModal("Phương thức thanh toán", "Vui lòng chọn phương thức thanh toán.");
       return;
     }
 
@@ -452,6 +465,18 @@ const TicketConfirmScreen = () => {
         setSelectedPromo={setSelectedPromo}
         setPromoDiscount={setPromoDiscount}
         setVisible={setShowPromoModal}
+      />
+      <UniversalConfirmModal
+        visible={showVoucherErrorModal}
+        title={voucherErrorTitle}
+        message={voucherErrorMessage}
+        buttons={[
+          {
+            text: "OK",
+            type: "primary",
+            onPress: () => setShowVoucherErrorModal(false),
+          },
+        ]}
       />
     </View>
   );

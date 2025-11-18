@@ -47,7 +47,7 @@ const UniversalConfirmModal: React.FC<UniversalConfirmModalProps> = ({
           {title && (
             <PickText
               style={{
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: "700",
                 marginBottom: SPACING.md,
                 textAlign: "center",
@@ -61,7 +61,7 @@ const UniversalConfirmModal: React.FC<UniversalConfirmModalProps> = ({
             <PickText
               style={{
                 fontSize: 15,
-                color: COLORS.text,
+                color: COLORS.text.secondary,
                 marginBottom: SPACING.lg,
                 textAlign: "center",
               }}
@@ -85,14 +85,12 @@ const UniversalConfirmModal: React.FC<UniversalConfirmModalProps> = ({
                   flex: 1,
                   paddingVertical: 14,
                   backgroundColor: pressed
-                    ?
-                      btn.type === "primary"
+                    ? btn.type === "primary"
                       ? "#013d94"
                       : btn.type === "danger"
                       ? "#8f271d"
                       : "#e5e5e5"
-                    :
-                      btn.type === "primary"
+                    : btn.type === "primary"
                     ? "#012e6e"
                     : btn.type === "danger"
                     ? "#b33126"
@@ -104,10 +102,7 @@ const UniversalConfirmModal: React.FC<UniversalConfirmModalProps> = ({
               >
                 <PickText
                   style={{
-                    color:
-                      btn.type === "primary" || btn.type === "danger"
-                        ? "white"
-                        : "black",
+                    color: btn.type === "primary" || btn.type === "danger" ? "white" : "black",
                     fontWeight: "bold",
                     fontSize: 15,
                   }}

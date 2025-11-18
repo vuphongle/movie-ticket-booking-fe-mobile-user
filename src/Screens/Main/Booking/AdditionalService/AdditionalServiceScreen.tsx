@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, ActivityIndicator, Alert } from "react-native";
+import { ScrollView, ActivityIndicator } from "react-native";
 import { PickView, PickText, ScreenHeader } from "@Components";
 import { COLORS } from "@Constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,7 +7,7 @@ import { useAdditionalServices } from "@Hooks/additionalService/useAdditionalSer
 import { useBookingStore } from "@Store/useBookingStore";
 import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
 import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
-import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal"
+import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 import { useCancelSeatMulti } from "@Hooks/booking/useReservation";
 
 import AdditionalTab from "./Components/AdditionalTab";
@@ -26,6 +26,7 @@ const AdditionalServiceScreen: React.FC = () => {
   const { services: fetchedServices, isLoading } = useAdditionalServices();
   const { showtimeId, seats, services, addService, updateServiceQty, clearAll } = useBookingStore();
   const { mutateAsync: cancelSeatMulti } = useCancelSeatMulti();
+  const [isPending, setIsPending] = useState(false);
 
   const [openTab, setOpenTab] = useState<"COMBO" | "SINGLE">("COMBO");
 
@@ -47,13 +48,25 @@ const AdditionalServiceScreen: React.FC = () => {
   }, [fetchedServices]);
 
   const handleBackPress = () => {
-    const hasSelectedSeatOrService =
-      seats.length > 0 || services.some((s) => s.quantity > 0);
+    const hasSelectedSeatOrService = seats.length > 0 || services.some((s) => s.quantity > 0);
 
     if (hasSelectedSeatOrService) {
       setShowLeaveModal(true);
     } else {
       navigation.goBack();
+    }
+  };
+
+  const handleContinue = async () => {
+    if (isPending) return;
+    setIsPending(true);
+
+    try {
+      navigation.navigate("TicketConfirm");
+    } catch (err) {
+      console.error("Continue failed:", err);
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -84,7 +97,7 @@ const AdditionalServiceScreen: React.FC = () => {
       )}
 
       <SelectedServiceList selectedItems={selectedItems} updateServiceQty={updateServiceQty} />
-      <BookingSummary onContinue={() => navigation.navigate("TicketConfirm")} />
+      <BookingSummary onContinue={handleContinue} isPending={isPending} />
 
       <UniversalConfirmModal
         visible={showLeaveModal}

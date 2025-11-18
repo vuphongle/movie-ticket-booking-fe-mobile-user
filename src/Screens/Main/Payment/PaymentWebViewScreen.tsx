@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, Alert, ActivityIndicator, BackHandler } from "react-native";
+import { View, ActivityIndicator, BackHandler } from "react-native";
 import { WebView, WebViewNavigation } from "react-native-webview";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import { ScreenHeader } from "@Components";
 import { useBookingStore } from "@Store/useBookingStore";
+import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 
 type Props = NativeStackScreenProps<RootStackParamList, "PaymentWebView">;
 
@@ -14,6 +15,10 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [canGoBack, setCanGoBack] = useState(false);
   const { clearAll } = useBookingStore();
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showFailedModal, setShowFailedModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -21,109 +26,37 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
         webViewRef.current.goBack();
         return true;
       }
-
-      Alert.alert("Hủy thanh toán", "Bạn có chắc chắn muốn hủy thanh toán? Giao dịch sẽ bị hủy.", [
-        { text: "Tiếp tục thanh toán", style: "cancel" },
-        {
-          text: "Hủy thanh toán",
-          style: "destructive",
-          onPress: () => {
-            clearAll();
-            navigation.navigate("Main");
-          },
-        },
-      ]);
+      setShowCancelModal(true);
       return true;
     };
 
     const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
 
     return () => backHandler.remove();
-  }, [canGoBack, clearAll, navigation]);
+  }, [canGoBack]);
 
   const handleNavigationStateChange = (navState: WebViewNavigation) => {
     const { url } = navState;
     setCanGoBack(navState.canGoBack);
 
-    // Kiểm tra URL success - PayOS trả về URL dạng: .../success/ hoặc .../success?...
     if (url.includes("/success")) {
-      Alert.alert("Thành công", "Thanh toán thành công! Vui lòng kiểm tra vé trong lịch sử.", [
-        {
-          text: "OK",
-          onPress: () => {
-            clearAll();
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Main" }],
-            });
-          },
-        },
-      ]);
+      setShowSuccessModal(true);
       return;
     }
 
-    // Kiểm tra URL cancel hoặc failure
     if (url.includes("/cancel") || url.includes("/failure")) {
-      Alert.alert("Đã hủy", "Giao dịch thanh toán đã bị hủy hoặc thất bại.", [
-        {
-          text: "OK",
-          onPress: () => {
-            clearAll();
-            navigation.navigate("Main");
-          },
-        },
-      ]);
+      setShowFailedModal(true);
       return;
     }
   };
 
   const handleError = () => {
-    Alert.alert(
-      "Lỗi",
-      "Không thể tải trang thanh toán. Vui lòng kiểm tra kết nối mạng và thử lại.",
-      [
-        {
-          text: "Thử lại",
-          onPress: () => {
-            if (webViewRef.current) {
-              webViewRef.current.reload();
-            }
-          },
-        },
-        {
-          text: "Hủy",
-          style: "cancel",
-          onPress: () => {
-            clearAll();
-            navigation.navigate("Main");
-          },
-        },
-      ]
-    );
+    setShowErrorModal(true);
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: "#F2F3F5" }}>
-      <ScreenHeader
-        title="Thanh toán"
-        onBackPress={() => {
-          Alert.alert(
-            "Hủy thanh toán",
-            "Bạn có chắc chắn muốn hủy thanh toán? Giao dịch sẽ bị hủy.",
-            [
-              { text: "Tiếp tục thanh toán", style: "cancel" },
-              {
-                text: "Hủy thanh toán",
-                style: "destructive",
-                onPress: () => {
-                  clearAll();
-                  navigation.navigate("Main");
-                },
-              },
-            ]
-          );
-        }}
-      />
+      <ScreenHeader title="Thanh toán" onBackPress={() => setShowCancelModal(true)} />
 
       {isLoading && (
         <View
@@ -165,17 +98,98 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
           </View>
         )}
         style={{ flex: 1 }}
-        // Security settings
-        javaScriptEnabled={true}
-        domStorageEnabled={true}
-        thirdPartyCookiesEnabled={true}
-        sharedCookiesEnabled={true}
-        // iOS specific
-        allowsInlineMediaPlayback={true}
+        javaScriptEnabled
+        domStorageEnabled
+        thirdPartyCookiesEnabled
+        sharedCookiesEnabled
+        allowsInlineMediaPlayback
         mediaPlaybackRequiresUserAction={false}
-        // Android specific
         mixedContentMode="always"
         geolocationEnabled={false}
+      />
+
+      <UniversalConfirmModal
+        visible={showCancelModal}
+        title="Hủy thanh toán"
+        message="Bạn có chắc chắn muốn hủy thanh toán? Giao dịch sẽ bị hủy."
+        buttons={[
+          {
+            text: "Tiếp tục thanh toán",
+            type: "cancel",
+            onPress: () => setShowCancelModal(false),
+          },
+          {
+            text: "Hủy thanh toán",
+            type: "danger",
+            onPress: () => {
+              setShowCancelModal(false);
+              clearAll();
+              navigation.navigate("Main");
+            },
+          },
+        ]}
+      />
+
+      <UniversalConfirmModal
+        visible={showSuccessModal}
+        title="Thành công"
+        message="Thanh toán thành công! Vui lòng kiểm tra vé trong lịch sử."
+        buttons={[
+          {
+            text: "OK",
+            type: "primary",
+            onPress: () => {
+              setShowSuccessModal(false);
+              clearAll();
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Main" }],
+              });
+            },
+          },
+        ]}
+      />
+
+      <UniversalConfirmModal
+        visible={showFailedModal}
+        title="Đã hủy"
+        message="Giao dịch thanh toán đã bị hủy hoặc thất bại."
+        buttons={[
+          {
+            text: "OK",
+            type: "primary",
+            onPress: () => {
+              setShowFailedModal(false);
+              clearAll();
+              navigation.navigate("Main");
+            },
+          },
+        ]}
+      />
+
+      <UniversalConfirmModal
+        visible={showErrorModal}
+        title="Lỗi"
+        message="Không thể tải trang thanh toán. Vui lòng kiểm tra kết nối mạng và thử lại."
+        buttons={[
+          {
+            text: "Thử lại",
+            type: "primary",
+            onPress: () => {
+              setShowErrorModal(false);
+              webViewRef.current?.reload();
+            },
+          },
+          {
+            text: "Hủy",
+            type: "cancel",
+            onPress: () => {
+              setShowErrorModal(false);
+              clearAll();
+              navigation.navigate("Main");
+            },
+          },
+        ]}
       />
     </View>
   );
