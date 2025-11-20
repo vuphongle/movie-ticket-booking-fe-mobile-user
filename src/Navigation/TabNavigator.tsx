@@ -1,30 +1,10 @@
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Animated, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  createBottomTabNavigator,
-  BottomTabBarProps,
-} from "@react-navigation/bottom-tabs";
-import {
-  MAIN_TAB_STACK,
-  COLORS,
-  SPACING,
-  FONT_SIZE,
-} from "@Constants";
+import { createBottomTabNavigator, BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { MAIN_TAB_STACK, COLORS, SPACING, FONT_SIZE } from "@Constants";
 import { MainTabParamList } from "@Types/navigationTypes";
 
-import {
-  HomeScreen,
-  QuicklyBookingScreen,
-  NewsScreen,
-  ProfileScreen,
-} from "@Screens";
+import { HomeScreen, QuicklyBookingScreen, NewsScreen, ProfileScreen } from "@Screens";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -47,7 +27,7 @@ const LABEL: Record<string, string> = {
   [MAIN_TAB_STACK.PROFILE]: "Cá nhân",
 };
 
-function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   return (
     <SafeAreaView edges={["bottom"]} style={styles.safeArea}>
       <View style={styles.tabContainer}>
@@ -66,17 +46,9 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           }).start();
 
           return (
-            <TouchableOpacity
-              key={route.key}
-              onPress={onPress}
-              style={styles.itemTouchable}
-            >
+            <TouchableOpacity key={route.key} onPress={onPress} style={styles.itemTouchable}>
               <Animated.View
-                style={[
-                  styles.item,
-                  isFocused && styles.itemFocused,
-                  { transform: [{ scale }] },
-                ]}
+                style={[styles.item, isFocused && styles.itemFocused, { transform: [{ scale }] }]}
               >
                 <Icon
                   name={ICONS[route.name]}

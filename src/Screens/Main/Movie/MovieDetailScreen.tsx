@@ -91,7 +91,7 @@ const MovieDetailScreen: React.FC = () => {
       <PickView style={styles.center}>
         <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
         <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-                  Đang tải thông tin phim
+          Đang tải thông tin phim
         </PickText>
       </PickView>
     );

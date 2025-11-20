@@ -9,6 +9,7 @@ export type RootStackParamList = {
   [ROOT_STACK.MAIN]: undefined;
   Login?: any;
   Register: undefined;
+  MovieSearch: undefined;
   ForgotPassword: undefined;
   EditProfile: undefined;
   ChangePassword: undefined;

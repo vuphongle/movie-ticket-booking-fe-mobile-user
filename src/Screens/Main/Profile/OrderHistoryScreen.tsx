@@ -1,5 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { ScrollView, RefreshControl, Alert, TouchableOpacity, Linking, ActivityIndicator } from "react-native";
+import {
+  ScrollView,
+  RefreshControl,
+  Alert,
+  TouchableOpacity,
+  Linking,
+  ActivityIndicator,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -188,9 +195,9 @@ export const OrderHistoryScreen: React.FC = () => {
         {isLoading ? (
           <PickView alignCenter paddingVertical={40}>
             <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
-                    <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-                              Đang tải lịch sử
-                    </PickText>
+            <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
+              Đang tải lịch sử
+            </PickText>
           </PickView>
         ) : filteredOrders.length === 0 ? (
           <PickView alignCenter paddingVertical={60}>
