@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PickView, PickText } from "@Components";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const Header = () => {
   const insets = useSafeAreaInsets();
