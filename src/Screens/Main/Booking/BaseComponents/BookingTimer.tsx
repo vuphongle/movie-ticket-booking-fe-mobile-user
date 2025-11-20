@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useBookingStore } from "@Store/useBookingStore";
 import { useNavigation } from "@react-navigation/native";
 import { FONT_SIZE } from "@Constants/theme";
 import { useCancelSeatMulti } from "@Hooks/booking/useReservation";
+import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 
 const BookingTimer: React.FC = () => {
   const navigation = useNavigation<any>();
   const { expireAt, showtimeId, seats, clearAll } = useBookingStore();
   const { mutateAsync: cancelSeatMulti } = useCancelSeatMulti();
   const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [showTimeoutModal, setShowTimeoutModal] = useState(false); // ⭐ thêm state modal
 
   useEffect(() => {
     if (!expireAt) return;
@@ -37,12 +39,8 @@ const BookingTimer: React.FC = () => {
     } catch (err) {
       console.error("Cancel seat error:", err);
     } finally {
+      setShowTimeoutModal(true);
       clearAll();
-      Alert.alert(
-        "Hết thời gian giữ ghế",
-        "Bạn đã hết thời gian 8 phút giữ ghế. Vui lòng Thực hiện lại thao tác.",
-        [{ text: "OK", onPress: () => navigation.navigate("Main") }]
-      );
     }
   };
 
@@ -52,15 +50,33 @@ const BookingTimer: React.FC = () => {
   const seconds = Math.floor((timeLeft / 1000) % 60);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        Thời gian giữ ghế:
-        <Text style={styles.time}>
-          {" "}
-          {minutes.toString().padStart(2, "0")}:{seconds.toString().padStart(2, "0")}
+    <>
+      <UniversalConfirmModal
+        visible={showTimeoutModal}
+        title="Hết thời gian giữ ghế"
+        message="Bạn đã hết thời gian 8 phút giữ ghế. Vui lòng thực hiện lại thao tác."
+        buttons={[
+          {
+            text: "OK",
+            type: "primary",
+            onPress: () => {
+              setShowTimeoutModal(false);
+              navigation.navigate("Main");
+            },
+          },
+        ]}
+      />
+
+      <View style={styles.container}>
+        <Text style={styles.text}>
+          Thời gian giữ ghế:
+          <Text style={styles.time}>
+            {" "}
+            {minutes.toString().padStart(2, "0")}:{seconds.toString().padStart(2, "0")}
+          </Text>
         </Text>
-      </Text>
-    </View>
+      </View>
+    </>
   );
 };
 
@@ -73,7 +89,6 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     fontSize: FONT_SIZE.sm,
-    textTransform: "none",
     fontWeight: "500",
   },
   time: {

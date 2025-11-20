@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, ActivityIndicator, Alert } from "react-native";
+import { ScrollView, ActivityIndicator } from "react-native";
 import { PickView, PickText, ScreenHeader } from "@Components";
 import { COLORS } from "@Constants/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,6 +7,7 @@ import { useAdditionalServices } from "@Hooks/additionalService/useAdditionalSer
 import { useBookingStore } from "@Store/useBookingStore";
 import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
 import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
+import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 import { useCancelSeatMulti } from "@Hooks/booking/useReservation";
 
 import AdditionalTab from "./Components/AdditionalTab";
@@ -21,9 +22,11 @@ type SelectScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 const AdditionalServiceScreen: React.FC = () => {
   const navigation = useNavigation<SelectScreenNavigationProp>();
   const insets = useSafeAreaInsets();
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
   const { services: fetchedServices, isLoading } = useAdditionalServices();
   const { showtimeId, seats, services, addService, updateServiceQty, clearAll } = useBookingStore();
   const { mutateAsync: cancelSeatMulti } = useCancelSeatMulti();
+  const [isPending, setIsPending] = useState(false);
 
   const [openTab, setOpenTab] = useState<"COMBO" | "SINGLE">("COMBO");
 
@@ -48,35 +51,22 @@ const AdditionalServiceScreen: React.FC = () => {
     const hasSelectedSeatOrService = seats.length > 0 || services.some((s) => s.quantity > 0);
 
     if (hasSelectedSeatOrService) {
-      Alert.alert(
-        "Xác nhận rời khỏi",
-        "Ghế và dịch vụ đã chọn sẽ bị hủy, bạn có chắc chắn muốn rời?",
-        [
-          { text: "Hủy", style: "cancel" },
-          {
-            text: "Đồng ý",
-            style: "destructive",
-            onPress: async () => {
-              try {
-                if (seats.length > 0 && showtimeId) {
-                  await cancelSeatMulti({
-                    showtimeId,
-                    seatIds: seats.map((s) => s.id),
-                  });
-                }
-
-                clearAll();
-                navigation.goBack();
-              } catch (err) {
-                console.error("Cancel seat failed:", err);
-                Alert.alert("Lỗi", "Không thể hủy giữ ghế, vui lòng thử lại.");
-              }
-            },
-          },
-        ]
-      );
+      setShowLeaveModal(true);
     } else {
       navigation.goBack();
+    }
+  };
+
+  const handleContinue = async () => {
+    if (isPending) return;
+    setIsPending(true);
+
+    try {
+      navigation.navigate("TicketConfirm");
+    } catch (err) {
+      console.error("Continue failed:", err);
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -107,7 +97,39 @@ const AdditionalServiceScreen: React.FC = () => {
       )}
 
       <SelectedServiceList selectedItems={selectedItems} updateServiceQty={updateServiceQty} />
-      <BookingSummary onContinue={() => navigation.navigate("TicketConfirm")} />
+      <BookingSummary onContinue={handleContinue} isPending={isPending} />
+
+      <UniversalConfirmModal
+        visible={showLeaveModal}
+        title="Xác nhận rời khỏi"
+        message="Ghế và dịch vụ đã chọn sẽ bị hủy, bạn có chắc chắn muốn rời?"
+        buttons={[
+          {
+            text: "Hủy",
+            type: "cancel",
+            onPress: () => setShowLeaveModal(false),
+          },
+          {
+            text: "Đồng ý",
+            type: "primary",
+            onPress: async () => {
+              try {
+                if (seats.length > 0 && showtimeId) {
+                  await cancelSeatMulti({
+                    showtimeId,
+                    seatIds: seats.map((s) => s.id),
+                  });
+                }
+                clearAll();
+                setShowLeaveModal(false);
+                navigation.goBack();
+              } catch (err) {
+                console.error("Cancel seat failed:", err);
+              }
+            },
+          },
+        ]}
+      />
     </PickView>
   );
 };

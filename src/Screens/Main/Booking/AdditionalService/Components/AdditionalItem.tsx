@@ -22,6 +22,7 @@ const AdditionalItem = ({ item, updateServiceQty }: any) => {
   return (
     <PickView style={styles.card}>
       <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} resizeMode="cover" />
+
       <PickView style={styles.cardContent}>
         <PickText style={styles.itemName}>{item.name}</PickText>
         {item.description && <PickText style={styles.itemDesc}>{item.description}</PickText>}
@@ -30,12 +31,22 @@ const AdditionalItem = ({ item, updateServiceQty }: any) => {
         </PickText>
       </PickView>
 
-      <PickView style={styles.quantityControl}>
-        <TouchableOpacity onPress={() => updateServiceQty(item.id, Math.max(0, item.quantity - 1))}>
+      <PickView style={styles.quantityContainer}>
+        <TouchableOpacity
+          style={styles.iconWrapper}
+          onPress={() => updateServiceQty(item.id, Math.max(0, item.quantity - 1))}
+        >
           <Ionicons name="remove-circle-outline" size={26} color={COLORS.accent} />
         </TouchableOpacity>
-        <PickText style={styles.qtyText}>{item.quantity}</PickText>
-        <TouchableOpacity onPress={() => updateServiceQty(item.id, item.quantity + 1)}>
+
+        <PickView style={styles.qtyBox}>
+          <PickText style={styles.qtyText}>{item.quantity}</PickText>
+        </PickView>
+
+        <TouchableOpacity
+          style={styles.iconWrapper}
+          onPress={() => updateServiceQty(item.id, item.quantity + 1)}
+        >
           <Ionicons name="add-circle-outline" size={26} color={COLORS.accent} />
         </TouchableOpacity>
       </PickView>
@@ -49,21 +60,66 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     marginHorizontal: SPACING.sm,
     marginVertical: 6,
-    borderRadius: 8,
-    padding: SPACING.sm,
+    borderRadius: 10,
+    padding: SPACING.md,
     alignItems: "center",
     shadowColor: "#000",
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 3,
+    position: "relative",
   },
-  thumbnail: { width: 60, height: 80, borderRadius: 8, backgroundColor: "#ecf0f1" },
+
+  thumbnail: {
+    width: 70,
+    height: 90,
+    borderRadius: 10,
+    backgroundColor: "#ecf0f1",
+  },
+
   cardContent: { flex: 1, marginLeft: 12 },
+
   itemName: { fontSize: FONT_SIZE.md, fontWeight: "bold" },
+
   itemDesc: { fontSize: FONT_SIZE.sm, color: "#666", marginTop: 2 },
-  itemPrice: { fontSize: FONT_SIZE.md, color: COLORS.accent, marginTop: 4 },
-  quantityControl: { alignItems: "center", justifyContent: "center", gap: 4 },
-  qtyText: { fontWeight: "600", fontSize: FONT_SIZE.md },
+
+  itemPrice: { fontSize: FONT_SIZE.md, color: COLORS.accent, marginTop: 4, fontWeight: "600" },
+
+  quantityContainer: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+
+  iconWrapper: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: "#f0f0f0",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  qtyBox: {
+    minWidth: 32,
+    height: 32,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: "#f0f0f0",
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 6,
+  },
+
+  qtyText: {
+    fontWeight: "700",
+    fontSize: FONT_SIZE.md,
+    color: "#333",
+  },
 });
 
 export default AdditionalItem;

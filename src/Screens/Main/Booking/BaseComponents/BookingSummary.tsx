@@ -8,9 +8,10 @@ import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 
 interface BookingSummaryProps {
   onContinue?: () => void;
+  isPending?: boolean;
 }
 
-const BookingSummary: React.FC<BookingSummaryProps> = ({ onContinue }) => {
+const BookingSummary: React.FC<BookingSummaryProps> = ({ onContinue, isPending }) => {
   const { seats, totalPrice } = useBookingStore();
   const insets = useSafeAreaInsets();
 
@@ -26,9 +27,10 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({ onContinue }) => {
       </PickView>
 
       <PickButton
-        title="Tiếp tục"
+        title={isPending ? "Đang xử lý..." : "Tiếp tục"}
         type="Primary"
         onPress={onContinue}
+        disabled={isPending}
         style={styles.continueButton}
         textStyle={{ fontSize: FONT_SIZE.sm }}
       />

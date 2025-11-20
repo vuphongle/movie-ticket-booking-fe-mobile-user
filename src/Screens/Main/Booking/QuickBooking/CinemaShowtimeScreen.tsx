@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ScrollView, View, TouchableOpacity, Image, Alert } from "react-native";
+import { ScrollView, View, TouchableOpacity, Image } from "react-native";
 import { PickView, PickText, ScreenHeader } from "@Components";
 import { SPACING, FONT_SIZE, RADIUS, COLORS } from "@Constants/theme";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -9,6 +9,7 @@ import { useMoviesShowtimesByCinemaName } from "@Hooks/showtime/useMoviesShowtim
 import { useAuth } from "@Contexts/AuthContext";
 import { RootStackParamList } from "@Types/navigationTypes";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -18,6 +19,7 @@ const CinemaShowtimeScreen = () => {
   const navigation = useNavigation<NavProp>();
   const route = useRoute();
   const { cinemaId, cinemaName } = route.params as any;
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const { state } = useAuth();
   const { isAuthenticated } = state;
@@ -225,17 +227,7 @@ const CinemaShowtimeScreen = () => {
                           key={st.id}
                           onPress={() => {
                             if (!isAuthenticated) {
-                              Alert.alert("Yêu cầu đăng nhập", "Vui lòng đăng nhập để đặt ghế.", [
-                                { text: "Hủy", style: "cancel" },
-                                {
-                                  text: "Đăng nhập",
-                                  onPress: () =>
-                                    navigation.navigate("Login", {
-                                      redirectTo: "CinemaShowtime",
-                                      params: { cinemaId, cinemaName },
-                                    }),
-                                },
-                              ]);
+                              setShowLoginModal(true);
                               return;
                             }
 
@@ -301,6 +293,29 @@ const CinemaShowtimeScreen = () => {
           );
         })}
       </ScrollView>
+      <UniversalConfirmModal
+        visible={showLoginModal}
+        title="Yêu cầu đăng nhập"
+        message="Vui lòng đăng nhập để đặt ghế."
+        buttons={[
+          {
+            text: "Hủy",
+            type: "cancel",
+            onPress: () => setShowLoginModal(false),
+          },
+          {
+            text: "Đăng nhập",
+            type: "primary",
+            onPress: () => {
+              setShowLoginModal(false);
+              navigation.navigate("Login", {
+                redirectTo: "CinemaShowtime",
+                params: { cinemaId, cinemaName },
+              });
+            },
+          },
+        ]}
+      />
     </PickView>
   );
 };

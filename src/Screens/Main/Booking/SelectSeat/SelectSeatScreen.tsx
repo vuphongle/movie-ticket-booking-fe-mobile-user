@@ -24,6 +24,7 @@ import { RootStackParamList } from "@Types/navigationTypes";
 import { useBookingStore } from "@Store/useBookingStore";
 import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
 import Svg, { Path } from "react-native-svg";
+import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList, "AdditionalService">;
 
@@ -34,18 +35,30 @@ const SelectSeatScreen: React.FC = () => {
   const { showtimeId, cinema, auditorium, time, date, format } = route.params;
   const auditoriumId = auditorium.id;
   const { movie, isLoading } = useMovieByShowtime(showtimeId);
+  const [isPending, setIsPending] = useState(false);
 
   const {
     seats: seatDtos,
     isLoading: isSeatsLoading,
     refetch: refetchSeats,
   } = useSeats({ auditoriumId, showtimeId });
-  const { addSeat, removeSeat, setBookingInfo, seats, setExpireTime } = useBookingStore();
+  const { addSeat, removeSeat, setBookingInfo, seats, setExpireTime, clearAll } = useBookingStore();
   const checkSeatStatus = useLazyCheckSeatStatus();
   const { mutateAsync: bookSeat } = useBookSeat();
+  const [showAgeModal, setShowAgeModal] = useState(false);
+  const [ageTitle, setAgeTitle] = useState("");
+  const [ageMessage, setAgeMessage] = useState("");
+  const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [showNoSeatModal, setShowNoSeatModal] = useState(false);
+  const [showHeldSeatModal, setShowHeldSeatModal] = useState(false);
 
   const [mappedSeats, setMappedSeats] = useState<Seat[]>([]);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    clearAll();
+  }, [showtimeId]);
 
   // Lưu thông tin phim & suất chiếu vào store
   useEffect(() => {
@@ -81,32 +94,47 @@ const SelectSeatScreen: React.FC = () => {
     const selected = seats.some((s) => s.id === seat.id);
 
     if (selected) removeSeat(seat.id);
-    else if (seats.length >= 8) Alert.alert("Giới hạn", "Bạn chỉ được chọn tối đa 8 ghế.");
+    else if (seats.length >= 8) setShowLimitModal(true);
     else addSeat(seat);
   };
 
   const handleContinue = async () => {
     if (!seats.length) {
-      Alert.alert("Chọn ghế", "Vui lòng chọn ít nhất 1 ghế.");
+      setShowNoSeatModal(true);
       return;
     }
+    if (movie?.age && movie.age !== "P" && !isAgeConfirmed) {
+      let ageNumber = movie.age.replace("T", "");
+      if (movie.age === "K") ageNumber = "0";
+
+      setAgeTitle(`Xác nhận mua vé cho người có độ tuổi phù hợp (${movie.age})`);
+      setAgeMessage(
+        `Tôi xác nhận mua vé xem phim này cho người có độ tuổi từ ${ageNumber} tuổi trở lên và đồng ý cung cấp giấy tờ tùy thân để xác minh độ tuổi.`
+      );
+      setShowAgeModal(true);
+      return;
+    }
+
+    if (isPending) return;
+    setIsPending(true);
 
     try {
       const seatStatusResults = await Promise.all(
         seats.map((seat) => checkSeatStatus(seat.id, showtimeId))
       );
+
       const heldSeats = seatStatusResults.filter((r) => r.status === "HELD");
       const bookedSeats = seatStatusResults.filter((r) => r.status === "BOOKED");
+
       if (heldSeats.length > 0 || bookedSeats.length > 0) {
         const heldIds = heldSeats.map((h) => h.seatId);
         const bookedIds = bookedSeats.map((h) => h.seatId);
+
         heldIds.forEach((id) => removeSeat(id));
         bookedIds.forEach((id) => removeSeat(id));
+
         await refetchSeats();
-        Alert.alert(
-          "Ghế đang được giữ",
-          "Một số ghế đã bị giữ hoặc đã được đặt. Vui lòng chọn lại."
-        );
+        setShowHeldSeatModal(true);
         return;
       }
 
@@ -117,8 +145,16 @@ const SelectSeatScreen: React.FC = () => {
     } catch (err) {
       console.error(err);
       Alert.alert("Lỗi", "Không thể giữ ghế, vui lòng thử lại.");
+    } finally {
+      setIsPending(false);
     }
   };
+
+  useEffect(() => {
+    if (isAgeConfirmed) {
+      handleContinue();
+    }
+  }, [isAgeConfirmed]);
 
   if (isSeatsLoading || isLoading)
     return (
@@ -162,8 +198,58 @@ const SelectSeatScreen: React.FC = () => {
           </SeatMapZoomable>
         </ScrollView>
 
-        <BookingSummary onContinue={handleContinue} />
+        <BookingSummary onContinue={handleContinue} isPending={isPending} />
       </PickView>
+      <UniversalConfirmModal
+        visible={showAgeModal}
+        title={ageTitle}
+        message={ageMessage}
+        buttons={[
+          {
+            text: "Hủy",
+            type: "cancel",
+            onPress: () => setShowAgeModal(false),
+          },
+          {
+            text: "Đồng ý",
+            type: "primary",
+            onPress: () => {
+              setShowAgeModal(false);
+              setIsAgeConfirmed(true);
+            },
+          },
+        ]}
+      />
+
+      {/* Modal giới hạn 8 ghế */}
+      <UniversalConfirmModal
+        visible={showLimitModal}
+        title="Giới hạn"
+        message="Bạn chỉ được chọn tối đa 8 ghế."
+        buttons={[
+          {
+            text: "OK",
+            type: "primary",
+            onPress: () => setShowLimitModal(false),
+          },
+        ]}
+      />
+
+      {/* Modal chưa chọn ghế */}
+      <UniversalConfirmModal
+        visible={showNoSeatModal}
+        title="Chọn ghế"
+        message="Vui lòng chọn ít nhất 1 ghế."
+        buttons={[{ text: "OK", type: "primary", onPress: () => setShowNoSeatModal(false) }]}
+      />
+
+      {/* Modal ghế đang được giữ */}
+      <UniversalConfirmModal
+        visible={showHeldSeatModal}
+        title="Ghế đang được giữ"
+        message="Một số ghế đã bị giữ hoặc đã được đặt. Vui lòng chọn lại."
+        buttons={[{ text: "OK", type: "primary", onPress: () => setShowHeldSeatModal(false) }]}
+      />
     </ImageBackground>
   );
 };
