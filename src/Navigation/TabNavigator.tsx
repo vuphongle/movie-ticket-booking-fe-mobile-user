@@ -3,15 +3,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createBottomTabNavigator, BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { MAIN_TAB_STACK, COLORS, SPACING, FONT_SIZE } from "@Constants";
 import { MainTabParamList } from "@Types/navigationTypes";
+
 import { HomeScreen, QuicklyBookingScreen, NewsScreen, ProfileScreen } from "@Screens";
+
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
-const EMOJI: Record<string, string> = {
-  [MAIN_TAB_STACK.HOME]: "🏠",
-  [MAIN_TAB_STACK.BOOKING]: "🎫",
-  [MAIN_TAB_STACK.NEWS]: "📰",
-  [MAIN_TAB_STACK.PROFILE]: "👤",
+const ICON_ACTIVE_COLOR = "#174078";
+const ICON_INACTIVE_COLOR = "#566157";
+
+const ICONS: Record<string, string> = {
+  [MAIN_TAB_STACK.HOME]: "home-variant",
+  [MAIN_TAB_STACK.BOOKING]: "ticket-confirmation",
+  [MAIN_TAB_STACK.NEWS]: "newspaper-variant",
+  [MAIN_TAB_STACK.PROFILE]: "account-circle",
 };
 
 const LABEL: Record<string, string> = {
@@ -21,63 +27,50 @@ const LABEL: Record<string, string> = {
   [MAIN_TAB_STACK.PROFILE]: "Cá nhân",
 };
 
-function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+function CustomTabBar({ state, navigation }: BottomTabBarProps) {
   return (
     <SafeAreaView edges={["bottom"]} style={styles.safeArea}>
       <View style={styles.tabContainer}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
-          const { options } = descriptors[route.key];
+
           const onPress = () => {
-            const event = navigation.emit({
-              type: "tabPress",
-              target: route.key,
-              canPreventDefault: true,
-            });
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name);
-            }
-          };
-          const onLongPress = () => {
-            navigation.emit({ type: "tabLongPress", target: route.key });
+            if (!isFocused) navigation.navigate(route.name);
           };
 
-          const scale = new Animated.Value(isFocused ? 1 : 0.95);
+          const scale = new Animated.Value(isFocused ? 1 : 0.92);
           Animated.timing(scale, {
-            toValue: isFocused ? 1 : 0.95,
-            duration: 160,
+            toValue: isFocused ? 1 : 0.92,
+            duration: 150,
             useNativeDriver: true,
           }).start();
 
           return (
-            <TouchableOpacity
-              key={route.key}
-              accessibilityRole="button"
-              accessibilityState={isFocused ? { selected: true } : {}}
-              accessibilityLabel={options.tabBarAccessibilityLabel}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              style={styles.itemTouchable}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
+            <TouchableOpacity key={route.key} onPress={onPress} style={styles.itemTouchable}>
               <Animated.View
                 style={[styles.item, isFocused && styles.itemFocused, { transform: [{ scale }] }]}
               >
-                <Text style={[styles.icon, { opacity: isFocused ? 1 : 0.6 }]}>
-                  {EMOJI[route.name] ?? "📱"}
-                </Text>
+                <Icon
+                  name={ICONS[route.name]}
+                  size={isFocused ? 30 : 25}
+                  color={isFocused ? ICON_ACTIVE_COLOR : ICON_INACTIVE_COLOR}
+                  style={{
+                    marginBottom: 2,
+                    textShadowColor: isFocused ? "rgba(255,77,109,0.4)" : "transparent",
+                    textShadowRadius: isFocused ? 6 : 0,
+                  }}
+                />
 
                 <Text
                   style={[
                     styles.label,
                     {
-                      color: isFocused ? COLORS.accent : COLORS.text.light,
-                      opacity: isFocused ? 1 : 0.7,
+                      color: isFocused ? ICON_ACTIVE_COLOR : ICON_INACTIVE_COLOR,
+                      fontWeight: isFocused ? "700" : "500",
                     },
                   ]}
-                  numberOfLines={1}
                 >
-                  {LABEL[route.name] ?? ""}
+                  {LABEL[route.name]}
                 </Text>
               </Animated.View>
             </TouchableOpacity>
@@ -95,7 +88,6 @@ const TabNavigator = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: { display: "none" },
-        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen name={MAIN_TAB_STACK.HOME} component={HomeScreen} />
@@ -106,7 +98,7 @@ const TabNavigator = () => {
   );
 };
 
-const CONTAINER_HEIGHT = Platform.select({ ios: 70, android: 66 });
+const CONTAINER_HEIGHT = Platform.select({ ios: 68, android: 66 });
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -114,7 +106,6 @@ const styles = StyleSheet.create({
     left: SPACING.md,
     right: SPACING.md,
     bottom: 0,
-    paddingBottom: Platform.select({ ios: 0, android: SPACING.sm }),
   },
   tabContainer: {
     height: CONTAINER_HEIGHT,
@@ -125,13 +116,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: Platform.select({ ios: 0, android: SPACING.xs }),
+    marginBottom: Platform.select({ ios: 0, android: SPACING.md }),
 
     shadowColor: "#000",
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.07,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
+    elevation: 5,
+
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.border,
   },
@@ -142,19 +134,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     borderRadius: 14,
   },
   itemFocused: {
-    backgroundColor: "rgba(233,69,96,0.12)",
-  },
-  icon: {
-    fontSize: 22,
-    marginBottom: 2,
+    backgroundColor: "#c7ddf9",
   },
   label: {
     fontSize: FONT_SIZE.xs,
-    fontWeight: "600",
   },
 });
 

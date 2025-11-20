@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
 import { PickView } from "@Components";
-import { COLORS, SPACING, RADIUS } from "@Constants/theme";
+import { SPACING, RADIUS } from "@Constants/theme";
 import Header from "./Components/Header";
 import Banner from "./Components/Banner";
 import MovieSection from "./Components/MovieSection";
@@ -54,7 +54,7 @@ const HomeScreen: React.FC = () => {
   if (loadingNow || loadingComing) {
     return (
       <PickView flex={1} justifyCenter alignCenter>
-        <ActivityIndicator size="large" color={COLORS.accent} />
+        <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
       </PickView>
     );
   }

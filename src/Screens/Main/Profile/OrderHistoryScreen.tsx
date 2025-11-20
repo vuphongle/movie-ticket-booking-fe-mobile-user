@@ -1,5 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { ScrollView, RefreshControl, Alert, TouchableOpacity, Linking } from "react-native";
+import {
+  ScrollView,
+  RefreshControl,
+  Alert,
+  TouchableOpacity,
+  Linking,
+  ActivityIndicator,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -22,7 +29,7 @@ const ORDER_STATUS_FILTERS: Array<{ key: OrderStatus | "ALL"; label: string }> =
 export const OrderHistoryScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<RootStackNavigationProp>();
-  const { colors } = useThemedStyles();
+  const { colors, spacing } = useThemedStyles();
   const { canViewPdf } = useOrderUtils();
 
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "ALL">("ALL");
@@ -187,8 +194,9 @@ export const OrderHistoryScreen: React.FC = () => {
       >
         {isLoading ? (
           <PickView alignCenter paddingVertical={40}>
-            <PickText size={14} color="body">
-              Đang tải...
+            <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
+            <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
+              Đang tải lịch sử
             </PickText>
           </PickView>
         ) : filteredOrders.length === 0 ? (

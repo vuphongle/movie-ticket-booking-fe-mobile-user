@@ -5,6 +5,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
+import useThemedStyles from "@Theme/Hook/useThemedStyles";
 
 import MovieContent, { MovieContentProps } from "./Components/MovieContent";
 import { Review } from "./Components/MovieReview";
@@ -39,6 +40,7 @@ const MovieDetailScreen: React.FC = () => {
   const route = useRoute();
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const insets = useSafeAreaInsets();
+  const { colors, spacing } = useThemedStyles();
   const { id, slug } = route.params as { id: string; slug: string };
 
   const [movie, setMovie] = useState<MovieContentProps["movie"] | null>(null);
@@ -87,7 +89,10 @@ const MovieDetailScreen: React.FC = () => {
   if (loading)
     return (
       <PickView style={styles.center}>
-        <ActivityIndicator size="large" color={COLORS.accent} />
+        <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
+        <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
+          Đang tải thông tin phim
+        </PickText>
       </PickView>
     );
 

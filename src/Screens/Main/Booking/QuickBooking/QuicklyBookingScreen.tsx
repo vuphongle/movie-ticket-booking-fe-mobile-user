@@ -46,7 +46,7 @@ const QuicklyBookingScreen = () => {
       <PickView alignCenter justifyCenter style={{ paddingVertical: spacing.s48 * 2 }}>
         <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
         <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-          Đang tải danh sách rạp...
+          Đang tải danh sách rạp
         </PickText>
       </PickView>
     );
