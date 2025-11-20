@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, ActivityIndicator, BackHandler } from "react-native";
+import { View, ActivityIndicator, BackHandler, Alert } from "react-native";
 import { WebView, WebViewNavigation } from "react-native-webview";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
@@ -16,9 +16,8 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   const [canGoBack, setCanGoBack] = useState(false);
   const { clearAll } = useBookingStore();
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showFailedModal, setShowFailedModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const hasHandledResult = useRef(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -39,13 +38,26 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
     const { url } = navState;
     setCanGoBack(navState.canGoBack);
 
-    if (url.includes("/success")) {
-      setShowSuccessModal(true);
+    if (hasHandledResult.current) {
       return;
     }
 
-    if (url.includes("/cancel") || url.includes("/failure")) {
-      setShowFailedModal(true);
+    if (url.includes("/success")) {
+      hasHandledResult.current = true;
+      clearAll();
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Main" }],
+      });
+      Alert.alert("Thành công", "Thanh toán thành công! Vui lòng kiểm tra vé trong lịch sử.");
+      return;
+    }
+
+    if (url.includes("failed")) {
+      hasHandledResult.current = true;
+      clearAll();
+      navigation.navigate("Main");
+      Alert.alert("Thất bại", "Thanh toán không thành công. Vui lòng thử lại sau.");
       return;
     }
   };
@@ -123,43 +135,6 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
             type: "danger",
             onPress: () => {
               setShowCancelModal(false);
-              clearAll();
-              navigation.navigate("Main");
-            },
-          },
-        ]}
-      />
-
-      <UniversalConfirmModal
-        visible={showSuccessModal}
-        title="Thành công"
-        message="Thanh toán thành công! Vui lòng kiểm tra vé trong lịch sử."
-        buttons={[
-          {
-            text: "OK",
-            type: "primary",
-            onPress: () => {
-              setShowSuccessModal(false);
-              clearAll();
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Main" }],
-              });
-            },
-          },
-        ]}
-      />
-
-      <UniversalConfirmModal
-        visible={showFailedModal}
-        title="Đã hủy"
-        message="Giao dịch thanh toán đã bị hủy hoặc thất bại."
-        buttons={[
-          {
-            text: "OK",
-            type: "primary",
-            onPress: () => {
-              setShowFailedModal(false);
               clearAll();
               navigation.navigate("Main");
             },
