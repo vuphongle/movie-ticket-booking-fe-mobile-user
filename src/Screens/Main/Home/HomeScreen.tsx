@@ -54,7 +54,7 @@ const HomeScreen: React.FC = () => {
   if (loadingNow || loadingComing) {
     return (
       <PickView flex={1} justifyCenter alignCenter>
-        <ActivityIndicator size="large" color={COLORS.accent} />
+        <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
       </PickView>
     );
   }

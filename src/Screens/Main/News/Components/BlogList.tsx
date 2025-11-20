@@ -44,7 +44,7 @@ const BlogList: React.FC<BlogListProps> = ({ type = "all", onBlogPress }) => {
         <PickView alignCenter justifyCenter style={{ paddingVertical: spacing.s48 * 2 }}>
           <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
           <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-            Đang tải tin tức...
+            Đang tải tin tức
           </PickText>
         </PickView>
       );
