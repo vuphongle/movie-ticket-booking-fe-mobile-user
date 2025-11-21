@@ -13,7 +13,10 @@ import MovieSection from "@Screens/Main/Home/Components/MovieSection";
 import { movieService } from "@Services/movie/movieService";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 
-type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
+type MovieSectionNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "MovieList"
+>;
 
 enum MovieAge {
   P = "P",
@@ -46,13 +49,17 @@ const MovieDetailScreen: React.FC = () => {
   const [movie, setMovie] = useState<MovieContentProps["movie"] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const [nowShowingMovies, setNowShowingMovies] = useState<MovieItem[]>([]);
+  const [isNowShowing, setIsNowShowing] = useState(false);
+
   const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+
         const movieDetail = await movieService.getMovieDetail(Number(id), slug);
         setMovie({
           ...movieDetail,
@@ -60,6 +67,9 @@ const MovieDetailScreen: React.FC = () => {
         });
 
         const moviesNow = await movieService.getShowingNowMovies();
+
+        setIsNowShowing(moviesNow.some((m) => m.id === Number(id)));
+
         setNowShowingMovies(
           moviesNow.map((m) => ({
             id: m.id.toString(),
@@ -121,6 +131,7 @@ const MovieDetailScreen: React.FC = () => {
       >
         <MovieContent movie={movie} />
 
+        {isNowShowing && (
         <PickView paddingHorizontal={SPACING.md} marginBottom={SPACING.md}>
           <PickButton
             title={`Đánh giá phim (${reviews.length})`}
@@ -135,6 +146,7 @@ const MovieDetailScreen: React.FC = () => {
             }
           />
         </PickView>
+        )}
 
         <MovieSection
           title="Phim đang chiếu"
@@ -149,20 +161,21 @@ const MovieDetailScreen: React.FC = () => {
         />
       </ScrollView>
 
-      {/* Nút Đặt vé */}
-      <View style={[styles.bookingButtonContainer, { bottom: insets.bottom + 12 }]}>
-        <PickButton
-          type="Primary"
-          title="Đặt vé"
-          onPress={() =>
-            navigation.navigate("MovieShowtime", {
-              movieId: Number(id),
-              movieName: movie.name,
-              slug,
-            })
-          }
-        />
-      </View>
+      {isNowShowing && (
+        <View style={[styles.bookingButtonContainer, { bottom: insets.bottom + 12 }]}>
+          <PickButton
+            type="Primary"
+            title="Đặt vé"
+            onPress={() =>
+              navigation.navigate("MovieShowtime", {
+                movieId: Number(id),
+                movieName: movie.name,
+                slug,
+              })
+            }
+          />
+        </View>
+      )}
     </PickView>
   );
 };
