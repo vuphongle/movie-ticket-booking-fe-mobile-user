@@ -18,7 +18,12 @@ import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useOrderHistory, useOrderUtils } from "@Hooks";
 import type { Order, OrderStatus } from "@Types/orderTypes";
 
-const ORDER_STATUS_FILTERS: Array<{ key: OrderStatus | "ALL"; label: string }> = [
+const ORDER_STATUS_FILTERS: Array<{
+  key: OrderStatus | "ALL" | "UPCOMING" | "WATCHED";
+  label: string;
+}> = [
+  { key: "UPCOMING", label: "Sắp tới" },
+  { key: "WATCHED", label: "Đã xem" },
   { key: "ALL", label: "Tất cả" },
   { key: "CONFIRMED", label: "Đã thanh toán" },
   { key: "PENDING", label: "Chờ thanh toán" },
@@ -32,7 +37,9 @@ export const OrderHistoryScreen: React.FC = () => {
   const { colors, spacing } = useThemedStyles();
   const { canViewPdf } = useOrderUtils();
 
-  const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "ALL">("ALL");
+  const [selectedStatus, setSelectedStatus] = useState<
+    OrderStatus | "ALL" | "UPCOMING" | "WATCHED"
+  >("UPCOMING");
 
   const { data: orders = [], isLoading, error, refetch, isRefetching } = useOrderHistory();
 
@@ -69,13 +76,38 @@ export const OrderHistoryScreen: React.FC = () => {
     if (__DEV__) {
       console.log("Navigate to order details:", order.id);
     }
-    Alert.alert("Thông báo", `Chi tiết đơn hàng #${order.id} (chưa implement)`);
   }, []);
 
   // Filter orders based on selected status
-  const filteredOrders = orders.filter(
-    (order) => selectedStatus === "ALL" || order.status === selectedStatus
-  );
+  const filteredOrders = orders.filter((order) => {
+    if (selectedStatus === "ALL") return true;
+
+    if (selectedStatus === "UPCOMING") {
+      // Show confirmed orders with future showtime
+      if (order.status !== "CONFIRMED") return false;
+
+      // Parse showtime date and time
+      const [year, month, day] = order.showtime.date;
+      const [hours, minutes] = order.showtime.startTime.split(":").map(Number);
+      const showtimeDate = new Date(year, month - 1, day, hours, minutes);
+      const now = new Date();
+      return showtimeDate > now;
+    }
+
+    if (selectedStatus === "WATCHED") {
+      // Show confirmed orders with past showtime
+      if (order.status !== "CONFIRMED") return false;
+
+      // Parse showtime date and time
+      const [year, month, day] = order.showtime.date;
+      const [hours, minutes] = order.showtime.startTime.split(":").map(Number);
+      const showtimeDate = new Date(year, month - 1, day, hours, minutes);
+      const now = new Date();
+      return showtimeDate <= now;
+    }
+
+    return order.status === selectedStatus;
+  });
 
   if (error) {
     return (
@@ -213,6 +245,10 @@ export const OrderHistoryScreen: React.FC = () => {
             <PickText size={14} color="body" style={{ textAlign: "center" }}>
               {selectedStatus === "ALL"
                 ? "Bạn chưa đặt vé nào. Hãy đặt vé xem phim ngay!"
+                : selectedStatus === "UPCOMING"
+                ? "Bạn chưa có vé nào sắp tới"
+                : selectedStatus === "WATCHED"
+                ? "Bạn chưa xem phim nào"
                 : `Không có đơn hàng nào với trạng thái "${
                     ORDER_STATUS_FILTERS.find((f) => f.key === selectedStatus)?.label
                   }"`}
