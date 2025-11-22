@@ -5,8 +5,9 @@ import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
 
 interface BannerItem {
   id: string;
-  title: string;
+  title?: string;
   subtitle?: string;
+  image?: any;
   imageUrl?: string;
   backgroundColor?: string;
 }
@@ -32,7 +33,9 @@ const Banner: React.FC<BannerProps> = ({ banners }) => {
               { backgroundColor: banner.backgroundColor || COLORS.secondary },
             ]}
           >
-            {banner.imageUrl ? (
+            {banner.image ? (
+              <Image source={banner.image} style={styles.bannerImage} />
+            ) : banner.imageUrl ? (
               <Image source={{ uri: banner.imageUrl }} style={styles.bannerImage} />
             ) : (
               <PickView style={styles.bannerContent} justifyCenter alignCenter>

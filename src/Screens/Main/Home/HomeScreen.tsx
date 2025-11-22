@@ -13,25 +13,27 @@ import useThemedStyles from "@Theme/Hook/useThemedStyles";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
 
-// Mock banners
 const mockBanners = [
   {
     id: "1",
     title: "Ưu đãi đặc biệt",
     subtitle: "Giảm 50% cho lần đặt vé đầu tiên",
     backgroundColor: "#e94560",
+    image: require("@Assets/images/banner2.png"),
   },
   {
     id: "2",
     title: "Phim mới ra mắt",
     subtitle: "Những bộ phim blockbuster 2024",
     backgroundColor: "#3498db",
+    image: require("@Assets/images/banner4.png"),
   },
   {
     id: "3",
     title: "Combo tiết kiệm",
     subtitle: "Vé + bỏng ngô + nước ngọt",
     backgroundColor: "#2ecc71",
+    image: require("@Assets/images/banner3.png"),
   },
 ];
 
