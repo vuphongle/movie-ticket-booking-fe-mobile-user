@@ -51,4 +51,7 @@ export interface MovieServiceInterface {
   getMovieDetail: (id: number, slug: string) => Promise<MovieDetail>;
   getMovieByShowtime: (showtimeId: number) => Promise<Movie>;
   searchMovies: (keyword: string) => Promise<Movie[]>;
+  createReview(formData: FormData): Promise<any>;
+  updateReview(formData: FormData): Promise<any>;
+  deleteReview(reviewId: number): Promise<any>;
 }
