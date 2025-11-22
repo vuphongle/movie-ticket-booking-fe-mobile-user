@@ -32,6 +32,26 @@ class MovieService implements MovieServiceInterface {
       { skipAuth: true }
     );
   }
+
+  async createReview(formData: FormData): Promise<any> {
+    return this.httpService.post("/reviews", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  async updateReview(formData: FormData): Promise<any> {
+    return this.httpService.put("/reviews", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  async deleteReview(reviewId: number): Promise<any> {
+    return this.httpService.delete(`/reviews/${reviewId}`);
+  }
 }
 
 export const movieService = new MovieService();

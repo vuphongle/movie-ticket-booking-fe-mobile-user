@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: Platform.select({ ios: 0, android: SPACING.md }),
+    marginBottom: Platform.select({ ios: 0, android: SPACING.sm }),
 
     shadowColor: "#000",
     shadowOpacity: 0.07,

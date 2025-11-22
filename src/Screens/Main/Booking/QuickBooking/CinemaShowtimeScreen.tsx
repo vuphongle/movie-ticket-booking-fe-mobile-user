@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { ScrollView, View, TouchableOpacity, Image } from "react-native";
 import { PickView, PickText, ScreenHeader } from "@Components";
 import { SPACING, FONT_SIZE, RADIUS, COLORS } from "@Constants/theme";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { parseGraphicArray } from "@Utils/graphicUtils";
 
@@ -89,6 +90,40 @@ const CinemaShowtimeScreen = () => {
             );
           })}
         </ScrollView>
+
+        {movies.every((movie: any) => {
+          const showtimes = movie.showtimes.filter((st: any) => {
+            const [y, m, d] = st.date;
+            const dt = new Date(y, m - 1, d);
+            return dt.toDateString() === selectedDate.toDateString();
+          });
+          return showtimes.length === 0;
+        }) && (
+          <PickView
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              height: 300,
+              marginTop: SPACING.md,
+              borderRadius: RADIUS.md,
+              borderWidth: 1,
+              borderColor: COLORS.border,
+              backgroundColor: COLORS.surface,
+              marginHorizontal: SPACING.md,
+            }}
+          >
+            <Icon name="movie-open-outline" size={55} color={COLORS.text.secondary} />
+            <PickText
+              style={{
+                marginTop: SPACING.sm,
+                fontSize: FONT_SIZE.md,
+                color: COLORS.text.secondary,
+              }}
+            >
+              Hiện chưa có suất chiếu nào trong ngày
+            </PickText>
+          </PickView>
+        )}
 
         {/* --- Movie list --- */}
         {movies.map((movie: any) => {

@@ -97,7 +97,7 @@ const HomeScreen: React.FC = () => {
 
         <MovieSection
           title="Phim đang chiếu"
-          movies={formatMovies(nowShowing)}
+          movies={formatMovies(nowShowing.slice(0, 7))}
           onSeeAll={() =>
             navigation.navigate("MovieList", {
               type: "nowShowing",
@@ -109,7 +109,7 @@ const HomeScreen: React.FC = () => {
 
         <MovieSection
           title="Phim sắp chiếu"
-          movies={formatMovies(comingSoon)}
+          movies={formatMovies(comingSoon.slice(0, 7))}
           onSeeAll={() =>
             navigation.navigate("MovieList", {
               type: "comingSoon",

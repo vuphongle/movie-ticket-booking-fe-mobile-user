@@ -298,7 +298,16 @@ export class HttpService {
       const { axiosConfig, cleanup } = this.setupRequest(config);
 
       try {
-        const response = await this.axiosInstance.post<T>(url, data, axiosConfig);
+        const isFormData = data instanceof FormData;
+
+        const response = await this.axiosInstance.post<T>(url, data, {
+          ...axiosConfig,
+          headers: {
+            ...axiosConfig.headers,
+            ...(isFormData ? { "Content-Type": "multipart/form-data" } : {}),
+          },
+        });
+
         return response.data;
       } finally {
         cleanup();
@@ -311,7 +320,16 @@ export class HttpService {
       const { axiosConfig, cleanup } = this.setupRequest(config);
 
       try {
-        const response = await this.axiosInstance.put<T>(url, data, axiosConfig);
+        const isFormData = data instanceof FormData;
+
+        const response = await this.axiosInstance.put<T>(url, data, {
+          ...axiosConfig,
+          headers: {
+            ...axiosConfig.headers,
+            ...(isFormData ? { "Content-Type": "multipart/form-data" } : {}),
+          },
+        });
+
         return response.data;
       } finally {
         cleanup();

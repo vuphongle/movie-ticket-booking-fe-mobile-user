@@ -13,10 +13,7 @@ import MovieSection from "@Screens/Main/Home/Components/MovieSection";
 import { movieService } from "@Services/movie/movieService";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 
-type MovieSectionNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "MovieList"
->;
+type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
 
 enum MovieAge {
   P = "P",
@@ -132,20 +129,20 @@ const MovieDetailScreen: React.FC = () => {
         <MovieContent movie={movie} />
 
         {isNowShowing && (
-        <PickView paddingHorizontal={SPACING.md} marginBottom={SPACING.md}>
-          <PickButton
-            title={`Đánh giá phim (${reviews.length})`}
-            type="Secondary"
-            size="sm"
-            onPress={() =>
-              navigation.navigate("MovieRating", {
-                movieId: Number(id),
-                movieName: movie.name,
-                reviews,
-              })
-            }
-          />
-        </PickView>
+          <PickView paddingHorizontal={SPACING.md} marginBottom={SPACING.md}>
+            <PickButton
+              title={`Đánh giá phim (${reviews.length})`}
+              type="Secondary"
+              size="sm"
+              onPress={() =>
+                navigation.navigate("MovieRating", {
+                  movieId: Number(id),
+                  movieName: movie.name,
+                  reviews,
+                })
+              }
+            />
+          </PickView>
         )}
 
         <MovieSection
