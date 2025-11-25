@@ -22,7 +22,7 @@ class SeatReservationService implements ReservationServiceInterface {
   }
 
   async cancelSeatMulti(body: CancelMultipleSeatsRequest): Promise<void> {
-    return this.httpService.post<void>("/seat-reservations/cancel-multiple", body);
+    return this.httpService.post<void>("/public/seat-reservations/cancel-multiple", body);
   }
 
   async checkSeatStatus(seatId: number, showtimeId: number): Promise<SeatStatusResponse> {
