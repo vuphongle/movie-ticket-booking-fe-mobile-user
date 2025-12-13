@@ -11,6 +11,7 @@ import { useAuth } from "@Contexts/AuthContext";
 import { RootStackParamList } from "@Types/navigationTypes";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -21,6 +22,7 @@ const CinemaShowtimeScreen = () => {
   const route = useRoute();
   const { cinemaId, cinemaName } = route.params as any;
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const { t } = useTranslation();
 
   const { state } = useAuth();
   const { isAuthenticated } = state;
@@ -40,7 +42,15 @@ const CinemaShowtimeScreen = () => {
 
   const [selectedDate, setSelectedDate] = useState(next10Days[0]);
 
-  const weekdays = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+  const weekdayKeys = [
+    "COMMON_WEEKDAY_SUN",
+    "COMMON_WEEKDAY_MON",
+    "COMMON_WEEKDAY_TUE",
+    "COMMON_WEEKDAY_WED",
+    "COMMON_WEEKDAY_THU",
+    "COMMON_WEEKDAY_FRI",
+    "COMMON_WEEKDAY_SAT",
+  ] as const;
 
   return (
     <PickView flex={1}>
@@ -64,7 +74,9 @@ const CinemaShowtimeScreen = () => {
             const isActive = selectedDate.toDateString() === d.toDateString();
 
             const label =
-              d.toDateString() === today.toDateString() ? "Hôm nay" : `${weekdays[d.getDay()]}`;
+              d.toDateString() === today.toDateString()
+                ? t("COMMON_TODAY")
+                : t(weekdayKeys[d.getDay()]);
 
             return (
               <TouchableOpacity key={d.toDateString()} onPress={() => setSelectedDate(d)}>
@@ -120,7 +132,7 @@ const CinemaShowtimeScreen = () => {
                 color: COLORS.text.secondary,
               }}
             >
-              Hiện chưa có suất chiếu nào trong ngày
+              {t("BOOKING_CINEMA_NO_SHOWTIME")}
             </PickText>
           </PickView>
         )}
@@ -217,8 +229,8 @@ const CinemaShowtimeScreen = () => {
                     showtimes.reduce((acc: Record<string, any[]>, st: any) => {
                       const graphicsMap = { _2D: "2D", _3D: "3D" } as const;
                       const translationMap = {
-                        SUBTITLING: "Phụ đề",
-                        DUBBING: "Lồng tiếng",
+                        SUBTITLING: t("SHOWTIME_TRANSLATION_SUB"),
+                        DUBBING: t("SHOWTIME_TRANSLATION_DUB"),
                       } as const;
 
                       const graphics =
@@ -228,7 +240,10 @@ const CinemaShowtimeScreen = () => {
                         translationMap[st.translationType as keyof typeof translationMap] ??
                         st.translationType;
 
-                      const key = `Phòng ${st.auditoriumType} - ${graphics} ${translation}`;
+                      const key = t("MOVIE_SHOWTIME_ROOM_FORMAT", {
+                        room: st.auditoriumType,
+                        format: `${graphics} ${translation}`,
+                      });
 
                       if (!acc[key]) acc[key] = [];
                       acc[key].push(st);
@@ -283,8 +298,8 @@ const CinemaShowtimeScreen = () => {
 
                             const graphicsMap = { _2D: "2D", _3D: "3D" } as const;
                             const translationMap = {
-                              SUBTITLING: "Phụ đề",
-                              DUBBING: "Lồng tiếng",
+                              SUBTITLING: t("SHOWTIME_TRANSLATION_SUB"),
+                              DUBBING: t("SHOWTIME_TRANSLATION_DUB"),
                             } as const;
 
                             const payload = {
@@ -330,16 +345,16 @@ const CinemaShowtimeScreen = () => {
       </ScrollView>
       <UniversalConfirmModal
         visible={showLoginModal}
-        title="Yêu cầu đăng nhập"
-        message="Vui lòng đăng nhập để đặt ghế."
+        title={t("BOOKING_CINEMA_LOGIN_TITLE")}
+        message={t("BOOKING_CINEMA_LOGIN_MESSAGE")}
         buttons={[
           {
-            text: "Hủy",
+            text: t("COMMON_CANCEL"),
             type: "cancel",
             onPress: () => setShowLoginModal(false),
           },
           {
-            text: "Đăng nhập",
+            text: t("COMMON_LOGIN"),
             type: "primary",
             onPress: () => {
               setShowLoginModal(false);

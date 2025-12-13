@@ -24,6 +24,7 @@ import VoucherModal from "./Modals/VoucherModal";
 import PromoModal from "./Modals/PromoModal";
 import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
+import { useTranslation } from "@Hooks/useTranslation";
 
 const TicketConfirmScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -60,6 +61,8 @@ const TicketConfirmScreen = () => {
   const [voucherErrorMessage, setVoucherErrorMessage] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"PAYOS" | "VNPAY" | null>(null);
 
+  const { t } = useTranslation();
+  const brandName = t("COMMON_APP_NAME");
   const couponsQuery = useCoupons();
   const previewAllCoupons = usePreviewAllCoupons();
   const couponByCodeQuery = useCouponByCode(voucherCode, false);
@@ -121,7 +124,7 @@ const TicketConfirmScreen = () => {
           setPromoDiscount(bestPromo.lineDiscount || 0);
         }
       } catch (err: any) {
-        Alert.alert("Lỗi", err.message);
+        Alert.alert(t("COMMON_ERROR"), err.message);
       } finally {
         setIsLoadingPromo(false);
       }
@@ -191,7 +194,7 @@ const TicketConfirmScreen = () => {
 
       setShowPromoModal(true);
     } catch (err: any) {
-      Alert.alert("Lỗi", err.message);
+      Alert.alert(t("COMMON_ERROR"), err.message);
     } finally {
       setIsLoadingPromo(false);
     }
@@ -199,7 +202,7 @@ const TicketConfirmScreen = () => {
 
   const handleCheckVoucher = async () => {
     if (!voucherCode) {
-      openVoucherModal("Voucher", "Vui lòng nhập mã voucher");
+      openVoucherModal(t("BOOKING_VOUCHER_TITLE"), t("BOOKING_VOUCHER_ENTER_CODE"));
       return;
     }
 
@@ -207,7 +210,10 @@ const TicketConfirmScreen = () => {
     try {
       const coupon = await couponByCodeQuery.refetch();
       if (!coupon.data) {
-        openVoucherModal("Voucher không hợp lệ", "Không tìm thấy voucher này.");
+        openVoucherModal(
+          t("BOOKING_VOUCHER_INVALID_TITLE"),
+          t("BOOKING_VOUCHER_INVALID_MESSAGE")
+        );
         return;
       }
 
@@ -234,7 +240,7 @@ const TicketConfirmScreen = () => {
       setVoucherPreview(preview);
       setShowVoucherModal(true);
     } catch (error: any) {
-      Alert.alert("Lỗi", error.message);
+      Alert.alert(t("COMMON_ERROR"), error.message);
     } finally {
       setIsCheckingVoucher(false);
     }
@@ -242,15 +248,15 @@ const TicketConfirmScreen = () => {
 
   const handleConfirmPayment = async () => {
     if (!isAgree) {
-      openVoucherModal(
-        "Điều khoản",
-        "Vui lòng đồng ý với điều khoản sử dụng trước khi thanh toán."
-      );
+      openVoucherModal(t("BOOKING_TERMS_TITLE"), t("BOOKING_TERMS_REQUIRED"));
       return;
     }
 
     if (!paymentMethod) {
-      openVoucherModal("Phương thức thanh toán", "Vui lòng chọn phương thức thanh toán.");
+      openVoucherModal(
+        t("BOOKING_PAYMENT_METHOD_TITLE"),
+        t("BOOKING_PAYMENT_METHOD_REQUIRED")
+      );
       return;
     }
 
@@ -332,15 +338,18 @@ const TicketConfirmScreen = () => {
               paymentUrl: res.url,
             });
           } else {
-            Alert.alert("Thông báo", "Không nhận được URL thanh toán từ hệ thống.");
+            Alert.alert(t("COMMON_NOTICE"), t("BOOKING_PAYMENT_NO_URL"));
           }
         },
         onError: (err: any) => {
-          Alert.alert("Lỗi thanh toán", err?.message || "Đã xảy ra lỗi, vui lòng thử lại.");
+          Alert.alert(
+            t("BOOKING_PAYMENT_ERROR_TITLE"),
+            err?.message || t("BOOKING_PAYMENT_GENERIC_ERROR")
+          );
         },
       });
     } catch (error: any) {
-      Alert.alert("Lỗi", error?.message || "Không thể thực hiện thanh toán.");
+      Alert.alert(t("COMMON_ERROR"), error?.message || t("BOOKING_PAYMENT_GENERIC_ERROR"));
     }
   };
 
@@ -348,7 +357,7 @@ const TicketConfirmScreen = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#F2F3F5" }}>
-      <ScreenHeader title="Thanh toán" />
+      <ScreenHeader title={t("BOOKING_CONFIRM_TITLE")} />
       <BookingTimer />
 
       <MovieInfoCard
@@ -390,7 +399,7 @@ const TicketConfirmScreen = () => {
             }}
           >
             <PickText style={{ fontWeight: "500", fontSize: FONT_SIZE.md, color: "#2B2B2B" }}>
-              Tổng cộng
+              {t("BOOKING_CONFIRM_TOTAL_LABEL")}
             </PickText>
             <PickText style={{ fontWeight: "700", fontSize: FONT_SIZE.lg, color: "#012e6e" }}>
               {formatCurrency(totalPrice)}
@@ -421,10 +430,13 @@ const TicketConfirmScreen = () => {
                 lineHeight: 20,
               }}
             >
-              Tôi xác nhận các thông tin đặt vé đã chính xác và đồng ý với{" "}
-              <Text style={{ fontWeight: "bold" }}>Điều khoản dịch vụ</Text>,{" "}
-              <Text style={{ textDecorationLine: "underline" }}>Chính sách bảo mật</Text> & của Go
-              Cinema.
+              {t("BOOKING_CONFIRM_AGREE_PREFIX")}
+              <Text style={{ fontWeight: "bold" }}>{t("BOOKING_CONFIRM_AGREE_TERMS")}</Text>
+              {t("BOOKING_CONFIRM_AGREE_SEPARATOR")}
+              <Text style={{ textDecorationLine: "underline" }}>
+                {t("BOOKING_CONFIRM_AGREE_PRIVACY")}
+              </Text>
+              {t("BOOKING_CONFIRM_AGREE_SUFFIX", { brand: brandName })}
             </PickText>
           </PickCheckbox>
         </ScrollView>
@@ -440,7 +452,11 @@ const TicketConfirmScreen = () => {
           }}
         >
           <PickButton
-            title={isPending ? "Đang xử lý..." : `Thanh toán ${formatCurrency(finalTotalPrice)}`}
+            title={
+              isPending
+                ? t("COMMON_PROCESSING")
+                : t("BOOKING_CONFIRM_PAY", { amount: formatCurrency(finalTotalPrice) })
+            }
             type="Primary"
             onPress={handleConfirmPayment}
             disabled={isPending}
@@ -472,7 +488,7 @@ const TicketConfirmScreen = () => {
         message={voucherErrorMessage}
         buttons={[
           {
-            text: "OK",
+            text: t("COMMON_OK"),
             type: "primary",
             onPress: () => setShowVoucherErrorModal(false),
           },

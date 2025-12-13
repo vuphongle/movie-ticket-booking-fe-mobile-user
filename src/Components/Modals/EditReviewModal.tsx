@@ -4,6 +4,7 @@ import { PickView, PickText, PickInput, PickButton } from "@Components";
 import { COLORS, SPACING, RADIUS, FONT_SIZE } from "@Constants/theme";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/Ionicons";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface LocalImage {
   uri: string;
@@ -37,6 +38,8 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Modal visible={visible} transparent animationType="fade">
       <PickView
@@ -56,7 +59,7 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
           }}
         >
           <PickText font="bold" size={FONT_SIZE.lg}>
-            Sửa đánh giá
+            {t("MOVIE_REVIEW_EDIT_TITLE")}
           </PickText>
 
           <PickView row style={{ flexWrap: "wrap", marginVertical: SPACING.sm }}>
@@ -69,7 +72,11 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
             ))}
           </PickView>
 
-          <PickInput value={comment} onChangeText={setComment} placeholder="Nhập bình luận..." />
+          <PickInput
+            value={comment}
+            onChangeText={setComment}
+            placeholder={t("MOVIE_REVIEW_PLACEHOLDER")}
+          />
 
           <TouchableOpacity
             onPress={onPickImages}
@@ -84,7 +91,9 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
             }}
           >
             <Icon name="image-plus" size={18} color={COLORS.primary} />
-            <PickText style={{ marginLeft: 6, color: COLORS.primary }}>Thêm ảnh</PickText>
+            <PickText style={{ marginLeft: 6, color: COLORS.primary }}>
+              {t("MOVIE_REVIEW_ADD_IMAGE")}
+            </PickText>
           </TouchableOpacity>
 
           <ScrollView horizontal style={{ marginTop: 10 }} showsHorizontalScrollIndicator={false}>
@@ -122,13 +131,18 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
 
           <PickView row justifySpaceBetween marginTop={SPACING.md}>
             <PickButton
-              title="Đóng"
+              title={t("COMMON_CLOSE")}
               type="Secondary"
               onPress={onClose}
               style={{ flex: 1, marginRight: 10 }}
             />
 
-            <PickButton title="Lưu" type="Primary" onPress={onSubmit} style={{ flex: 1 }} />
+            <PickButton
+              title={t("COMMON_SAVE")}
+              type="Primary"
+              onPress={onSubmit}
+              style={{ flex: 1 }}
+            />
           </PickView>
         </PickView>
       </PickView>

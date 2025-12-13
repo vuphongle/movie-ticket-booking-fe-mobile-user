@@ -1,4 +1,12 @@
+import { i18n } from "@Locales/i18n";
+
 export function formatCurrency(value?: number): string {
-  if (value == null) return "0 đ";
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ";
+  const amount = value ?? 0;
+  const locale = i18n.language === "vi" ? "vi-VN" : "en-US";
+
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(amount);
 }

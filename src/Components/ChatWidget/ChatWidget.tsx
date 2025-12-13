@@ -7,6 +7,7 @@ import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 import { useAuth } from "@Contexts/AuthContext";
 import type { RecommendedMovie, RecommendedShowtime } from "@Types/chatTypes";
 import { parseBackendDate, toISODate } from "@Utils/dateUtils";
+import { useTranslation } from "@Hooks/useTranslation";
 
 /**
  * ChatWidget Component
@@ -19,6 +20,7 @@ export const ChatWidget: React.FC = () => {
   const navigation = useNavigation<RootStackNavigationProp>();
   const { state } = useAuth();
   const isAuthenticated = state.isAuthenticated;
+  const { t } = useTranslation();
 
   const handleOpen = () => {
     setIsVisible(true);
@@ -101,16 +103,16 @@ export const ChatWidget: React.FC = () => {
       />
       <UniversalConfirmModal
         visible={showLoginModal}
-        title="Đăng nhập để đặt vé"
-        message="Vui lòng đăng nhập để tiếp tục chọn ghế và thanh toán."
+        title={t("CHAT_LOGIN_REQUIRED_TITLE")}
+        message={t("CHAT_LOGIN_REQUIRED_MESSAGE")}
         buttons={[
           {
-            text: "Đóng",
+            text: t("COMMON_CLOSE"),
             type: "cancel",
             onPress: () => setShowLoginModal(false),
           },
           {
-            text: "Đăng nhập",
+            text: t("COMMON_LOGIN"),
             type: "primary",
             onPress: () => {
               setShowLoginModal(false);

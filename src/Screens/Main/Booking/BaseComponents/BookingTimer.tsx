@@ -5,13 +5,15 @@ import { useNavigation } from "@react-navigation/native";
 import { FONT_SIZE } from "@Constants/theme";
 import { useCancelSeatMulti } from "@Hooks/booking/useReservation";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
+import { useTranslation } from "@Hooks/useTranslation";
 
 const BookingTimer: React.FC = () => {
   const navigation = useNavigation<any>();
   const { expireAt, showtimeId, seats, clearAll } = useBookingStore();
   const { mutateAsync: cancelSeatMulti } = useCancelSeatMulti();
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [showTimeoutModal, setShowTimeoutModal] = useState(false); // ⭐ thêm state modal
+  const [showTimeoutModal, setShowTimeoutModal] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!expireAt) return;
@@ -53,11 +55,11 @@ const BookingTimer: React.FC = () => {
     <>
       <UniversalConfirmModal
         visible={showTimeoutModal}
-        title="Hết thời gian giữ ghế"
-        message="Bạn đã hết thời gian 8 phút giữ ghế. Vui lòng thực hiện lại thao tác."
+        title={t("BOOKING_TIMER_TIMEOUT_TITLE")}
+        message={t("BOOKING_TIMER_TIMEOUT_MESSAGE")}
         buttons={[
           {
-            text: "OK",
+            text: t("COMMON_OK"),
             type: "primary",
             onPress: () => {
               setShowTimeoutModal(false);
@@ -69,7 +71,7 @@ const BookingTimer: React.FC = () => {
 
       <View style={styles.container}>
         <Text style={styles.text}>
-          Thời gian giữ ghế:
+          {t("BOOKING_TIMER_LABEL")}
           <Text style={styles.time}>
             {" "}
             {minutes.toString().padStart(2, "0")}:{seconds.toString().padStart(2, "0")}

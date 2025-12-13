@@ -1,4 +1,7 @@
 import { format, parse, isValid } from "date-fns";
+import { i18n } from "@Locales/i18n";
+
+const getLocale = () => (i18n.language === "vi" ? "vi-VN" : "en-US");
 
 /**
  * Convert date to ISO date string (YYYY-MM-DD)
@@ -159,7 +162,7 @@ export const formatBackendDate = (
     ...options,
   };
 
-  return parsedDate.toLocaleDateString("vi-VN", defaultOptions);
+  return parsedDate.toLocaleDateString(getLocale(), defaultOptions);
 };
 
 /**
@@ -198,12 +201,12 @@ export const formatRelativeTime = (date: Date | number[] | string | null | undef
   const diffWeeks = Math.floor(diffDays / 7);
   const diffMonths = Math.floor(diffDays / 30);
 
-  if (diffSeconds < 60) return "Vừa xong";
-  if (diffMinutes < 60) return `${diffMinutes} phút trước`;
-  if (diffHours < 24) return `${diffHours} giờ trước`;
-  if (diffDays < 7) return `${diffDays} ngày trước`;
-  if (diffWeeks < 4) return `${diffWeeks} tuần trước`;
-  if (diffMonths < 12) return `${diffMonths} tháng trước`;
+  if (diffSeconds < 60) return i18n.t("COMMON_TIME_JUST_NOW");
+  if (diffMinutes < 60) return i18n.t("COMMON_TIME_MINUTES_AGO", { count: diffMinutes });
+  if (diffHours < 24) return i18n.t("COMMON_TIME_HOURS_AGO", { count: diffHours });
+  if (diffDays < 7) return i18n.t("COMMON_TIME_DAYS_AGO", { count: diffDays });
+  if (diffWeeks < 4) return i18n.t("COMMON_TIME_WEEKS_AGO", { count: diffWeeks });
+  if (diffMonths < 12) return i18n.t("COMMON_TIME_MONTHS_AGO", { count: diffMonths });
 
   // If more than 1 year, show full date
   return formatBackendDate(parsedDate, {
@@ -216,7 +219,7 @@ export const formatRelativeTime = (date: Date | number[] | string | null | undef
 export const formatDate = (
   dateInput?: string | number | Date | [number, number, number]
 ): string => {
-  if (!dateInput) return "N/A";
+  if (!dateInput) return i18n.t("COMMON_NOT_AVAILABLE");
 
   let date: Date;
 
@@ -227,7 +230,7 @@ export const formatDate = (
     date = new Date(dateInput);
   }
 
-  if (isNaN(date.getTime())) return "N/A";
+  if (isNaN(date.getTime())) return i18n.t("COMMON_NOT_AVAILABLE");
 
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");

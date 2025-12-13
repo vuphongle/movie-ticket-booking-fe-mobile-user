@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { calcAge } from "@Utils/dateUtils";
+import { i18n } from "@Locales/i18n";
 
 // Vietnamese phone regex - same as in authSchemas.ts
 const vietnamesePhoneRegex = /^(03|05|07|08|09|012|016|018|019)[0-9]{8}$/;
@@ -11,20 +12,20 @@ const vietnamesePhoneRegex = /^(03|05|07|08|09|012|016|018|019)[0-9]{8}$/;
 export const updateProfileSchema = z.object({
   name: z
     .string()
-    .min(1, "Họ và tên là bắt buộc")
+    .min(1, i18n.t("VALIDATION_NAME_REQUIRED"))
     .trim()
-    .min(2, "Họ và tên phải có ít nhất 2 ký tự")
-    .max(100, "Họ và tên không được quá 100 ký tự"),
+    .min(2, i18n.t("VALIDATION_NAME_MIN"))
+    .max(100, i18n.t("VALIDATION_NAME_MAX")),
 
   phone: z
     .string()
-    .min(1, "Số điện thoại là bắt buộc")
-    .regex(vietnamesePhoneRegex, "Số điện thoại không đúng định dạng"),
+    .min(1, i18n.t("VALIDATION_PHONE_REQUIRED"))
+    .regex(vietnamesePhoneRegex, i18n.t("VALIDATION_PHONE_INVALID")),
 
   dob: z
     .date({
-      required_error: "Ngày sinh là bắt buộc",
-      invalid_type_error: "Ngày sinh không hợp lệ",
+      required_error: i18n.t("VALIDATION_DOB_REQUIRED"),
+      invalid_type_error: i18n.t("VALIDATION_DOB_INVALID"),
     })
     .refine(
       (date) => {
@@ -32,7 +33,7 @@ export const updateProfileSchema = z.object({
         return year >= 1900;
       },
       {
-        message: "Năm sinh phải từ 1900 trở lên",
+        message: i18n.t("VALIDATION_DOB_MIN_YEAR"),
       }
     )
     .refine(
@@ -41,7 +42,7 @@ export const updateProfileSchema = z.object({
         return age >= 12;
       },
       {
-        message: "Bạn phải đủ 12 tuổi để sử dụng dịch vụ",
+        message: i18n.t("VALIDATION_DOB_MIN_AGE_PROFILE"),
       }
     )
     .refine(
@@ -49,7 +50,7 @@ export const updateProfileSchema = z.object({
         return date <= new Date();
       },
       {
-        message: "Ngày sinh không được là ngày trong tương lai",
+        message: i18n.t("VALIDATION_DOB_FUTURE"),
       }
     ),
 });

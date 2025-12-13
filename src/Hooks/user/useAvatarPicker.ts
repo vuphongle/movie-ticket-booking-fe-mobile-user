@@ -2,6 +2,7 @@ import { Alert, Platform, PermissionsAndroid } from "react-native";
 import type { Permission } from "react-native";
 import { check, request, PERMISSIONS, RESULTS, openSettings } from "react-native-permissions";
 import ImagePicker from "react-native-image-crop-picker";
+import { i18n } from "@Locales/i18n";
 
 const ANDROID_API = {
   TIRAMISU: 33,
@@ -53,20 +54,22 @@ export const useAvatarPicker = ({ onImageSelected, onError, options = {} }: Avat
 
   const showPermissionDeniedAlert = (permissionType: "camera" | "library") => {
     const title =
-      permissionType === "camera" ? "Yêu cầu quyền Camera" : "Yêu cầu quyền Thư viện ảnh";
+      permissionType === "camera"
+        ? i18n.t("PROFILE_AVATAR_PERMISSION_CAMERA_TITLE")
+        : i18n.t("PROFILE_AVATAR_PERMISSION_LIBRARY_TITLE");
 
     const message =
       permissionType === "camera"
-        ? "Để chụp ảnh, vui lòng cho phép truy cập camera trong Cài đặt."
-        : "Để chọn ảnh, vui lòng cho phép truy cập thư viện ảnh trong Cài đặt.";
+        ? i18n.t("PROFILE_AVATAR_PERMISSION_CAMERA_MESSAGE")
+        : i18n.t("PROFILE_AVATAR_PERMISSION_LIBRARY_MESSAGE");
 
     Alert.alert(title, message, [
       {
-        text: "Hủy",
+        text: i18n.t("COMMON_CANCEL"),
         style: "cancel",
       },
       {
-        text: "Mở Cài đặt",
+        text: i18n.t("PROFILE_AVATAR_PERMISSION_OPEN_SETTINGS"),
         onPress: () => {
           openSettings();
         },
@@ -226,7 +229,7 @@ export const useAvatarPicker = ({ onImageSelected, onError, options = {} }: Avat
       });
     } catch (error: any) {
       if (error.code !== "E_PICKER_CANCELLED") {
-        onError?.("Không thể mở camera.");
+        onError?.(i18n.t("PROFILE_AVATAR_CAMERA_ERROR"));
       }
     }
   };
@@ -272,22 +275,22 @@ export const useAvatarPicker = ({ onImageSelected, onError, options = {} }: Avat
       });
     } catch (error: any) {
       if (error.code !== "E_PICKER_CANCELLED") {
-        onError?.("Không thể mở thư viện ảnh.");
+        onError?.(i18n.t("PROFILE_AVATAR_LIBRARY_ERROR"));
       }
     }
   };
 
   const showImagePickerAlert = () => {
-    Alert.alert("Thay đổi ảnh đại diện", "Chọn nguồn ảnh", [
+    Alert.alert(i18n.t("PROFILE_AVATAR_PICKER_TITLE"), i18n.t("PROFILE_AVATAR_PICKER_SUBTITLE"), [
       {
-        text: "Chụp ảnh",
+        text: i18n.t("PROFILE_AVATAR_PICKER_CAMERA"),
         onPress: openCamera,
       },
       {
-        text: "Chọn từ thư viện",
+        text: i18n.t("PROFILE_AVATAR_PICKER_LIBRARY"),
         onPress: openLibrary,
       },
-      { text: "Hủy", style: "cancel" },
+      { text: i18n.t("COMMON_CANCEL"), style: "cancel" },
     ]);
   };
 

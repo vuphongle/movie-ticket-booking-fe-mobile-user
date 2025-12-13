@@ -23,6 +23,7 @@ module.exports = {
           "@Hooks": "./src/Hooks",
           "@Theme": "./src/Theme",
           "@Schemas": "./src/Schemas",
+          "@Locales": "./src/Locales",
         },
       },
     ],

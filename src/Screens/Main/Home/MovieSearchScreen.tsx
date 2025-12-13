@@ -8,6 +8,7 @@ import { Movie } from "@Types/movieTypes";
 import debounce from "lodash.debounce";
 import { useNavigation } from "@react-navigation/native";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface MovieWithStatus extends Movie {
   status?: "SHOWING" | "COMING_SOON";
@@ -19,6 +20,7 @@ const MovieSearchScreen = () => {
   const [keyword, setKeyword] = useState("");
   const [movies, setMovies] = useState<MovieWithStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleSearch = async (text: string) => {
     setKeyword(text);
@@ -72,7 +74,7 @@ const MovieSearchScreen = () => {
               fontSize: FONT_SIZE.sm,
             }}
           >
-            Đang chiếu
+            {t("HOME_SEARCH_TAG_SHOWING")}
           </PickText>
         </PickView>
       );
@@ -96,7 +98,7 @@ const MovieSearchScreen = () => {
               fontSize: FONT_SIZE.sm,
             }}
           >
-            Sắp chiếu
+            {t("HOME_SEARCH_TAG_COMING_SOON")}
           </PickText>
         </PickView>
       );
@@ -135,7 +137,7 @@ const MovieSearchScreen = () => {
           <TextInput
             value={keyword}
             onChangeText={debouncedSearch}
-            placeholder="Tìm phim..."
+            placeholder={t("HOME_SEARCH_PLACEHOLDER")}
             placeholderTextColor="#999"
             style={{
               flex: 1,
@@ -155,7 +157,7 @@ const MovieSearchScreen = () => {
               fontWeight: "bold",
             }}
           >
-            Hủy
+            {t("HOME_SEARCH_CANCEL")}
           </PickText>
         </TouchableOpacity>
       </PickView>
@@ -173,11 +175,11 @@ const MovieSearchScreen = () => {
           <Icon name="search-outline" size={70} color="#ccc" />
 
           <PickText style={{ marginTop: 20, fontSize: FONT_SIZE.lg, fontWeight: "700" }}>
-            Úi, không tìm thấy phim rồi!
+            {t("HOME_SEARCH_EMPTY_TITLE")}
           </PickText>
 
           <PickText style={{ marginTop: 6, color: COLORS.text.secondary }}>
-            Bạn thử lại từ khóa khác nha
+            {t("HOME_SEARCH_EMPTY_SUBTITLE")}
           </PickText>
 
           <TouchableOpacity
@@ -190,7 +192,9 @@ const MovieSearchScreen = () => {
               borderRadius: RADIUS.sm,
             }}
           >
-            <PickText style={{ color: "white", fontWeight: "bold" }}>Tìm kiếm phim</PickText>
+            <PickText style={{ color: "white", fontWeight: "bold" }}>
+              {t("HOME_SEARCH_EMPTY_ACTION")}
+            </PickText>
           </TouchableOpacity>
         </PickView>
       )}
@@ -250,7 +254,9 @@ const MovieSearchScreen = () => {
                   fontWeight: "600",
                 }}
               >
-                {movie.status === "SHOWING" ? "Đặt vé" : "Thông tin"}
+                {movie.status === "SHOWING"
+                  ? t("HOME_SEARCH_BUTTON_BOOK")
+                  : t("HOME_SEARCH_BUTTON_INFO")}
               </PickText>
             </TouchableOpacity>
           </PickView>

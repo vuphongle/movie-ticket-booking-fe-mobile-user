@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type SelectScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "SelectSeat">;
 
@@ -26,6 +27,7 @@ const MovieShowtime: React.FC = () => {
   const { isAuthenticated } = state;
   const navigation = useNavigation<SelectScreenNavigationProp>();
   const { spacing } = useThemedStyles();
+  const { t } = useTranslation();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { movieId, movieName, slug } = route.params as {
     movieId: number;
@@ -151,7 +153,7 @@ const MovieShowtime: React.FC = () => {
           marginTop: spacing.s16,
         }}
       >
-        Chọn ngày chiếu
+        {t("MOVIE_SHOWTIME_SELECT_DATE")}
       </PickText>
 
       <ScrollView
@@ -178,7 +180,7 @@ const MovieShowtime: React.FC = () => {
             marginTop: SPACING.md,
           }}
         >
-          <PickText>Đang tải lịch chiếu...</PickText>
+          <PickText>{t("MOVIE_SHOWTIME_LOADING")}</PickText>
         </PickView>
       ) : groupedShowtimes.length === 0 ? (
         <PickView
@@ -197,7 +199,7 @@ const MovieShowtime: React.FC = () => {
           <PickText
             style={{ marginTop: SPACING.sm, fontSize: FONT_SIZE.md, color: COLORS.text.secondary }}
           >
-            Hiện chưa có suất chiếu nào trong ngày
+            {t("MOVIE_SHOWTIME_EMPTY")}
           </PickText>
         </PickView>
       ) : (
@@ -230,7 +232,9 @@ const MovieShowtime: React.FC = () => {
                             color: COLORS.text.secondary,
                             marginBottom: 2,
                           }}
-                        >{`Phòng ${room.type} | ${f.format}`}</PickText>
+                        >
+                          {t("MOVIE_SHOWTIME_ROOM_FORMAT", { room: room.type, format: f.format })}
+                        </PickText>
                         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: SPACING.sm }}>
                           {f.times.map((t: any) => (
                             <ShowtimeButton
@@ -259,16 +263,16 @@ const MovieShowtime: React.FC = () => {
       )}
       <UniversalConfirmModal
         visible={showLoginModal}
-        title="Yêu cầu đăng nhập"
-        message="Vui lòng đăng nhập để đặt ghế."
+        title={t("MOVIE_SHOWTIME_LOGIN_TITLE")}
+        message={t("MOVIE_SHOWTIME_LOGIN_MESSAGE")}
         buttons={[
           {
-            text: "Hủy",
+            text: t("COMMON_CANCEL"),
             type: "cancel",
             onPress: () => setShowLoginModal(false),
           },
           {
-            text: "Đăng nhập",
+            text: t("COMMON_LOGIN"),
             type: "primary",
             onPress: () => {
               setShowLoginModal(false);

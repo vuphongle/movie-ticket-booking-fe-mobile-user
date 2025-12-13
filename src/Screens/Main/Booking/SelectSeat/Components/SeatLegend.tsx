@@ -2,14 +2,17 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { PickView, PickText } from "@Components";
 import { SPACING, COLORS, FONT_SIZE } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
 const SeatLegend: React.FC = () => {
+  const { t } = useTranslation();
+
   const legendItems = [
-    { color: "#7e57c2", label: "Ghế thường", borderColor: "#5e35b1" },
-    { color: "#fbc02d", label: "Ghế VIP", borderColor: "#f9a825" },
-    { color: "#ff4081", label: "Ghế đôi", borderColor: "#f50057" },
-    { color: "#d32f2f", label: "Ghế đã đặt", borderColor: "#9a0007" },
-    { color: "#1976d2", label: "Ghế bạn chọn", borderColor: "#115293" },
+    { color: "#7e57c2", label: t("BOOKING_SEAT_LEGEND_STANDARD"), borderColor: "#5e35b1" },
+    { color: "#fbc02d", label: t("BOOKING_SEAT_LEGEND_VIP"), borderColor: "#f9a825" },
+    { color: "#ff4081", label: t("BOOKING_SEAT_LEGEND_DOUBLE"), borderColor: "#f50057" },
+    { color: "#d32f2f", label: t("BOOKING_SEAT_LEGEND_BOOKED"), borderColor: "#9a0007" },
+    { color: "#1976d2", label: t("BOOKING_SEAT_LEGEND_SELECTED"), borderColor: "#115293" },
   ];
 
   return (

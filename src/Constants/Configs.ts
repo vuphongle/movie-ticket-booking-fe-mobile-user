@@ -16,6 +16,7 @@ export const STORAGE_KEYS = {
     BOOKING_DRAFT: "@gocinema:BookingDraftKey",
     SELECTED_CITY: "@gocinema:SelectedCityKey",
     LAST_LOGIN_EMAIL: "@gocinema:LastLoginEmailKey",
+    LANGUAGE_PREFERENCE: "@gocinema:LanguagePreference",
   },
   AUTH: {
     SERVICE_NAME: "GoCinemaAuth",

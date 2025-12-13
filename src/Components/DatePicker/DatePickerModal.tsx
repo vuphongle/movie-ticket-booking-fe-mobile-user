@@ -4,6 +4,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { PickText } from "@Components";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface DatePickerModalProps {
   visible: boolean;
@@ -24,6 +25,9 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
 }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(value || new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const { t, language } = useTranslation();
+  const locale = language === "vi" ? vi : undefined;
+  const dateFormat = language === "vi" ? "dd MMMM yyyy" : "MMMM dd, yyyy";
 
   const handleDateChange = (event: any, date?: Date) => {
     if (Platform.OS === "android") {
@@ -51,7 +55,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
         onChange={handleDateChange}
         minimumDate={minimumDate}
         maximumDate={maximumDate}
-        locale="vi"
+        locale={language}
       />
     );
   }
@@ -66,17 +70,17 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
           <View style={styles.header}>
             <TouchableOpacity onPress={onCancel} style={styles.headerButton}>
               <PickText size={16} font="semibold" style={{ color: "#666" }}>
-                Hủy
+                {t("COMMON_CANCEL")}
               </PickText>
             </TouchableOpacity>
 
             <PickText size={18} font="bold" style={{ color: "#1a1a2e" }}>
-              Chọn ngày sinh
+              {t("AUTH_DOB_PICKER_TITLE")}
             </PickText>
 
             <TouchableOpacity onPress={handleConfirm} style={styles.headerButton}>
               <PickText size={16} font="semibold" style={{ color: "#6d5edc" }}>
-                Xong
+                {t("COMMON_DONE")}
               </PickText>
             </TouchableOpacity>
           </View>
@@ -84,7 +88,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
           {/* Date Display */}
           <View style={styles.dateDisplay}>
             <PickText size={16} font="semibold" style={{ color: "#1a1a2e" }}>
-              {format(selectedDate, "dd MMMM yyyy", { locale: vi })}
+              {format(selectedDate, dateFormat, { locale })}
             </PickText>
           </View>
 
@@ -98,7 +102,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                 onChange={handleDateChange}
                 minimumDate={minimumDate}
                 maximumDate={maximumDate}
-                locale="vi"
+                locale={language}
                 textColor="#1a1a2e"
                 style={styles.picker}
               />

@@ -3,6 +3,7 @@ import { Image, TouchableOpacity } from "react-native";
 import type { RecommendedMovie, RecommendedShowtime } from "@Types/chatTypes";
 import { PickView, PickText } from "@Components";
 import { parseBackendDate, toDisplayDate } from "@Utils/dateUtils";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface ChatMovieCardProps {
   movie: RecommendedMovie;
@@ -15,6 +16,8 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({
   onPress,
   onShowtimePress,
 }) => {
+  const { t } = useTranslation();
+
   const handlePress = () => {
     const movieId = movie.movieId.toString();
     const slug = movie.slug || `phim-${movie.movieId}`;
@@ -65,7 +68,7 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({
   };
 
   const posterUrl = movie.poster || "https://via.placeholder.com/120x160?text=No+Image";
-  const movieName = movie.name || "Chưa có tên";
+  const movieName = movie.name || t("CHAT_MOVIE_NO_TITLE");
   const rating = typeof movie.rating === "number" ? movie.rating.toFixed(1) : null;
 
   return (
@@ -147,7 +150,7 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({
         {renderShowtimes()}
 
         <PickText size={12} style={{ color: "#6366f1", fontWeight: "600", marginTop: 4 }}>
-          Xem chi tiết →
+          {t("CHAT_VIEW_DETAILS")}
         </PickText>
       </PickView>
     </TouchableOpacity>

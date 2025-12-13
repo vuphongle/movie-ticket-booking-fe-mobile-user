@@ -5,11 +5,13 @@ import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "@Hooks/useTranslation";
 
 const Header = () => {
   const insets = useSafeAreaInsets();
   const { colors } = useThemedStyles();
   const navigation = useNavigation<any>();
+  const { t } = useTranslation();
 
   return (
     <PickView
@@ -55,10 +57,10 @@ const Header = () => {
       {/* --- TITLE TEXTS --- */}
       <PickView centerItems>
         <PickText color="body-inverted" size={FONT_SIZE.md}>
-          Chào mừng bạn đến với
+          {t("HOME_WELCOME")}
         </PickText>
 
-        <PickText style={styles.appTitle}>GO CINEMA</PickText>
+        <PickText style={styles.appTitle}>{t("COMMON_APP_NAME").toUpperCase()}</PickText>
       </PickView>
     </PickView>
   );

@@ -12,7 +12,7 @@ export const useCinemaDistances = (cinemas: any[]) => {
     const fetchDistances = async () => {
       const granted = await requestLocationPermission();
       if (!granted) {
-        console.warn("Quyền vị trí bị từ chối → Không tính khoảng cách");
+        console.warn("Location permission denied → skipping distance calculation");
         return;
       }
 

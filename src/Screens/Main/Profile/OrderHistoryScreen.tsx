@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import {
   ScrollView,
   RefreshControl,
@@ -17,29 +17,34 @@ import { OrderCard } from "@Components/OrderCard";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useOrderHistory, useOrderUtils } from "@Hooks";
 import type { Order, OrderStatus } from "@Types/orderTypes";
-
-const ORDER_STATUS_FILTERS: Array<{
-  key: OrderStatus | "ALL" | "UPCOMING" | "WATCHED";
-  label: string;
-}> = [
-  { key: "UPCOMING", label: "Sắp tới" },
-  { key: "WATCHED", label: "Đã xem" },
-  { key: "ALL", label: "Tất cả" },
-  { key: "CONFIRMED", label: "Đã thanh toán" },
-  { key: "PENDING", label: "Chờ thanh toán" },
-  { key: "CANCELLED", label: "Đã hủy" },
-  { key: "RETURNED", label: "Đã trả vé" },
-];
+import { useTranslation } from "@Hooks/useTranslation";
 
 export const OrderHistoryScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<RootStackNavigationProp>();
   const { colors, spacing } = useThemedStyles();
   const { canViewPdf } = useOrderUtils();
+  const { t } = useTranslation();
 
   const [selectedStatus, setSelectedStatus] = useState<
     OrderStatus | "ALL" | "UPCOMING" | "WATCHED"
   >("UPCOMING");
+
+  const statusFilters: Array<{
+    key: OrderStatus | "ALL" | "UPCOMING" | "WATCHED";
+    label: string;
+  }> = useMemo(
+    () => [
+      { key: "UPCOMING", label: t("ORDERS_FILTER_UPCOMING") },
+      { key: "WATCHED", label: t("ORDERS_FILTER_WATCHED") },
+      { key: "ALL", label: t("ORDERS_FILTER_ALL") },
+      { key: "CONFIRMED", label: t("ORDERS_FILTER_CONFIRMED") },
+      { key: "PENDING", label: t("ORDERS_FILTER_PENDING") },
+      { key: "CANCELLED", label: t("ORDERS_FILTER_CANCELLED") },
+      { key: "RETURNED", label: t("ORDERS_FILTER_RETURNED") },
+    ],
+    [t]
+  );
 
   const { data: orders = [], isLoading, error, refetch, isRefetching } = useOrderHistory();
 
@@ -50,7 +55,7 @@ export const OrderHistoryScreen: React.FC = () => {
   const handleViewPdf = useCallback(
     async (order: Order) => {
       if (!canViewPdf(order) || !order.pdfPath) {
-        Alert.alert("Thông báo", "Hoá đơn PDF không khả dụng cho đơn hàng này");
+        Alert.alert(t("ORDERS_PDF_ALERT_TITLE"), t("ORDERS_PDF_UNAVAILABLE"));
         return;
       }
 
@@ -59,16 +64,16 @@ export const OrderHistoryScreen: React.FC = () => {
         if (supported) {
           await Linking.openURL(order.pdfPath);
         } else {
-          Alert.alert("Lỗi", "Không thể mở file PDF");
+          Alert.alert(t("COMMON_ERROR"), t("ORDERS_PDF_OPEN_ERROR"));
         }
       } catch (error) {
         if (__DEV__) {
           console.error("Error opening PDF:", error);
         }
-        Alert.alert("Lỗi", "Không thể mở file PDF");
+        Alert.alert(t("COMMON_ERROR"), t("ORDERS_PDF_OPEN_ERROR"));
       }
     },
-    [canViewPdf]
+    [canViewPdf, t]
   );
 
   const handleOrderPress = useCallback((order: Order) => {
@@ -125,7 +130,7 @@ export const OrderHistoryScreen: React.FC = () => {
           color="error-primary"
           style={{ marginTop: 16, marginBottom: 8 }}
         >
-          Có lỗi xảy ra
+          {t("ORDERS_ERROR_TITLE")}
         </PickText>
         <PickText size={14} color="body" style={{ textAlign: "center", marginBottom: 24 }}>
           {error.message}
@@ -138,7 +143,7 @@ export const OrderHistoryScreen: React.FC = () => {
             backgroundColor={colors.background["bg-brand-quaternary"]}
           >
             <PickText size={14} font="medium" color="body-inverted">
-              Thử lại
+              {t("ORDERS_ERROR_RETRY")}
             </PickText>
           </PickView>
         </ScalableButton>
@@ -168,7 +173,7 @@ export const OrderHistoryScreen: React.FC = () => {
               <Icon name="arrow-back" size={24} color={colors.text["heading-primary"]} />
             </ScalableButton>
             <PickText size={20} font="bold" color="heading-primary">
-              Lịch sử đặt vé
+              {t("ORDERS_SCREEN_TITLE")}
             </PickText>
           </PickView>
         </PickView>
@@ -180,7 +185,7 @@ export const OrderHistoryScreen: React.FC = () => {
           contentContainerStyle={{ paddingTop: 16 }}
         >
           <PickView row gap={8}>
-            {ORDER_STATUS_FILTERS.map((filter) => (
+            {statusFilters.map((filter) => (
               <TouchableOpacity key={filter.key} onPress={() => setSelectedStatus(filter.key)}>
                 <PickView
                   paddingHorizontal={16}
@@ -228,7 +233,7 @@ export const OrderHistoryScreen: React.FC = () => {
           <PickView alignCenter paddingVertical={40}>
             <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
             <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-              Đang tải lịch sử
+              {t("ORDERS_LOADING_HISTORY")}
             </PickText>
           </PickView>
         ) : filteredOrders.length === 0 ? (
@@ -240,24 +245,24 @@ export const OrderHistoryScreen: React.FC = () => {
               color="heading-secondary"
               style={{ marginTop: 16, marginBottom: 8 }}
             >
-              Chưa có đơn hàng nào
+              {t("ORDERS_EMPTY_TITLE")}
             </PickText>
             <PickText size={14} color="body" style={{ textAlign: "center" }}>
               {selectedStatus === "ALL"
-                ? "Bạn chưa đặt vé nào. Hãy đặt vé xem phim ngay!"
+                ? t("ORDERS_EMPTY_MESSAGE_ALL")
                 : selectedStatus === "UPCOMING"
-                ? "Bạn chưa có vé nào sắp tới"
+                ? t("ORDERS_EMPTY_MESSAGE_UPCOMING")
                 : selectedStatus === "WATCHED"
-                ? "Bạn chưa xem phim nào"
-                : `Không có đơn hàng nào với trạng thái "${
-                    ORDER_STATUS_FILTERS.find((f) => f.key === selectedStatus)?.label
-                  }"`}
+                ? t("ORDERS_EMPTY_MESSAGE_WATCHED")
+                : t("ORDERS_EMPTY_MESSAGE_STATUS", {
+                    status: statusFilters.find((f) => f.key === selectedStatus)?.label ?? "",
+                  })}
             </PickText>
           </PickView>
         ) : (
           <>
             <PickText size={14} color="body" style={{ marginBottom: 16 }}>
-              {filteredOrders.length} đơn hàng
+              {t("ORDERS_COUNT_LABEL", { count: filteredOrders.length })}
             </PickText>
 
             {filteredOrders.map((order) => (

@@ -3,7 +3,8 @@ import { useMutation } from "@tanstack/react-query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "@Contexts/AuthContext";
 import { chatService } from "@Services";
-import { CHAT_STORAGE_KEYS, CHAT_CONFIG } from "@Constants";
+import { CHAT_STORAGE_KEYS, CHAT_TEXT_KEYS } from "@Constants";
+import { i18n } from "@Locales/i18n";
 import type {
   ChatMessage,
   ChatRecommendationRequest,
@@ -24,7 +25,7 @@ const generateId = (): string => {
 const createGreetingMessage = (): ChatMessage => ({
   id: generateId(),
   sender: "assistant",
-  content: CHAT_CONFIG.GREETING_MESSAGE,
+  content: i18n.t(CHAT_TEXT_KEYS.GREETING),
   timestamp: Date.now(),
 });
 
@@ -202,7 +203,7 @@ export const useChat = () => {
       const errorMessage: ChatMessage = {
         id: generateId(),
         sender: "assistant",
-        content: CHAT_CONFIG.ERROR_MESSAGE,
+        content: i18n.t(CHAT_TEXT_KEYS.ERROR),
         variant: "error",
         timestamp: Date.now(),
       };
@@ -234,7 +235,7 @@ export const useChat = () => {
       // Send to API
       const request: ChatRecommendationRequest = {
         message: trimmed,
-        language: "vi", // Vietnamese
+        language: i18n.language,
         conversationId: conversationId,
       };
 

@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -16,18 +17,22 @@ interface Tab {
   label: string;
 }
 
-const TABS: Tab[] = [
-  { key: BlogType.ALL, label: "Tất cả" },
-  { key: BlogType.PHIM_CHIEU_RAP, label: "Phim chiếu rạp" },
-  { key: BlogType.TONG_HOP_PHIM, label: "Tổng hợp phim" },
-  { key: BlogType.PHIM_NEFLIX, label: "Netflix" },
-];
-
 const NewsScreen: React.FC = () => {
   const { colors, spacing, radius } = useThemedStyles();
   const [activeTab, setActiveTab] = useState<string>(BlogType.ALL);
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp>();
+  const { t } = useTranslation();
+
+  const tabs: Tab[] = React.useMemo(
+    () => [
+      { key: BlogType.ALL, label: t("NEWS_TAB_ALL") },
+      { key: BlogType.PHIM_CHIEU_RAP, label: t("NEWS_TAB_CINEMA") },
+      { key: BlogType.TONG_HOP_PHIM, label: t("NEWS_TAB_COLLECTION") },
+      { key: BlogType.PHIM_NEFLIX, label: t("NEWS_TAB_NETFLIX") },
+    ],
+    [t]
+  );
 
   const handleBlogPress = (blog: BlogDto) => {
     navigation.navigate("BlogDetail", {
@@ -86,10 +91,10 @@ const NewsScreen: React.FC = () => {
         }}
       >
         <PickText size={24} font="bold" color="body-inverted" style={{ marginBottom: spacing.s4 }}>
-          Tin Tức
+          {t("NEWS_HEADER_TITLE")}
         </PickText>
         <PickText size={14} color="body-inverted">
-          Cập nhật tin tức mới nhất về điện ảnh
+          {t("NEWS_HEADER_SUBTITLE")}
         </PickText>
       </PickView>
 
@@ -97,7 +102,7 @@ const NewsScreen: React.FC = () => {
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={TABS}
+        data={tabs}
         renderItem={renderTabItem}
         keyExtractor={(item) => item.key}
         contentContainerStyle={{

@@ -14,9 +14,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useChat } from "@Hooks/useChat";
 import { ChatMessageBubble } from "./ChatMessage";
-import { CHAT_CONFIG } from "@Constants";
+import { CHAT_CONFIG, CHAT_TEXT_KEYS } from "@Constants";
 import { PickView, PickText, PickInput } from "@Components";
 import type { RecommendedMovie, RecommendedShowtime } from "@Types/chatTypes";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface ChatWindowProps {
   visible: boolean;
@@ -36,6 +37,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   const flatListRef = useRef<FlatList>(null);
   const slideAnim = useRef(new Animated.Value(0)).current;
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   /**
    * Animate modal slide in/out with opacity
@@ -84,13 +86,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
    * Handle reset conversation with confirmation
    */
   const handleReset = () => {
-    Alert.alert("Bắt đầu cuộc trò chuyện mới", CHAT_CONFIG.RESET_CONFIRMATION, [
+    Alert.alert(t("CHAT_RESET_TITLE"), t(CHAT_TEXT_KEYS.RESET_CONFIRMATION), [
       {
-        text: "Hủy",
+        text: t("COMMON_CANCEL"),
         style: "cancel",
       },
       {
-        text: "Xác nhận",
+        text: t("COMMON_CONFIRM"),
         style: "destructive",
         onPress: () => {
           resetConversation();
@@ -138,10 +140,10 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           >
             <PickView flex={1}>
               <PickText size={18} style={{ fontWeight: "600", color: "#1a1a2e" }}>
-                Trợ lý AI GoCinema
+                {t("CHAT_HEADER_TITLE")}
               </PickText>
               <PickText size={12} style={{ color: "#666666", marginTop: 2 }}>
-                Tìm phim phù hợp với bạn
+                {t("CHAT_HEADER_SUBTITLE")}
               </PickText>
             </PickView>
             <PickView row gap={8}>
@@ -178,7 +180,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
             <PickView row alignCenter justifyCenter paddingVertical={12} gap={8}>
               <ActivityIndicator color="#6366f1" size="small" />
               <PickText size={12} style={{ color: "#666666" }}>
-                {CHAT_CONFIG.LOADING_TEXT}
+                {t("CHAT_LOADING")}
               </PickText>
             </PickView>
           )}
@@ -201,7 +203,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
             >
               <PickView flex={1}>
                 <PickInput
-                  placeholder={CHAT_CONFIG.INPUT_PLACEHOLDER}
+                  placeholder={t(CHAT_TEXT_KEYS.INPUT_PLACEHOLDER)}
                   placeholderTextColor="#999999"
                   value={inputValue}
                   onChangeText={setInputValue}

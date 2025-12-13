@@ -4,6 +4,7 @@ import { hideSplash } from "react-native-splash-view";
 import RootNavigator from "./RootNavigator";
 import { ROOT_STACK } from "@Constants";
 import { AuthProvider, useAuth } from "@Contexts/AuthContext";
+import { I18nProvider } from "@Contexts/I18nContext";
 import { ChatWidget } from "@Components";
 
 const AppNavigator = () => {
@@ -30,9 +31,11 @@ const AppNavigator = () => {
 
 const Routes = () => {
   return (
-    <AuthProvider>
-      <AppNavigator />
-    </AuthProvider>
+    <I18nProvider>
+      <AuthProvider>
+        <AppNavigator />
+      </AuthProvider>
+    </I18nProvider>
   );
 };
 

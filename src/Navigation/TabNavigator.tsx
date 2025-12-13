@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import { Animated, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createBottomTabNavigator, BottomTabBarProps } from "@react-navigation/bottom-tabs";
@@ -5,6 +6,7 @@ import { MAIN_TAB_STACK, COLORS, SPACING, FONT_SIZE } from "@Constants";
 import { MainTabParamList } from "@Types/navigationTypes";
 
 import { HomeScreen, QuicklyBookingScreen, NewsScreen, ProfileScreen } from "@Screens";
+import { useTranslation } from "@Hooks/useTranslation";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -20,14 +22,18 @@ const ICONS: Record<string, string> = {
   [MAIN_TAB_STACK.PROFILE]: "account-circle",
 };
 
-const LABEL: Record<string, string> = {
-  [MAIN_TAB_STACK.HOME]: "Trang chủ",
-  [MAIN_TAB_STACK.BOOKING]: "Đặt vé",
-  [MAIN_TAB_STACK.NEWS]: "Tin tức",
-  [MAIN_TAB_STACK.PROFILE]: "Cá nhân",
-};
-
 function CustomTabBar({ state, navigation }: BottomTabBarProps) {
+  const { t } = useTranslation();
+
+  const labels: Record<string, string> = useMemo(() => {
+    return {
+      [MAIN_TAB_STACK.HOME]: t("TABS_HOME"),
+      [MAIN_TAB_STACK.BOOKING]: t("TABS_BOOKING"),
+      [MAIN_TAB_STACK.NEWS]: t("TABS_NEWS"),
+      [MAIN_TAB_STACK.PROFILE]: t("TABS_PROFILE"),
+    };
+  }, [t]);
+
   return (
     <SafeAreaView edges={["bottom"]} style={styles.safeArea}>
       <View style={styles.tabContainer}>
@@ -70,7 +76,7 @@ function CustomTabBar({ state, navigation }: BottomTabBarProps) {
                     },
                   ]}
                 >
-                  {LABEL[route.name]}
+                  {labels[route.name]}
                 </Text>
               </Animated.View>
             </TouchableOpacity>

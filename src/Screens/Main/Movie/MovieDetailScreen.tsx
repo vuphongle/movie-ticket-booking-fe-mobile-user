@@ -12,6 +12,7 @@ import { Review } from "./Components/MovieReview";
 import MovieSection from "@Screens/Main/Home/Components/MovieSection";
 import { movieService } from "@Services/movie/movieService";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
 
@@ -42,6 +43,7 @@ const MovieDetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const { colors, spacing } = useThemedStyles();
   const { id, slug } = route.params as { id: string; slug: string };
+  const { t } = useTranslation();
 
   const [movie, setMovie] = useState<MovieContentProps["movie"] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -76,7 +78,7 @@ const MovieDetailScreen: React.FC = () => {
             slug: m.slug,
             graphics: m.graphics,
             rating: m.rating,
-            duration: `${m.duration} phút`,
+            duration: t("HOME_DURATION_MINUTES", { minutes: m.duration }),
             imageUrl: m.poster,
           }))
         );
@@ -84,7 +86,7 @@ const MovieDetailScreen: React.FC = () => {
         setReviews(movieDetail.reviews || []);
       } catch (err: any) {
         console.error(err);
-        setError("Không thể tải dữ liệu phim.");
+        setError(t("MOVIE_DETAIL_ERROR"));
       } finally {
         setLoading(false);
       }
@@ -98,7 +100,7 @@ const MovieDetailScreen: React.FC = () => {
       <PickView style={styles.center}>
         <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
         <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-          Đang tải thông tin phim
+          {t("MOVIE_DETAIL_LOADING")}
         </PickText>
       </PickView>
     );
@@ -113,13 +115,13 @@ const MovieDetailScreen: React.FC = () => {
   if (!movie)
     return (
       <PickView style={styles.center}>
-        <PickText style={styles.errorText}>Phim không tồn tại.</PickText>
+        <PickText style={styles.errorText}>{t("MOVIE_DETAIL_NOT_FOUND")}</PickText>
       </PickView>
     );
 
   return (
     <PickView style={styles.container}>
-      <ScreenHeader title="Chi tiết phim" />
+      <ScreenHeader title={t("MOVIE_DETAIL_TITLE")} />
 
       <ScrollView
         contentContainerStyle={{
@@ -131,7 +133,7 @@ const MovieDetailScreen: React.FC = () => {
         {isNowShowing && (
           <PickView paddingHorizontal={SPACING.md} marginBottom={SPACING.md}>
             <PickButton
-              title={`Đánh giá phim (${reviews.length})`}
+              title={t("MOVIE_DETAIL_REVIEWS_BUTTON", { count: reviews.length })}
               type="Secondary"
               size="sm"
               onPress={() =>
@@ -146,13 +148,13 @@ const MovieDetailScreen: React.FC = () => {
         )}
 
         <MovieSection
-          title="Phim đang chiếu"
+          title={t("MOVIE_DETAIL_NOW_SHOWING")}
           movies={nowShowingMovies.slice(0, 5)}
           onSeeAll={() =>
             navigation.navigate("MovieList", {
               type: "nowShowing",
-              title: "Phim đang chiếu",
-              emptyText: "Không có phim nào đang chiếu",
+              title: t("MOVIE_DETAIL_NOW_SHOWING"),
+              emptyText: t("MOVIE_DETAIL_NOW_SHOWING_EMPTY"),
             })
           }
         />
@@ -162,7 +164,7 @@ const MovieDetailScreen: React.FC = () => {
         <View style={[styles.bookingButtonContainer, { bottom: insets.bottom + 12 }]}>
           <PickButton
             type="Primary"
-            title="Đặt vé"
+            title={t("MOVIE_DETAIL_BOOK")}
             onPress={() =>
               navigation.navigate("MovieShowtime", {
                 movieId: Number(id),

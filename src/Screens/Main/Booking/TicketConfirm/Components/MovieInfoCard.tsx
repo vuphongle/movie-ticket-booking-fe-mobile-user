@@ -2,6 +2,7 @@ import React from "react";
 import { View, Image } from "react-native";
 import { PickView, PickText } from "@Components";
 import { FONT_SIZE, SPACING } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface MovieInfoCardProps {
   movie?: {
@@ -23,6 +24,7 @@ const MovieInfoCard: React.FC<MovieInfoCardProps> = ({
   showtime,
   format,
 }) => {
+  const { t } = useTranslation();
   if (!movie) return null;
 
   return (
@@ -79,7 +81,7 @@ const MovieInfoCard: React.FC<MovieInfoCardProps> = ({
           </View>
 
           <PickText style={{ color: "#4B4B4B", fontSize: FONT_SIZE.sm }}>
-            Thời lượng: {movie.duration} phút
+            {t("BOOKING_MOVIE_DURATION", { minutes: movie.duration })}
           </PickText>
           <PickText style={{ color: "#4B4B4B", fontSize: FONT_SIZE.sm }}>
             {cinema} - {auditorium}

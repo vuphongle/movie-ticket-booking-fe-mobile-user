@@ -16,6 +16,7 @@ import TicketConfirmScreen from "@Screens/Main/Booking/TicketConfirm/TicketConfi
 import CinemaShowtimeScreen from "@Screens/Main/Booking/QuickBooking/CinemaShowtimeScreen";
 import PaymentWebViewScreen from "@Screens/Main/Payment/PaymentWebViewScreen";
 import MovieSearchScreen from "@Screens/Main/Home/MovieSearchScreen";
+import SettingsScreen from "@Screens/Main/Profile/Settings/SettingsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -177,6 +178,14 @@ const RootNavigator = ({ initialRouteName = ROOT_STACK.MAIN }: RootNavigatorProp
       <Stack.Screen
         name="MovieSearch"
         component={MovieSearchScreen}
+        options={{
+          animation: "slide_from_right",
+          animationDuration: 300,
+        }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={SettingsScreen}
         options={{
           animation: "slide_from_right",
           animationDuration: 300,

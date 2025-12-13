@@ -2,6 +2,7 @@ import React from "react";
 import { TouchableOpacity, Image } from "react-native";
 import { PickView, PickText } from "@Components";
 import { SPACING, FONT_SIZE } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface PaymentSectionProps {
   paymentMethod: "PAYOS" | "VNPAY" | null;
@@ -9,6 +10,7 @@ interface PaymentSectionProps {
 }
 
 const PaymentSection: React.FC<PaymentSectionProps> = ({ paymentMethod, setPaymentMethod }) => {
+  const { t } = useTranslation();
   return (
     <PickView
       style={{
@@ -31,7 +33,7 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({ paymentMethod, setPayme
           color: "#012e6e",
         }}
       >
-        Phương thức thanh toán
+        {t("BOOKING_PAYMENT_METHOD_LABEL")}
       </PickText>
 
       <TouchableOpacity
@@ -52,7 +54,7 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({ paymentMethod, setPayme
           source={require("@Assets/images/payos-icon.png")}
           style={{ width: 32, height: 32 }}
         />
-        <PickText style={{ fontWeight: "700" }}>Thanh toán bằng QR</PickText>
+        <PickText style={{ fontWeight: "700" }}>{t("BOOKING_PAYMENT_PAYOS")}</PickText>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -73,7 +75,7 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({ paymentMethod, setPayme
           source={require("@Assets/images/VNPAY-icon.png")}
           style={{ width: 32, height: 32 }}
         />
-        <PickText style={{ fontWeight: "700" }}>Ví điện tử VNPAY</PickText>
+        <PickText style={{ fontWeight: "700" }}>{t("BOOKING_PAYMENT_VNPAY")}</PickText>
       </TouchableOpacity>
     </PickView>
   );

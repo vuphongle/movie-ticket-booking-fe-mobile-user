@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PickButton, PickText, PickView } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -17,45 +18,49 @@ interface Feature {
   color: string;
 }
 
-const FEATURES: Feature[] = [
-  {
-    icon: "person-circle-outline",
-    title: "Quản lý thông tin",
-    description: "Cập nhật và quản lý thông tin cá nhân của bạn",
-    color: "#6d5edc",
-  },
-  {
-    icon: "ticket-outline",
-    title: "Lịch sử mua vé",
-    description: "Xem lại tất cả các vé đã đặt và trạng thái",
-    color: "#2193b0",
-  },
-  {
-    icon: "star-outline",
-    title: "Thành viên VIP",
-    description: "Tích điểm và nhận ưu đãi độc quyền",
-    color: "#ffd700",
-  },
-  {
-    icon: "gift-outline",
-    title: "Ưu đãi đặc biệt",
-    description: "Nhận thông báo về các chương trình khuyến mãi",
-    color: "#ff6b6b",
-  },
-  {
-    icon: "card-outline",
-    title: "Thanh toán nhanh",
-    description: "Lưu thông tin thanh toán để đặt vé dễ dàng",
-    color: "#4ecdc4",
-  },
-];
-
 export const GuestProfileView: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const insets = useSafeAreaInsets();
   const { colors, dimensions } = useThemedStyles();
+  const { t } = useTranslation();
   const screenWidth = dimensions.width;
   const buttonWidth = (screenWidth - 32 - 16) / 2;
+
+  const features: Feature[] = useMemo(
+    () => [
+      {
+        icon: "person-circle-outline",
+        title: t("PROFILE_GUEST_FEATURE_MANAGE_INFO_TITLE"),
+        description: t("PROFILE_GUEST_FEATURE_MANAGE_INFO_DESCRIPTION"),
+        color: "#6d5edc",
+      },
+      {
+        icon: "ticket-outline",
+        title: t("PROFILE_GUEST_FEATURE_TICKET_HISTORY_TITLE"),
+        description: t("PROFILE_GUEST_FEATURE_TICKET_HISTORY_DESCRIPTION"),
+        color: "#2193b0",
+      },
+      {
+        icon: "star-outline",
+        title: t("PROFILE_GUEST_FEATURE_VIP_TITLE"),
+        description: t("PROFILE_GUEST_FEATURE_VIP_DESCRIPTION"),
+        color: "#ffd700",
+      },
+      {
+        icon: "gift-outline",
+        title: t("PROFILE_GUEST_FEATURE_PROMOTIONS_TITLE"),
+        description: t("PROFILE_GUEST_FEATURE_PROMOTIONS_DESCRIPTION"),
+        color: "#ff6b6b",
+      },
+      {
+        icon: "card-outline",
+        title: t("PROFILE_GUEST_FEATURE_FAST_PAYMENT_TITLE"),
+        description: t("PROFILE_GUEST_FEATURE_FAST_PAYMENT_DESCRIPTION"),
+        color: "#4ecdc4",
+      },
+    ],
+    [t]
+  );
 
   const handleLogin = () => {
     navigation.navigate("Login");
@@ -95,7 +100,7 @@ export const GuestProfileView: React.FC = () => {
             numberOfLines={2}
             style={{ maxWidth: 250 }}
           >
-            Chào mừng đến GoCinema
+            {t("PROFILE_GUEST_HERO_TITLE")}
           </PickText>
           <PickText
             size={16}
@@ -107,7 +112,7 @@ export const GuestProfileView: React.FC = () => {
             }}
             numberOfLines={2}
           >
-            Đăng nhập để trải nghiệm đầy đủ tính năng
+            {t("PROFILE_GUEST_HERO_SUBTITLE")}
           </PickText>
         </PickView>
 
@@ -116,14 +121,14 @@ export const GuestProfileView: React.FC = () => {
             style={{ marginTop: 8, alignSelf: "center", width: buttonWidth }}
             type="Tertiary"
             size="sm"
-            title="Đăng nhập"
+            title={t("PROFILE_GUEST_LOGIN")}
             onPress={handleLogin}
           />
           <PickButton
             style={{ marginTop: 8, alignSelf: "center", width: buttonWidth }}
             type="Tertiary"
             size="sm"
-            title="Đăng ký"
+            title={t("PROFILE_GUEST_REGISTER")}
             onPress={handleRegister}
           />
         </PickView>
@@ -139,13 +144,13 @@ export const GuestProfileView: React.FC = () => {
       >
         <PickView paddingHorizontal={20} paddingTop={30}>
           <PickText size={24} font="bold" style={{ color: "#1a1a2e", marginBottom: 8 }}>
-            Tính năng khi đăng nhập
+            {t("PROFILE_GUEST_SECTION_TITLE")}
           </PickText>
           <PickText size={14} style={{ color: "#666", marginBottom: 20 }}>
-            Tận hưởng trải nghiệm xem phim tốt nhất
+            {t("PROFILE_GUEST_SECTION_SUBTITLE")}
           </PickText>
 
-          {FEATURES.map((feature, index) => (
+          {features.map((feature, index) => (
             <PickView
               key={index}
               row
@@ -189,9 +194,9 @@ export const GuestProfileView: React.FC = () => {
         {/* Bottom CTA */}
         <PickView marginTop={30} paddingHorizontal={20} alignCenter>
           <PickText size={14} style={{ color: "#666" }}>
-            Đã có tài khoản?{" "}
+            {t("PROFILE_GUEST_CTA_LABEL")}{" "}
             <PickText size={14} font="semibold" onPress={handleLogin} style={{ color: "#6d5edc" }}>
-              Đăng nhập ngay
+              {t("PROFILE_GUEST_CTA_ACTION")}
             </PickText>
           </PickText>
         </PickView>
