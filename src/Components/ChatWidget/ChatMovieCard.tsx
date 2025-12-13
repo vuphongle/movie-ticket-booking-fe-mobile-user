@@ -23,15 +23,21 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({
   };
 
   const renderShowtimes = () => {
-    if (!movie.showtimes || movie.showtimes.length === 0) return null;
+    const showtimes =
+      movie.showtimes?.filter(
+        (st) => st && typeof st.startTime === "string" && st.startTime.trim().length > 0
+      ) || [];
+
+    if (showtimes.length === 0) return null;
+
     return (
       <PickView row gap={8} flexWrap="wrap">
-        {movie.showtimes.slice(0, 4).map((st) => {
+        {showtimes.slice(0, 4).map((st, index) => {
           const dateText = toDisplayDate(parseBackendDate(st.date));
           const meta = [dateText, st.cinemaName].filter(Boolean).join(" • ");
           return (
             <TouchableOpacity
-              key={`${movie.movieId}-${st.id}`}
+              key={`${movie.movieId}-${st.id ?? index}`}
               style={{
                 paddingHorizontal: 10,
                 paddingVertical: 8,
