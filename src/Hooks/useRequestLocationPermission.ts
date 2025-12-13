@@ -1,4 +1,5 @@
 import { PermissionsAndroid, Platform } from "react-native";
+import { i18n } from "@Locales/i18n";
 
 export const requestLocationPermission = async () => {
   if (Platform.OS !== "android") return true;
@@ -7,11 +8,11 @@ export const requestLocationPermission = async () => {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
-        title: "Quyền truy cập vị trí",
-        message: "Ứng dụng cần truy cập vị trí để tính khoảng cách đến rạp.",
-        buttonNeutral: "Hỏi lại sau",
-        buttonNegative: "Từ chối",
-        buttonPositive: "Đồng ý",
+        title: i18n.t("PERMISSION_LOCATION_TITLE"),
+        message: i18n.t("PERMISSION_LOCATION_MESSAGE"),
+        buttonNeutral: i18n.t("COMMON_ASK_LATER"),
+        buttonNegative: i18n.t("COMMON_DENY"),
+        buttonPositive: i18n.t("COMMON_ALLOW"),
       }
     );
 

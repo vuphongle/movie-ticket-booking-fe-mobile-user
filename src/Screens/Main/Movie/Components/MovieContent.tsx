@@ -3,6 +3,7 @@ import { ScrollView, Dimensions } from "react-native";
 import { PickView, PickText } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import YoutubePlayer from "react-native-youtube-iframe";
+import { useTranslation } from "@Hooks/useTranslation";
 
 export interface Person {
   id: number;
@@ -34,6 +35,7 @@ export interface MovieContentProps {
 const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
   const { colors, spacing } = useThemedStyles();
   const screenWidth = Dimensions.get("window").width;
+  const { t } = useTranslation();
 
   // Extract YouTube video ID from URL
   const getYouTubeVideoId = (url: string): string | null => {
@@ -49,7 +51,7 @@ const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
   const videoId = movie.trailer ? getYouTubeVideoId(movie.trailer) : null;
 
   const infoBoxes = [
-    { label: "⏱", value: `${movie.duration} phút` },
+    { label: "⏱", value: t("HOME_DURATION_MINUTES", { minutes: movie.duration }) },
     { label: "⭐", value: `${movie.rating}` },
     { label: "🎞", value: movie.genres.map((g) => g.name).join(", ") },
   ];
@@ -116,14 +118,14 @@ const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
             }}
           >
             <PickText size={13} style={{ marginBottom: 2 }}>
-              Đạo diễn: {movie.directors.map((d) => d.name).join(", ")}
+              {t("MOVIE_DIRECTOR_LABEL")}: {movie.directors.map((d) => d.name).join(", ")}
             </PickText>
             <PickText size={13} style={{ marginBottom: 2 }}>
-              Diễn viên: {movie.actors.map((a) => a.name).join(", ")}
+              {t("MOVIE_ACTOR_LABEL")}: {movie.actors.map((a) => a.name).join(", ")}
             </PickText>
             <PickView style={{ marginBottom: 2 }}>
               <PickText size={13} numberOfLines={2} ellipsizeMode="tail" lineHeight={20}>
-                Mô tả: {movie.description}
+                {t("MOVIE_DESCRIPTION_LABEL")}: {movie.description}
               </PickText>
             </PickView>
           </PickView>

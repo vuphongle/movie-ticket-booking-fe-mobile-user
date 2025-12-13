@@ -46,4 +46,22 @@ export default {
   PROFILE_GUEST_FEATURE_PROMOTIONS_DESCRIPTION: "Get notified about deals and promotions",
   PROFILE_GUEST_FEATURE_FAST_PAYMENT_TITLE: "Fast checkout",
   PROFILE_GUEST_FEATURE_FAST_PAYMENT_DESCRIPTION: "Save payment info to book faster",
+
+  PROFILE_AVATAR_PICKER_TITLE: "Change avatar",
+  PROFILE_AVATAR_PICKER_SUBTITLE: "Choose an image source",
+  PROFILE_AVATAR_PICKER_CAMERA: "Take photo",
+  PROFILE_AVATAR_PICKER_LIBRARY: "Pick from library",
+  PROFILE_AVATAR_PERMISSION_CAMERA_TITLE: "Camera permission required",
+  PROFILE_AVATAR_PERMISSION_LIBRARY_TITLE: "Photo library permission required",
+  PROFILE_AVATAR_PERMISSION_CAMERA_MESSAGE:
+    "To take a photo, please allow camera access in Settings.",
+  PROFILE_AVATAR_PERMISSION_LIBRARY_MESSAGE:
+    "To choose a photo, please allow photo library access in Settings.",
+  PROFILE_AVATAR_PERMISSION_OPEN_SETTINGS: "Open Settings",
+  PROFILE_AVATAR_CAMERA_ERROR: "Unable to open camera.",
+  PROFILE_AVATAR_LIBRARY_ERROR: "Unable to open photo library.",
+  PROFILE_UPDATE_ERROR_TITLE: "Update failed",
+  PROFILE_UPDATE_ERROR_MESSAGE: "Unable to update your information. Please try again.",
+  PROFILE_AVATAR_UPLOAD_ERROR_TITLE: "Upload failed",
+  PROFILE_AVATAR_UPLOAD_ERROR_MESSAGE: "Unable to upload the photo. Please try again.",
 };

@@ -4,6 +4,7 @@ import { Portal } from "@gorhom/portal";
 import { Modalize } from "react-native-modalize";
 import { PickView, PickText } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface AvatarOptionsBottomSheetProps {
   visible: boolean;
@@ -21,6 +22,7 @@ const AvatarOptionsBottomSheet: React.FC<AvatarOptionsBottomSheetProps> = ({
   const { colors, spacing } = useThemedStyles();
   const modalizeRef = useRef<Modalize>(null);
   const [pressedButton, setPressedButton] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -83,7 +85,7 @@ const AvatarOptionsBottomSheet: React.FC<AvatarOptionsBottomSheetProps> = ({
                 color={pressedButton === "camera" ? "body-inverted" : "body"}
                 size={16}
               >
-                Chụp ảnh
+                {t("PROFILE_AVATAR_PICKER_CAMERA")}
               </PickText>
             </PickView>
           </TouchableOpacity>
@@ -107,7 +109,7 @@ const AvatarOptionsBottomSheet: React.FC<AvatarOptionsBottomSheetProps> = ({
                 color={pressedButton === "upload" ? "body-inverted" : "body"}
                 size={16}
               >
-                Chọn từ thư viện
+                {t("PROFILE_AVATAR_PICKER_LIBRARY")}
               </PickText>
             </PickView>
           </TouchableOpacity>
@@ -131,7 +133,7 @@ const AvatarOptionsBottomSheet: React.FC<AvatarOptionsBottomSheetProps> = ({
           >
             <PickView style={{ alignItems: "center" }}>
               <PickText variant="body_large" size={16} color="body">
-                Hủy
+                {t("COMMON_CANCEL")}
               </PickText>
             </PickView>
           </TouchableOpacity>

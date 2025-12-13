@@ -24,11 +24,13 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadLanguage = async () => {
       try {
-        const stored = (await AsyncStorage.getItem(
-          STORAGE_KEYS.APP.LANGUAGE_PREFERENCE
-        )) as Language | "vn" | null;
+        const stored = (await AsyncStorage.getItem(STORAGE_KEYS.APP.LANGUAGE_PREFERENCE)) as
+          | Language
+          | "vn"
+          | null;
         const normalized = stored === "vn" ? "vi" : stored;
-        const nextLanguage = normalized === "en" || normalized === "vi" ? normalized : DEFAULT_LANGUAGE;
+        const nextLanguage =
+          normalized === "en" || normalized === "vi" ? normalized : DEFAULT_LANGUAGE;
 
         await initI18n(nextLanguage);
         setLanguage(nextLanguage);

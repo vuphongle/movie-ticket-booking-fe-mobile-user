@@ -7,6 +7,7 @@ import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useOrderUtils } from "@Hooks";
 import { formatCurrency } from "@Utils/currencyUtils";
 import type { Order } from "@Types/orderTypes";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface OrderCardProps {
   order: Order;
@@ -17,6 +18,7 @@ interface OrderCardProps {
 export const OrderCard: React.FC<OrderCardProps> = ({ order, onPress, onViewPdf }) => {
   const { colors } = useThemedStyles();
   const { getOrderSummary, formatOrderDate, canViewPdf } = useOrderUtils();
+  const { t } = useTranslation();
 
   const summary = getOrderSummary(order);
   const canShowPdf = canViewPdf(order);
@@ -87,7 +89,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onPress, onViewPdf 
         >
           <PickView row justifySpaceBetween alignCenter>
             <PickText size={13} color="body">
-              Suất chiếu:
+              {t("ORDER_CARD_SHOWTIME")}:
             </PickText>
             <PickText size={13} font="medium" color="heading-primary">
               {summary.showTime} - {summary.showDate}
@@ -96,7 +98,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onPress, onViewPdf 
 
           <PickView row justifySpaceBetween alignCenter>
             <PickText size={13} color="body">
-              Ghế:
+              {t("ORDER_CARD_SEATS")}:
             </PickText>
             <PickText size={13} font="medium" color="heading-primary">
               {summary.seatCodes.join(", ")}
@@ -105,27 +107,27 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onPress, onViewPdf 
 
           <PickView row justifySpaceBetween alignCenter>
             <PickText size={13} color="body">
-              Số vé:
+              {t("ORDER_CARD_TICKETS")}:
             </PickText>
             <PickText size={13} font="medium" color="heading-primary">
-              {summary.totalTickets} vé
+              {t("ORDER_CARD_TICKET_COUNT", { count: summary.totalTickets })}
             </PickText>
           </PickView>
 
           {summary.totalServices > 0 && (
             <PickView row justifySpaceBetween alignCenter>
               <PickText size={13} color="body">
-                Dịch vụ:
+                {t("ORDER_CARD_SERVICES")}:
               </PickText>
               <PickText size={13} font="medium" color="heading-primary">
-                {summary.totalServices} món
+                {t("ORDER_CARD_SERVICE_COUNT", { count: summary.totalServices })}
               </PickText>
             </PickView>
           )}
 
           <PickView row justifySpaceBetween alignCenter>
             <PickText size={13} color="body">
-              Ngày đặt:
+              {t("ORDER_CARD_BOOKED_AT")}:
             </PickText>
             <PickText size={13} font="medium" color="body">
               {formatOrderDate(order.createdAt)}
@@ -148,7 +150,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onPress, onViewPdf 
             </PickText>
             {order.discount > 0 && (
               <PickText size={11} color="sub-headline-brand">
-                Tiết kiệm {formatCurrency(order.discount)}
+                {t("ORDER_CARD_SAVED", { amount: formatCurrency(order.discount) })}
               </PickText>
             )}
           </PickView>

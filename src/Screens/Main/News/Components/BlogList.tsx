@@ -5,6 +5,7 @@ import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { BlogDto } from "@Types/blogTypes";
 import BlogCard from "./BlogCard";
 import { useBlogList } from "@Hooks/useBlogList";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface BlogListProps {
   type?: string;
@@ -15,6 +16,7 @@ const BlogList: React.FC<BlogListProps> = ({ type = "all", onBlogPress }) => {
   const { colors, spacing } = useThemedStyles();
   const { blogs, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, isEmpty } =
     useBlogList({ type, limit: 10 });
+  const { t } = useTranslation();
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
@@ -32,7 +34,7 @@ const BlogList: React.FC<BlogListProps> = ({ type = "all", onBlogPress }) => {
       <PickView paddingVertical={spacing.s24} alignCenter>
         <ActivityIndicator size="small" color={colors.background["bg-brand-quaternary"]} />
         <PickText size={14} style={{ marginTop: spacing.s8, color: colors.text.body }}>
-          Đang tải thêm...
+          {t("NEWS_LOADING_MORE")}
         </PickText>
       </PickView>
     );
@@ -44,7 +46,7 @@ const BlogList: React.FC<BlogListProps> = ({ type = "all", onBlogPress }) => {
         <PickView alignCenter justifyCenter style={{ paddingVertical: spacing.s48 * 2 }}>
           <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
           <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-            Đang tải tin tức
+            {t("NEWS_LOADING_LIST")}
           </PickText>
         </PickView>
       );
@@ -59,10 +61,10 @@ const BlogList: React.FC<BlogListProps> = ({ type = "all", onBlogPress }) => {
             font="semibold"
             style={{ color: colors.background["bg-error-quarternary"], marginBottom: spacing.s4 }}
           >
-            Không thể tải tin tức
+            {t("NEWS_LIST_ERROR_TITLE")}
           </PickText>
           <PickText size={14} style={{ color: colors.text.body }}>
-            Vui lòng thử lại sau
+            {t("NEWS_LIST_ERROR_MESSAGE")}
           </PickText>
         </PickView>
       );
@@ -77,10 +79,10 @@ const BlogList: React.FC<BlogListProps> = ({ type = "all", onBlogPress }) => {
             font="semibold"
             style={{ color: colors.text["heading-primary"], marginBottom: spacing.s4 }}
           >
-            Chưa có tin tức nào
+            {t("NEWS_EMPTY_TITLE")}
           </PickText>
           <PickText size={14} style={{ color: colors.text.body }}>
-            Hãy quay lại sau nhé!
+            {t("NEWS_EMPTY_SUBTITLE")}
           </PickText>
         </PickView>
       );

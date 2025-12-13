@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { i18n } from "@Locales/i18n";
 
 /**
  * Shared password validation rule:
@@ -12,22 +13,25 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@
 
 export const passwordValidation = z
   .string()
-  .min(1, "Mật khẩu là bắt buộc")
-  .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
-  .regex(
-    passwordRegex,
-    "Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 chữ thường, 1 số và 1 ký tự đặc biệt (@$!%*?&#)"
-  );
+  .min(1, i18n.t("VALIDATION_PASSWORD_REQUIRED"))
+  .min(8, i18n.t("VALIDATION_PASSWORD_MIN"))
+  .regex(passwordRegex, i18n.t("VALIDATION_PASSWORD_COMPLEXITY"));
 
 export const loginSchema = z.object({
-  email: z.string().min(1, "Email là bắt buộc").email("Email không hợp lệ"),
-  password: z.string().min(1, "Mật khẩu là bắt buộc"),
+  email: z
+    .string()
+    .min(1, i18n.t("VALIDATION_EMAIL_REQUIRED"))
+    .email(i18n.t("VALIDATION_EMAIL_INVALID")),
+  password: z.string().min(1, i18n.t("VALIDATION_PASSWORD_REQUIRED")),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().min(1, "Email là bắt buộc").email("Email không hợp lệ"),
+  email: z
+    .string()
+    .min(1, i18n.t("VALIDATION_EMAIL_REQUIRED"))
+    .email(i18n.t("VALIDATION_EMAIL_INVALID")),
 });
 
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
@@ -38,18 +42,21 @@ export const registerSchema = z
   .object({
     name: z
       .string()
-      .min(1, "Họ và tên là bắt buộc")
-      .min(2, "Họ và tên phải có ít nhất 2 ký tự")
-      .max(100, "Họ và tên không được quá 100 ký tự"),
-    email: z.string().min(1, "Email là bắt buộc").email("Email không đúng định dạng"),
+      .min(1, i18n.t("VALIDATION_NAME_REQUIRED"))
+      .min(2, i18n.t("VALIDATION_NAME_MIN"))
+      .max(100, i18n.t("VALIDATION_NAME_MAX")),
+    email: z
+      .string()
+      .min(1, i18n.t("VALIDATION_EMAIL_REQUIRED"))
+      .email(i18n.t("VALIDATION_EMAIL_FORMAT")),
     phone: z
       .string()
-      .min(1, "Số điện thoại là bắt buộc")
-      .regex(vietnamesePhoneRegex, "Số điện thoại không đúng định dạng"),
+      .min(1, i18n.t("VALIDATION_PHONE_REQUIRED"))
+      .regex(vietnamesePhoneRegex, i18n.t("VALIDATION_PHONE_INVALID")),
     dob: z
       .date({
-        required_error: "Ngày sinh là bắt buộc",
-        invalid_type_error: "Ngày sinh không hợp lệ",
+        required_error: i18n.t("VALIDATION_DOB_REQUIRED"),
+        invalid_type_error: i18n.t("VALIDATION_DOB_INVALID"),
       })
       .refine(
         (date) => {
@@ -57,7 +64,7 @@ export const registerSchema = z
           return year >= 1900;
         },
         {
-          message: "Năm sinh phải từ 1900 trở lên",
+          message: i18n.t("VALIDATION_DOB_MIN_YEAR"),
         }
       )
       .refine(
@@ -75,7 +82,7 @@ export const registerSchema = z
           return exactAge >= 12;
         },
         {
-          message: "Bạn phải đủ 12 tuổi để đăng ký",
+          message: i18n.t("VALIDATION_DOB_MIN_AGE_REGISTER"),
         }
       )
       .refine(
@@ -83,14 +90,14 @@ export const registerSchema = z
           return date <= new Date();
         },
         {
-          message: "Ngày sinh không được là ngày trong tương lai",
+          message: i18n.t("VALIDATION_DOB_FUTURE"),
         }
       ),
     password: passwordValidation,
-    confirmPassword: z.string().min(1, "Xác nhận mật khẩu là bắt buộc"),
+    confirmPassword: z.string().min(1, i18n.t("VALIDATION_CONFIRM_PASSWORD_REQUIRED")),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Mật khẩu xác nhận không khớp",
+    message: i18n.t("VALIDATION_PASSWORD_MISMATCH"),
     path: ["confirmPassword"],
   });
 
@@ -102,12 +109,12 @@ export type RegisterFormData = z.infer<typeof registerSchema>;
  */
 export const changePasswordSchema = z
   .object({
-    oldPassword: z.string().min(1, "Mật khẩu cũ là bắt buộc"),
+    oldPassword: z.string().min(1, i18n.t("VALIDATION_OLD_PASSWORD_REQUIRED")),
     newPassword: passwordValidation,
-    confirmPassword: z.string().min(1, "Xác nhận mật khẩu mới là bắt buộc"),
+    confirmPassword: z.string().min(1, i18n.t("VALIDATION_CONFIRM_NEW_PASSWORD_REQUIRED")),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Mật khẩu xác nhận không khớp",
+    message: i18n.t("VALIDATION_PASSWORD_MISMATCH"),
     path: ["confirmPassword"],
   });
 

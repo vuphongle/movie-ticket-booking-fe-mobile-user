@@ -47,7 +47,10 @@ const SettingsScreen: React.FC = () => {
     try {
       await changeLanguage(lang);
       const nextT = i18n.getFixedT(lang);
-      Alert.alert(nextT("SETTINGS_LANGUAGE_CHANGED_TITLE"), nextT("SETTINGS_LANGUAGE_CHANGED_MESSAGE"));
+      Alert.alert(
+        nextT("SETTINGS_LANGUAGE_CHANGED_TITLE"),
+        nextT("SETTINGS_LANGUAGE_CHANGED_MESSAGE")
+      );
     } catch (error) {
       if (__DEV__) {
         console.warn("⚠️ Failed to apply language:", error);

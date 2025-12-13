@@ -8,6 +8,7 @@ import { formatGraphicLabel } from "@Utils/graphicUtils";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieDetail">;
 
@@ -15,13 +16,15 @@ const MovieListScreen = ({ route }: any) => {
   const { type, title, emptyText } = route.params;
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const { movies, isLoading, error } = useMovieList({ type });
+  const { t } = useTranslation();
+  const normalizedTitle = String(title || "").toLowerCase();
 
   if (isLoading)
     return (
       <PickView flex={1} justifyCenter alignCenter backgroundColor={COLORS.primary}>
         <ActivityIndicator size="large" color={COLORS.accent} />
         <PickText size={16} style={{ color: "#fff", marginTop: SPACING.md }}>
-          Đang tải {title.toLowerCase()}...
+          {t("MOVIE_LIST_LOADING", { title: normalizedTitle })}
         </PickText>
       </PickView>
     );
@@ -34,7 +37,7 @@ const MovieListScreen = ({ route }: any) => {
         </TouchableOpacity>
 
         <PickText size={16} style={{ color: "#fff", marginBottom: SPACING.sm }}>
-          Có lỗi xảy ra khi tải {title.toLowerCase()}
+          {t("MOVIE_LIST_ERROR", { title: normalizedTitle })}
         </PickText>
       </PickView>
     );

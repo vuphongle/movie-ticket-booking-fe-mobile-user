@@ -9,12 +9,14 @@ import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
 import { useChangePassword, useKeyboard } from "@Hooks";
 import { changePasswordSchema, type ChangePasswordFormData } from "@Schemas/authSchemas";
+import { useTranslation } from "@Hooks/useTranslation";
 
 export const ChangePasswordScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const { colors } = useThemedStyles();
   const { logout } = useAuth();
   const { keyboardShown } = useKeyboard();
+  const { t } = useTranslation();
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -37,11 +39,11 @@ export const ChangePasswordScreen: React.FC = () => {
     onSuccess: async () => {
       // Show success message and force logout
       Alert.alert(
-        "Thành công",
-        "Đổi mật khẩu thành công! Vui lòng đăng nhập lại với mật khẩu mới.",
+        t("AUTH_CHANGE_PASSWORD_SUCCESS_TITLE"),
+        t("AUTH_CHANGE_PASSWORD_SUCCESS_MESSAGE"),
         [
           {
-            text: "OK",
+            text: t("COMMON_OK"),
             onPress: async () => {
               try {
                 await logout();
@@ -69,7 +71,7 @@ export const ChangePasswordScreen: React.FC = () => {
     >
       <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
         {/* Header */}
-        <ScreenHeader title="Đổi mật khẩu" />
+        <ScreenHeader title={t("AUTH_CHANGE_PASSWORD_TITLE")} />
         {/* Form Content */}
         <ScrollView
           style={{ flex: 1 }}
@@ -93,8 +95,7 @@ export const ChangePasswordScreen: React.FC = () => {
             <Icon name="information-circle" size={24} color="#f59e0b" />
             <PickView flex={1}>
               <PickText size={13} style={{ color: "#92400e", lineHeight: 18 }}>
-                Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt
-                (@$!%*?&#)
+                {t("AUTH_PASSWORD_RULES")}
               </PickText>
             </PickView>
           </PickView>
@@ -103,8 +104,8 @@ export const ChangePasswordScreen: React.FC = () => {
             <PickFormInput
               control={control}
               name="oldPassword"
-              label="Mật khẩu cũ"
-              placeholder="Nhập mật khẩu cũ"
+              label={t("AUTH_CHANGE_PASSWORD_OLD_LABEL")}
+              placeholder={t("AUTH_CHANGE_PASSWORD_OLD_PLACEHOLDER")}
               secureTextEntry={!showOldPassword}
               autoCapitalize="none"
               iconBefore={<Icon name="lock-closed-outline" size={20} color="#666" />}
@@ -123,8 +124,8 @@ export const ChangePasswordScreen: React.FC = () => {
             <PickFormInput
               control={control}
               name="newPassword"
-              label="Mật khẩu mới"
-              placeholder="Nhập mật khẩu mới"
+              label={t("AUTH_CHANGE_PASSWORD_NEW_LABEL")}
+              placeholder={t("AUTH_CHANGE_PASSWORD_NEW_PLACEHOLDER")}
               secureTextEntry={!showNewPassword}
               autoCapitalize="none"
               iconBefore={<Icon name="lock-closed-outline" size={20} color="#666" />}
@@ -143,8 +144,8 @@ export const ChangePasswordScreen: React.FC = () => {
             <PickFormInput
               control={control}
               name="confirmPassword"
-              label="Xác nhận mật khẩu mới"
-              placeholder="Nhập lại mật khẩu mới"
+              label={t("AUTH_CHANGE_PASSWORD_CONFIRM_LABEL")}
+              placeholder={t("AUTH_CHANGE_PASSWORD_CONFIRM_PLACEHOLDER")}
               secureTextEntry={!showConfirmPassword}
               autoCapitalize="none"
               iconBefore={<Icon name="lock-closed-outline" size={20} color="#666" />}
@@ -174,10 +175,10 @@ export const ChangePasswordScreen: React.FC = () => {
             <Icon name="shield-checkmark" size={24} color="#dc2626" />
             <PickView flex={1}>
               <PickText size={13} font="semibold" style={{ color: "#7f1d1d", marginBottom: 4 }}>
-                Lưu ý bảo mật
+                {t("AUTH_CHANGE_PASSWORD_NOTICE_TITLE")}
               </PickText>
               <PickText size={12} style={{ color: "#7f1d1d", lineHeight: 16 }}>
-                Sau khi đổi mật khẩu, bạn sẽ được đăng xuất và cần đăng nhập lại với mật khẩu mới.
+                {t("AUTH_CHANGE_PASSWORD_NOTICE_DESCRIPTION")}
               </PickText>
             </PickView>
           </PickView>
@@ -206,11 +207,11 @@ export const ChangePasswordScreen: React.FC = () => {
             >
               {isPending ? (
                 <PickText size={16} font="semibold" color="body-inverted">
-                  Đang xử lý...
+                  {t("COMMON_PROCESSING")}
                 </PickText>
               ) : (
                 <PickText size={16} font="semibold" color="body-inverted">
-                  Đổi mật khẩu
+                  {t("AUTH_CHANGE_PASSWORD_BUTTON")}
                 </PickText>
               )}
             </PickView>

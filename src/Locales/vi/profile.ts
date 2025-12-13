@@ -46,4 +46,22 @@ export default {
   PROFILE_GUEST_FEATURE_PROMOTIONS_DESCRIPTION: "Nhận thông báo về các chương trình khuyến mãi",
   PROFILE_GUEST_FEATURE_FAST_PAYMENT_TITLE: "Thanh toán nhanh",
   PROFILE_GUEST_FEATURE_FAST_PAYMENT_DESCRIPTION: "Lưu thông tin thanh toán để đặt vé dễ dàng",
+
+  PROFILE_AVATAR_PICKER_TITLE: "Thay đổi ảnh đại diện",
+  PROFILE_AVATAR_PICKER_SUBTITLE: "Chọn nguồn ảnh",
+  PROFILE_AVATAR_PICKER_CAMERA: "Chụp ảnh",
+  PROFILE_AVATAR_PICKER_LIBRARY: "Chọn từ thư viện",
+  PROFILE_AVATAR_PERMISSION_CAMERA_TITLE: "Yêu cầu quyền Camera",
+  PROFILE_AVATAR_PERMISSION_LIBRARY_TITLE: "Yêu cầu quyền Thư viện ảnh",
+  PROFILE_AVATAR_PERMISSION_CAMERA_MESSAGE:
+    "Để chụp ảnh, vui lòng cho phép truy cập camera trong Cài đặt.",
+  PROFILE_AVATAR_PERMISSION_LIBRARY_MESSAGE:
+    "Để chọn ảnh, vui lòng cho phép truy cập thư viện ảnh trong Cài đặt.",
+  PROFILE_AVATAR_PERMISSION_OPEN_SETTINGS: "Mở Cài đặt",
+  PROFILE_AVATAR_CAMERA_ERROR: "Không thể mở camera.",
+  PROFILE_AVATAR_LIBRARY_ERROR: "Không thể mở thư viện ảnh.",
+  PROFILE_UPDATE_ERROR_TITLE: "Cập nhật thất bại",
+  PROFILE_UPDATE_ERROR_MESSAGE: "Không thể cập nhật thông tin. Vui lòng thử lại.",
+  PROFILE_AVATAR_UPLOAD_ERROR_TITLE: "Tải ảnh thất bại",
+  PROFILE_AVATAR_UPLOAD_ERROR_MESSAGE: "Không thể tải ảnh lên. Vui lòng thử lại.",
 };

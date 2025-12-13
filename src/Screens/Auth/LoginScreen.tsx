@@ -22,6 +22,7 @@ import { useAuth } from "@Contexts/AuthContext";
 import { getErrorMessage } from "@Constants";
 import { transformLoginResponse, getUserDisplayName } from "@Utils/authHelpers";
 import { icons } from "@Assets";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -32,6 +33,7 @@ export const LoginScreen: React.FC = () => {
   const redirectParams = (route.params as any)?.params;
   const { colors, dimensions } = useThemedStyles();
   const { updateAuthStatus } = useAuth();
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -57,20 +59,24 @@ export const LoginScreen: React.FC = () => {
 
         await updateAuthStatus(tokens, userInfo);
 
-        Alert.alert("Đăng nhập thành công", `Chào mừng ${getUserDisplayName(userInfo)}!`, [
-          {
-            text: "OK",
-            onPress: () => {
-              if (redirectTo) {
-                navigation.replace(redirectTo, redirectParams);
-              } else {
-                navigation.navigate("Main");
-              }
+        Alert.alert(
+          t("AUTH_LOGIN_SUCCESS_TITLE"),
+          t("AUTH_LOGIN_SUCCESS_MESSAGE", { name: getUserDisplayName(userInfo) }),
+          [
+            {
+              text: t("COMMON_OK"),
+              onPress: () => {
+                if (redirectTo) {
+                  navigation.replace(redirectTo, redirectParams);
+                } else {
+                  navigation.navigate("Main");
+                }
+              },
             },
-          },
-        ]);
+          ]
+        );
       } else {
-        Alert.alert("Đăng nhập thất bại", "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.");
+        Alert.alert(t("AUTH_LOGIN_FAILURE_TITLE"), t("AUTH_LOGIN_FAILURE_MESSAGE"));
       }
     } catch (error: any) {
       if (__DEV__) {
@@ -84,10 +90,10 @@ export const LoginScreen: React.FC = () => {
       const errorCode = error?.code || error?.response?.data?.code;
       const errorMessage = getErrorMessage(
         errorCode,
-        error?.message || "Không thể kết nối đến máy chủ. Vui lòng thử lại."
+        error?.message || t("AUTH_LOGIN_NETWORK_ERROR")
       );
 
-      Alert.alert("Lỗi", errorMessage);
+      Alert.alert(t("COMMON_ERROR"), errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +109,7 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader title="Đăng nhập" />
+      <ScreenHeader title={t("AUTH_LOGIN_TITLE")} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -134,10 +140,10 @@ export const LoginScreen: React.FC = () => {
 
             <PickView paddingHorizontal={20} gap={8} marginBottom={32} alignCenter>
               <PickText size={32} font="bold" align="center" lineHeight={40}>
-                Đăng nhập
+                {t("AUTH_LOGIN_TITLE")}
               </PickText>
               <PickText size={16} align="center" color="placeholder">
-                Chào mừng bạn quay trở lại GoCinema
+                {t("AUTH_LOGIN_SUBTITLE")}
               </PickText>
             </PickView>
 
@@ -147,7 +153,7 @@ export const LoginScreen: React.FC = () => {
                 name="email"
                 render={({ field: { onChange, value } }) => (
                   <PickInput
-                    placeholder="Email"
+                    placeholder={t("AUTH_EMAIL_PLACEHOLDER")}
                     value={value}
                     onChangeText={onChange}
                     keyboardType="email-address"
@@ -168,7 +174,7 @@ export const LoginScreen: React.FC = () => {
                 name="password"
                 render={({ field: { onChange, value } }) => (
                   <PickInput
-                    placeholder="Mật khẩu"
+                    placeholder={t("AUTH_PASSWORD_PLACEHOLDER")}
                     value={value}
                     onChangeText={onChange}
                     secureTextEntry={!showPassword}
@@ -201,7 +207,7 @@ export const LoginScreen: React.FC = () => {
 
               <TouchableOpacity onPress={handleForgotPassword} style={{ alignSelf: "flex-end" }}>
                 <PickText size={14} font="semibold" style={{ color: "#6d5edc" }}>
-                  Quên mật khẩu?
+                  {t("AUTH_FORGOT_PASSWORD")}
                 </PickText>
               </TouchableOpacity>
 
@@ -209,18 +215,18 @@ export const LoginScreen: React.FC = () => {
                 style={{ marginTop: 8, alignSelf: "center", width: dimensions.width - 40 }}
                 type="Tertiary"
                 size="sm"
-                title={isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+                title={isLoading ? t("AUTH_LOGIN_LOADING") : t("AUTH_LOGIN_BUTTON")}
                 onPress={handleSubmit(handleLogin)}
                 disabled={isLoading}
               />
 
               <PickView row justifyCenter alignCenter marginTop={8}>
                 <PickText size={14} style={{ color: "#666" }}>
-                  Chưa có tài khoản?{" "}
+                  {t("AUTH_NO_ACCOUNT")}{" "}
                 </PickText>
                 <TouchableOpacity onPress={handleRegister}>
                   <PickText size={14} font="semibold" style={{ color: "#6d5edc" }}>
-                    Đăng ký ngay
+                    {t("AUTH_REGISTER_NOW")}
                   </PickText>
                 </TouchableOpacity>
               </PickView>

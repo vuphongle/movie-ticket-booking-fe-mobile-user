@@ -1,8 +1,9 @@
+import { i18n } from "@Locales/i18n";
+
 /**
  * Error codes returned from API
  * Keep in sync with backend error codes
  */
-
 export const ERROR_CODES = {
   // Authentication errors
   ACCOUNT_NOT_ACTIVATED: "ACCOUNT_NOT_ACTIVATED",
@@ -26,24 +27,27 @@ export type ErrorCode = keyof typeof ERROR_CODES;
 /**
  * User-friendly error messages
  */
-export const ERROR_MESSAGES: Record<string, string> = {
-  [ERROR_CODES.ACCOUNT_NOT_ACTIVATED]:
-    "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email để nhận liên kết kích hoạt.",
-  [ERROR_CODES.INVALID_CREDENTIALS]: "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại.",
-  [ERROR_CODES.UNAUTHORIZED]: "Bạn không có quyền truy cập. Vui lòng đăng nhập lại.",
-  [ERROR_CODES.TOKEN_EXPIRED]: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
-  [ERROR_CODES.NETWORK_ERROR]: "Không thể kết nối đến máy chủ. Vui lòng kiểm tra kết nối mạng.",
-  [ERROR_CODES.SERVER_ERROR]: "Lỗi máy chủ. Vui lòng thử lại sau.",
-  [ERROR_CODES.UNKNOWN_ERROR]: "Đã xảy ra lỗi. Vui lòng thử lại.",
-  [ERROR_CODES.USER_NOT_FOUND]: "Không tìm thấy tài khoản với email này.",
+
+export const ERROR_MESSAGE_KEYS: Record<string, string> = {
+  [ERROR_CODES.ACCOUNT_NOT_ACTIVATED]: "ERROR_ACCOUNT_NOT_ACTIVATED",
+  [ERROR_CODES.INVALID_CREDENTIALS]: "ERROR_INVALID_CREDENTIALS",
+  [ERROR_CODES.UNAUTHORIZED]: "ERROR_UNAUTHORIZED",
+  [ERROR_CODES.TOKEN_EXPIRED]: "ERROR_TOKEN_EXPIRED",
+  [ERROR_CODES.NETWORK_ERROR]: "ERROR_NETWORK",
+  [ERROR_CODES.SERVER_ERROR]: "ERROR_SERVER",
+  [ERROR_CODES.UNKNOWN_ERROR]: "ERROR_UNKNOWN",
+  [ERROR_CODES.USER_NOT_FOUND]: "ERROR_USER_NOT_FOUND",
 };
 
 /**
  * Get user-friendly error message from error code
  */
 export const getErrorMessage = (code?: string, defaultMessage?: string): string => {
-  if (code && ERROR_MESSAGES[code]) {
-    return ERROR_MESSAGES[code];
+  if (code && ERROR_MESSAGE_KEYS[code]) {
+    return i18n.t(ERROR_MESSAGE_KEYS[code]);
   }
-  return defaultMessage || ERROR_MESSAGES[ERROR_CODES.UNKNOWN_ERROR];
+  if (defaultMessage) {
+    return defaultMessage;
+  }
+  return i18n.t(ERROR_MESSAGE_KEYS[ERROR_CODES.UNKNOWN_ERROR]);
 };

@@ -3,6 +3,7 @@ import { uploadAvatar } from "@Services/User/userService";
 import { UploadResponse } from "@Types/authTypes";
 import { handleApiError } from "@Utils";
 import { Alert, Platform } from "react-native";
+import { i18n } from "@Locales/i18n";
 
 interface UseUploadAvatarOptions {
   onSuccess?: (response: UploadResponse) => void;
@@ -60,9 +61,11 @@ export const useUploadAvatar = (options?: UseUploadAvatarOptions) => {
       }
 
       // Show error alert
-      Alert.alert("Tải ảnh thất bại", error.message || "Không thể tải ảnh lên. Vui lòng thử lại.", [
-        { text: "OK" },
-      ]);
+      Alert.alert(
+        i18n.t("PROFILE_AVATAR_UPLOAD_ERROR_TITLE"),
+        error.message || i18n.t("PROFILE_AVATAR_UPLOAD_ERROR_MESSAGE"),
+        [{ text: i18n.t("COMMON_OK") }]
+      );
 
       options?.onError?.(error);
     },

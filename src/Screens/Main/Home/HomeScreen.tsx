@@ -10,36 +10,38 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
-
-const mockBanners = [
-  {
-    id: "1",
-    title: "Ưu đãi đặc biệt",
-    subtitle: "Giảm 50% cho lần đặt vé đầu tiên",
-    backgroundColor: "#e94560",
-    image: require("@Assets/images/banner2.png"),
-  },
-  {
-    id: "2",
-    title: "Phim mới ra mắt",
-    subtitle: "Những bộ phim blockbuster 2024",
-    backgroundColor: "#3498db",
-    image: require("@Assets/images/banner4.png"),
-  },
-  {
-    id: "3",
-    title: "Combo tiết kiệm",
-    subtitle: "Vé + bỏng ngô + nước ngọt",
-    backgroundColor: "#2ecc71",
-    image: require("@Assets/images/banner3.png"),
-  },
-];
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const { colors } = useThemedStyles();
+  const { t } = useTranslation();
+
+  const mockBanners = [
+    {
+      id: "1",
+      title: t("HOME_BANNER_SPECIAL_TITLE"),
+      subtitle: t("HOME_BANNER_SPECIAL_SUBTITLE"),
+      backgroundColor: "#e94560",
+      image: require("@Assets/images/banner2.png"),
+    },
+    {
+      id: "2",
+      title: t("HOME_BANNER_NEW_TITLE"),
+      subtitle: t("HOME_BANNER_NEW_SUBTITLE"),
+      backgroundColor: "#3498db",
+      image: require("@Assets/images/banner4.png"),
+    },
+    {
+      id: "3",
+      title: t("HOME_BANNER_COMBO_TITLE"),
+      subtitle: t("HOME_BANNER_COMBO_SUBTITLE"),
+      backgroundColor: "#2ecc71",
+      image: require("@Assets/images/banner3.png"),
+    },
+  ];
 
   const {
     movies: nowShowing,
@@ -74,7 +76,7 @@ const HomeScreen: React.FC = () => {
       rating: m.rating,
       age: m.age ?? "P",
       graphics: m.graphics,
-      duration: `${m.duration} phút`,
+      duration: t("HOME_DURATION_MINUTES", { minutes: m.duration }),
       imageUrl: m.poster,
     }));
 
@@ -98,25 +100,25 @@ const HomeScreen: React.FC = () => {
         <Banner banners={mockBanners} />
 
         <MovieSection
-          title="Phim đang chiếu"
+          title={t("HOME_SECTION_NOW_SHOWING")}
           movies={formatMovies(nowShowing.slice(0, 7))}
           onSeeAll={() =>
             navigation.navigate("MovieList", {
               type: "nowShowing",
-              title: "Phim đang chiếu",
-              emptyText: "Không có phim nào đang chiếu",
+              title: t("HOME_SECTION_NOW_SHOWING"),
+              emptyText: t("HOME_SECTION_NOW_SHOWING_EMPTY"),
             })
           }
         />
 
         <MovieSection
-          title="Phim sắp chiếu"
+          title={t("HOME_SECTION_COMING_SOON")}
           movies={formatMovies(comingSoon.slice(0, 7))}
           onSeeAll={() =>
             navigation.navigate("MovieList", {
               type: "comingSoon",
-              title: "Phim sắp chiếu",
-              emptyText: "Không có phim sắp chiếu",
+              title: t("HOME_SECTION_COMING_SOON"),
+              emptyText: t("HOME_SECTION_COMING_SOON_EMPTY"),
             })
           }
         />

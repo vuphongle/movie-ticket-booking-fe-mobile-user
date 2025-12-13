@@ -28,6 +28,7 @@ import { registerSchema, type RegisterFormData } from "@Schemas/authSchemas";
 import { useRegister } from "@Hooks";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -38,6 +39,7 @@ export const RegisterScreen: React.FC = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
   const [showDatePicker, setShowDatePicker] = React.useState(false);
+  const { t, language } = useTranslation();
 
   const {
     control,
@@ -57,29 +59,25 @@ export const RegisterScreen: React.FC = () => {
   const handleRegister = (data: RegisterFormData) => {
     registerMutation.mutate(data, {
       onSuccess: () => {
-        Alert.alert(
-          "Đăng ký thành công",
-          "Vui lòng kiểm tra email để kích hoạt tài khoản của bạn.",
-          [
-            {
-              text: "OK",
-              onPress: () => navigation.navigate("Login"),
-            },
-          ]
-        );
+        Alert.alert(t("AUTH_REGISTER_SUCCESS_TITLE"), t("AUTH_REGISTER_SUCCESS_MESSAGE"), [
+          {
+            text: t("COMMON_OK"),
+            onPress: () => navigation.navigate("Login"),
+          },
+        ]);
       },
       onError: (error: any) => {
         const errorCode = error?.code;
-        const errorMessage = error?.message || "Đã có lỗi xảy ra. Vui lòng thử lại.";
+        const errorMessage = error?.message || t("AUTH_REGISTER_GENERIC_ERROR");
 
         let message = errorMessage;
         if (errorCode === "EMAIL_ALREADY_EXISTS") {
-          message = "Email đã được sử dụng. Vui lòng sử dụng email khác.";
+          message = t("AUTH_REGISTER_EMAIL_USED");
         } else if (errorCode === "ACCOUNT_NOT_ACTIVATED") {
-          message = "Tài khoản của bạn chưa được kích hoạt. Vui lòng kiểm tra email.";
+          message = t("AUTH_REGISTER_ACCOUNT_NOT_ACTIVATED");
         }
 
-        Alert.alert("Đăng ký thất bại", message);
+        Alert.alert(t("AUTH_REGISTER_FAILURE_TITLE"), message);
       },
     });
   };
@@ -93,9 +91,12 @@ export const RegisterScreen: React.FC = () => {
     setShowDatePicker(false);
   };
 
+  const dateFormat = language === "vi" ? "dd/MM/yyyy" : "MM/dd/yyyy";
+  const dateLocale = language === "vi" ? vi : undefined;
+
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader title="Đăng ký" />
+      <ScreenHeader title={t("AUTH_REGISTER_TITLE")} />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -138,10 +139,10 @@ export const RegisterScreen: React.FC = () => {
                 lineHeight={40}
                 style={{ color: "#1a1a2e" }}
               >
-                Đăng ký
+                {t("AUTH_REGISTER_TITLE")}
               </PickText>
               <PickText size={16} align="center" style={{ color: "#666" }}>
-                Tạo tài khoản mới để bắt đầu
+                {t("AUTH_REGISTER_SUBTITLE")}
               </PickText>
             </PickView>
 
@@ -150,7 +151,7 @@ export const RegisterScreen: React.FC = () => {
               <PickFormInput
                 name="name"
                 control={control}
-                placeholder="Họ và tên"
+                placeholder={t("AUTH_FULLNAME_PLACEHOLDER")}
                 autoCapitalize="words"
                 iconBefore={<Icon name="person-outline" size={20} color="#666" />}
                 error={errors.name?.message}
@@ -160,7 +161,7 @@ export const RegisterScreen: React.FC = () => {
               <PickFormInput
                 name="email"
                 control={control}
-                placeholder="Email"
+                placeholder={t("AUTH_EMAIL_PLACEHOLDER")}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -172,7 +173,7 @@ export const RegisterScreen: React.FC = () => {
               <PickFormInput
                 name="phone"
                 control={control}
-                placeholder="Số điện thoại"
+                placeholder={t("AUTH_PHONE_PLACEHOLDER")}
                 keyboardType="phone-pad"
                 iconBefore={<Icon name="call-outline" size={20} color="#666" />}
                 error={errors.phone?.message}
@@ -208,7 +209,9 @@ export const RegisterScreen: React.FC = () => {
                       flex: 1,
                     }}
                   >
-                    {dobValue ? format(dobValue, "dd/MM/yyyy", { locale: vi }) : "Ngày sinh"}
+                    {dobValue
+                      ? format(dobValue, dateFormat, { locale: dateLocale })
+                      : t("AUTH_DOB_PLACEHOLDER")}
                   </PickText>
                 </PickView>
               </TouchableOpacity>
@@ -222,7 +225,7 @@ export const RegisterScreen: React.FC = () => {
               <PickFormInput
                 name="password"
                 control={control}
-                placeholder="Mật khẩu"
+                placeholder={t("AUTH_PASSWORD_PLACEHOLDER")}
                 secureTextEntry={!showPassword}
                 autoCapitalize="none"
                 iconBefore={<Icon name="lock-closed-outline" size={20} color="#666" />}
@@ -245,7 +248,7 @@ export const RegisterScreen: React.FC = () => {
               <PickFormInput
                 name="confirmPassword"
                 control={control}
-                placeholder="Xác nhận mật khẩu"
+                placeholder={t("AUTH_CONFIRM_PASSWORD_PLACEHOLDER")}
                 secureTextEntry={!showConfirmPassword}
                 autoCapitalize="none"
                 iconBefore={<Icon name="lock-closed-outline" size={20} color="#666" />}
@@ -271,15 +274,15 @@ export const RegisterScreen: React.FC = () => {
                 lineHeight={18}
                 style={{ color: "#666", marginBottom: 8 }}
               >
-                Bằng cách đăng ký, bạn đồng ý với{" "}
+                {t("AUTH_TERMS_PREFIX")}{" "}
                 <PickText size={12} font="semibold" style={{ color: "#6d5edc" }}>
-                  Điều khoản dịch vụ
+                  {t("AUTH_TERMS_SERVICE")}
                 </PickText>{" "}
-                và{" "}
+                {t("AUTH_TERMS_AND")}{" "}
                 <PickText size={12} font="semibold" style={{ color: "#6d5edc" }}>
-                  Chính sách bảo mật
+                  {t("AUTH_TERMS_PRIVACY")}
                 </PickText>{" "}
-                của chúng tôi
+                {t("AUTH_TERMS_SUFFIX")}
               </PickText>
 
               {/* Register Button */}
@@ -287,7 +290,11 @@ export const RegisterScreen: React.FC = () => {
                 style={{ marginTop: 8, alignSelf: "center", width: dimensions.width - 40 }}
                 type="Tertiary"
                 size="sm"
-                title={registerMutation.isPending ? "Đang đăng ký..." : "Đăng ký"}
+                title={
+                  registerMutation.isPending
+                    ? t("AUTH_REGISTER_LOADING")
+                    : t("AUTH_REGISTER_BUTTON")
+                }
                 onPress={handleSubmit(handleRegister)}
                 disabled={registerMutation.isPending}
               />
@@ -295,11 +302,11 @@ export const RegisterScreen: React.FC = () => {
               {/* Login Link */}
               <PickView row justifyCenter alignCenter marginTop={8}>
                 <PickText size={14} style={{ color: "#666" }}>
-                  Đã có tài khoản?{" "}
+                  {t("AUTH_HAVE_ACCOUNT")}{" "}
                 </PickText>
                 <TouchableOpacity onPress={handleLogin}>
                   <PickText size={14} font="semibold" style={{ color: "#6d5edc" }}>
-                    Đăng nhập
+                    {t("AUTH_LOGIN_NOW")}
                   </PickText>
                 </TouchableOpacity>
               </PickView>

@@ -9,6 +9,8 @@ import { useAuth } from "@Contexts/AuthContext";
 import { movieService } from "@Services/movie/movieService";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/Ionicons";
+import { useTranslation } from "@Hooks/useTranslation";
+import { formatRelativeTime } from "@Utils/dateUtils";
 
 export interface Review {
   id: number;
@@ -35,6 +37,7 @@ type LocalImage = {
 const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
   const { state } = useAuth();
   const { isAuthenticated, user } = state;
+  const { t } = useTranslation();
 
   const currentUserId = user?.sub;
 
@@ -78,19 +81,6 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
     });
   }, [localReviews, currentUserId]);
 
-  const formatRelativeTime = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diff = (now.getTime() - date.getTime()) / 1000;
-
-    if (diff < 60) return "Vừa xong";
-    if (diff < 3600) return `${Math.floor(diff / 60)} phút trước`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)} giờ trước`;
-    if (diff < 2592000) return `${Math.floor(diff / 86400)} ngày trước`;
-
-    return date.toLocaleDateString("vi-VN");
-  };
-
   const pickImages = async () => {
     const result = await launchImageLibrary({
       mediaType: "photo",
@@ -101,7 +91,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
     if (result.didCancel) return;
 
     if (result.errorCode) {
-      Alert.alert("Lỗi", "Không thể mở thư viện ảnh.");
+      Alert.alert(t("COMMON_ERROR"), t("MOVIE_REVIEW_PICKER_ERROR"));
       return;
     }
 
@@ -111,7 +101,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
       );
 
       if (validAssets.length !== result.assets.length) {
-        Alert.alert("Lưu ý", "Một số file không phải hình ảnh nên đã bị bỏ qua.");
+        Alert.alert(t("COMMON_NOTICE"), t("MOVIE_REVIEW_INVALID_IMAGES"));
       }
 
       const newImages: LocalImage[] = validAssets.map((a, idx) => ({
@@ -127,7 +117,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
 
   const handleSubmit = async () => {
     if (!isAuthenticated) {
-      Alert.alert("Thông báo", "Bạn cần đăng nhập để đánh giá.");
+      Alert.alert(t("COMMON_NOTICE"), t("MOVIE_REVIEW_LOGIN_REQUIRED"));
       return;
     }
 
@@ -168,7 +158,9 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
       console.log("Create review error:", err);
 
       const message =
-        err?.message || err?.originalError?.response?.data?.message || "Không thể gửi đánh giá.";
+        err?.message ||
+        err?.originalError?.response?.data?.message ||
+        t("MOVIE_REVIEW_CREATE_ERROR");
 
       setErrorReviewModal({
         visible: true,
@@ -223,7 +215,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
       setImages([]);
     } catch (err) {
       console.log("Update review error:", err);
-      Alert.alert("Lỗi", "Không thể cập nhật đánh giá.");
+      Alert.alert(t("COMMON_ERROR"), t("MOVIE_REVIEW_UPDATE_ERROR"));
     }
   };
 
@@ -237,7 +229,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
       setSuccessDeleteReviewModal(true);
     } catch (err) {
       console.log("Delete review error:", err);
-      Alert.alert("Lỗi", "Không thể xóa đánh giá.");
+      Alert.alert(t("COMMON_ERROR"), t("MOVIE_REVIEW_DELETE_ERROR"));
     }
   };
 
@@ -245,39 +237,47 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
     <PickView padding={SPACING.md}>
       <UniversalConfirmModal
         visible={deleteModal}
-        title="Xóa đánh giá"
-        message="Bạn có chắc chắn muốn xóa đánh giá này?"
+        title={t("MOVIE_REVIEW_DELETE_TITLE")}
+        message={t("MOVIE_REVIEW_DELETE_MESSAGE")}
         buttons={[
-          { text: "Hủy", type: "cancel", onPress: () => setDeleteModal(false) },
-          { text: "Xóa", type: "danger", onPress: confirmDelete },
+          { text: t("COMMON_CANCEL"), type: "cancel", onPress: () => setDeleteModal(false) },
+          { text: t("MOVIE_REVIEW_DELETE_ACTION"), type: "danger", onPress: confirmDelete },
         ]}
       />
 
       <UniversalConfirmModal
         visible={emptyTextNotificationModal}
-        title="Thông báo"
-        message="Vui lòng nhập nội dung bình luận."
+        title={t("COMMON_NOTICE")}
+        message={t("MOVIE_REVIEW_EMPTY_COMMENT_MESSAGE")}
         buttons={[
-          { text: "OK", type: "primary", onPress: () => setEmptyTextNotificationModal(false) },
+          {
+            text: t("COMMON_OK"),
+            type: "primary",
+            onPress: () => setEmptyTextNotificationModal(false),
+          },
         ]}
       />
 
       <UniversalConfirmModal
         visible={successCreateReviewModal}
-        title="Thành công"
-        message="Đánh giá thành công."
+        title={t("COMMON_SUCCESS")}
+        message={t("MOVIE_REVIEW_CREATE_SUCCESS")}
         buttons={[
-          { text: "OK", type: "primary", onPress: () => setSuccessCreateReviewModal(false) },
+          {
+            text: t("COMMON_OK"),
+            type: "primary",
+            onPress: () => setSuccessCreateReviewModal(false),
+          },
         ]}
       />
 
       <UniversalConfirmModal
         visible={successUpdateReviewModal}
-        title="Thành công"
-        message="Cập nhật đánh giá thành công."
+        title={t("COMMON_SUCCESS")}
+        message={t("MOVIE_REVIEW_UPDATE_SUCCESS")}
         buttons={[
           {
-            text: "OK",
+            text: t("COMMON_OK"),
             type: "primary",
             onPress: () => {
               setSuccessUpdateReviewModal(false);
@@ -289,19 +289,23 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
 
       <UniversalConfirmModal
         visible={successDeleteReviewModal}
-        title="Thành công"
-        message="Đã xóa đánh giá."
+        title={t("COMMON_SUCCESS")}
+        message={t("MOVIE_REVIEW_DELETE_SUCCESS")}
         buttons={[
-          { text: "OK", type: "primary", onPress: () => setSuccessDeleteReviewModal(false) },
+          {
+            text: t("COMMON_OK"),
+            type: "primary",
+            onPress: () => setSuccessDeleteReviewModal(false),
+          },
         ]}
       />
       <UniversalConfirmModal
         visible={errorReviewModal.visible}
-        title="Thông báo"
+        title={t("COMMON_NOTICE")}
         message={errorReviewModal.message}
         buttons={[
           {
-            text: "OK",
+            text: t("COMMON_OK"),
             type: "primary",
             onPress: () => setErrorReviewModal({ visible: false, message: "" }),
           },
@@ -322,11 +326,11 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
       />
 
       <PickText font="bold" size={FONT_SIZE.xl} style={{ marginBottom: SPACING.sm }}>
-        Đánh giá ({localReviews.length})
+        {t("MOVIE_REVIEW_TITLE", { count: localReviews.length })}
       </PickText>
 
       <PickView marginTop={SPACING.xs}>
-        <PickText font="semibold">Đánh giá sao: {rating}/10</PickText>
+        <PickText font="semibold">{t("MOVIE_REVIEW_RATING_LABEL", { rating })}</PickText>
 
         <PickView row style={{ flexWrap: "wrap" }}>
           {Array.from({ length: 10 }, (_, i) => (
@@ -341,7 +345,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
         <PickInput
           value={commentText}
           onChangeText={setCommentText}
-          placeholder="Nhập bình luận..."
+          placeholder={t("MOVIE_REVIEW_PLACEHOLDER")}
           containerStyle={{ marginTop: SPACING.sm }}
         />
 
@@ -360,7 +364,9 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
           }}
         >
           <Icon name="image-plus" size={18} color={COLORS.primary} style={{ marginRight: 6 }} />
-          <PickText style={{ color: COLORS.primary, fontWeight: "600" }}>Thêm ảnh</PickText>
+          <PickText style={{ color: COLORS.primary, fontWeight: "600" }}>
+            {t("MOVIE_REVIEW_ADD_IMAGE")}
+          </PickText>
         </TouchableOpacity>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -405,7 +411,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
         </ScrollView>
 
         <PickButton
-          title={editMode ? "Cập nhật đánh giá" : "Gửi đánh giá"}
+          title={editMode ? t("MOVIE_REVIEW_UPDATE_SUBMIT") : t("MOVIE_REVIEW_SUBMIT")}
           type="Primary"
           onPress={editMode ? handleUpdateReview : handleSubmit}
           style={{ marginTop: SPACING.sm }}
@@ -482,7 +488,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
               >
                 <Icon name="pencil" size={16} color="#22c55e" />
                 <PickText style={{ color: "#22c55e", fontWeight: "600", marginLeft: 4 }}>
-                  Sửa
+                  {t("MOVIE_REVIEW_EDIT")}
                 </PickText>
               </TouchableOpacity>
 
@@ -502,7 +508,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
               >
                 <Icon name="trash-can-outline" size={16} color="#ef4444" />
                 <PickText style={{ color: "#ef4444", fontWeight: "600", marginLeft: 4 }}>
-                  Xóa
+                  {t("MOVIE_REVIEW_DELETE_ACTION")}
                 </PickText>
               </TouchableOpacity>
             </PickView>
@@ -513,7 +519,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ reviews, movieId }) => {
       {visibleReviews < sortedReviews.length && (
         <PickView alignItems="center">
           <PickButton
-            title="Xem thêm"
+            title={t("MOVIE_REVIEW_LOAD_MORE")}
             type="Primary"
             size="md"
             onPress={() => setVisibleReviews((prev) => prev + 5)}

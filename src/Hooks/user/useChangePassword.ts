@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Alert } from "react-native";
 import { userService } from "@Services";
 import type { ChangePasswordRequest } from "@Types/authTypes";
+import { i18n } from "@Locales/i18n";
 
 interface UseChangePasswordOptions {
   onSuccess?: () => void;
@@ -25,13 +26,13 @@ export const useChangePassword = (options?: UseChangePasswordOptions) => {
       const errorCode = error?.code || error?.response?.data?.code;
 
       if (errorCode === "INVALID_OLD_PASSWORD") {
-        Alert.alert("Lỗi", "Mật khẩu cũ không đúng. Vui lòng kiểm tra lại.");
+        Alert.alert(i18n.t("COMMON_ERROR"), i18n.t("AUTH_CHANGE_PASSWORD_INVALID_OLD"));
       } else if (errorCode === "NEW_PASSWORD_SAME_AS_OLD") {
-        Alert.alert("Lỗi", "Mật khẩu mới không được trùng với mật khẩu cũ.");
+        Alert.alert(i18n.t("COMMON_ERROR"), i18n.t("AUTH_CHANGE_PASSWORD_SAME_AS_OLD"));
       } else {
         // Generic error handling
-        const errorMessage = error?.message || "Đã xảy ra lỗi khi đổi mật khẩu. Vui lòng thử lại.";
-        Alert.alert("Lỗi", errorMessage);
+        const errorMessage = error?.message || i18n.t("AUTH_CHANGE_PASSWORD_GENERIC_ERROR");
+        Alert.alert(i18n.t("COMMON_ERROR"), errorMessage);
       }
 
       if (options?.onError) {

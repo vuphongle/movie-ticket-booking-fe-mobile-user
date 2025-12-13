@@ -1,5 +1,6 @@
 import { HttpService } from "../httpService";
 import { ShowtimeDto, ShowtimeServiceInterface, MovieWithShowtimesDto } from "@Types/showtimeTypes";
+import { i18n } from "@Locales/i18n";
 
 class ShowtimeService implements ShowtimeServiceInterface {
   private httpService: HttpService;
@@ -23,9 +24,9 @@ class ShowtimeService implements ShowtimeServiceInterface {
       const graphics = st.graphicsType?.replace("_", "").toUpperCase() || "2D";
       const translation = st.translationType
         ? st.translationType.toUpperCase() === "SUBTITLING"
-          ? "Phụ đề"
+          ? i18n.t("SHOWTIME_TRANSLATION_SUB")
           : st.translationType.toUpperCase() === "DUBBING"
-          ? "Lồng tiếng"
+          ? i18n.t("SHOWTIME_TRANSLATION_DUB")
           : st.translationType
         : "";
 

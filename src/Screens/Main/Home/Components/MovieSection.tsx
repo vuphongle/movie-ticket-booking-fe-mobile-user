@@ -7,6 +7,7 @@ import { MovieAge } from "@Types/movieTypes";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieDetail">;
 
@@ -30,13 +31,14 @@ interface MovieSectionProps {
 
 const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) => {
   const navigation = useNavigation<MovieSectionNavigationProp>();
+  const { t } = useTranslation();
   return (
     <PickView style={styles.container}>
       <PickView row justifySpaceBetween alignCenter style={styles.header}>
         <PickText style={styles.sectionTitle}>{title}</PickText>
         {onSeeAll && (
           <TouchableOpacity onPress={onSeeAll}>
-            <PickText style={styles.seeAllText}>Xem tất cả</PickText>
+            <PickText style={styles.seeAllText}>{t("HOME_SEE_ALL")}</PickText>
           </TouchableOpacity>
         )}
       </PickView>

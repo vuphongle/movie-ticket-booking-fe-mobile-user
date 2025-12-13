@@ -3,6 +3,7 @@ import { updateUserProfile } from "@Services/User/userService";
 import { UpdateProfileRequest, User } from "@Types/authTypes";
 import { handleApiError } from "@Utils";
 import { Alert } from "react-native";
+import { i18n } from "@Locales/i18n";
 
 interface UseUpdateProfileOptions {
   onSuccess?: (user: User) => void;
@@ -33,9 +34,9 @@ export const useUpdateProfile = (options?: UseUpdateProfileOptions) => {
 
       // Show error alert
       Alert.alert(
-        "Cập nhật thất bại",
-        error.message || "Không thể cập nhật thông tin. Vui lòng thử lại.",
-        [{ text: "OK" }]
+        i18n.t("PROFILE_UPDATE_ERROR_TITLE"),
+        error.message || i18n.t("PROFILE_UPDATE_ERROR_MESSAGE"),
+        [{ text: i18n.t("COMMON_OK") }]
       );
 
       options?.onError?.(error);

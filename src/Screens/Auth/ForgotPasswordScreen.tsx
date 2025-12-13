@@ -10,6 +10,7 @@ import { PickButton, PickText, PickView, PickInput, ScreenHeader } from "@Compon
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { authService } from "@Services";
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@Schemas/authSchemas";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -20,6 +21,7 @@ const ForgotPasswordScreen: React.FC = () => {
   const { colors, dimensions } = useThemedStyles();
   const [isLoading, setIsLoading] = React.useState(false);
   const [cooldown, setCooldown] = React.useState<number>(0);
+  const { t } = useTranslation();
 
   const {
     control,
@@ -48,17 +50,18 @@ const ForgotPasswordScreen: React.FC = () => {
       setCooldown(COOLDOWN_SECONDS);
 
       Alert.alert(
-        "Yêu cầu gửi email thành công",
-        "Vui lòng kiểm tra email để nhận hướng dẫn đặt lại mật khẩu.",
+        t("AUTH_FORGOT_PASSWORD_SUCCESS_TITLE"),
+        t("AUTH_FORGOT_PASSWORD_SUCCESS_MESSAGE"),
         [
           {
-            text: "OK",
+            text: t("COMMON_OK"),
           },
         ]
       );
     } catch (error: any) {
-      const message = error?.response?.data?.message || error?.message || "Đã xảy ra lỗi";
-      Alert.alert("Lỗi", message);
+      const message =
+        error?.response?.data?.message || error?.message || t("AUTH_FORGOT_PASSWORD_ERROR_MESSAGE");
+      Alert.alert(t("COMMON_ERROR"), message);
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +74,7 @@ const ForgotPasswordScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader title="Quên mật khẩu" />
+      <ScreenHeader title={t("AUTH_FORGOT_PASSWORD_TITLE")} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -94,10 +97,10 @@ const ForgotPasswordScreen: React.FC = () => {
 
             <PickView paddingHorizontal={20} gap={8} marginBottom={32} alignCenter>
               <PickText size={24} font="bold" align="center" lineHeight={30}>
-                Quên mật khẩu
+                {t("AUTH_FORGOT_PASSWORD_TITLE")}
               </PickText>
               <PickText size={14} align="center" color="placeholder">
-                Nhập email đã đăng ký của bạn. Chúng tôi sẽ gửi hướng dẫn đặt lại mật khẩu.
+                {t("AUTH_FORGOT_PASSWORD_DESCRIPTION")}
               </PickText>
             </PickView>
 
@@ -107,7 +110,7 @@ const ForgotPasswordScreen: React.FC = () => {
                 name="email"
                 render={({ field: { onChange, value } }) => (
                   <PickInput
-                    placeholder="Email"
+                    placeholder={t("AUTH_EMAIL_PLACEHOLDER")}
                     value={value}
                     onChangeText={onChange}
                     keyboardType="email-address"
@@ -127,20 +130,22 @@ const ForgotPasswordScreen: React.FC = () => {
                 style={{ marginTop: 8, alignSelf: "center", width: dimensions.width - 40 }}
                 type="Tertiary"
                 size="sm"
-                title={isLoading ? "Đang gửi..." : "Gửi email"}
+                title={
+                  isLoading ? t("AUTH_FORGOT_PASSWORD_LOADING") : t("AUTH_FORGOT_PASSWORD_BUTTON")
+                }
                 onPress={handleSubmit(doSend)}
                 disabled={isLoading}
               />
 
               <PickView row justifyCenter alignCenter marginTop={8} gap={8}>
                 <PickText size={14} style={{ color: "#666" }}>
-                  Chưa nhận được email?
+                  {t("AUTH_FORGOT_PASSWORD_RESEND_PROMPT")}
                 </PickText>
                 <TouchableOpacity
                   onPress={async () => {
                     const current = (control as any)._formValues?.email as string | undefined;
                     if (!current) {
-                      Alert.alert("Lỗi", "Vui lòng nhập email trước khi gửi lại.");
+                      Alert.alert(t("COMMON_ERROR"), t("AUTH_FORGOT_PASSWORD_RESEND_EMPTY_EMAIL"));
                       return;
                     }
                     await handleResend(current);
@@ -152,7 +157,9 @@ const ForgotPasswordScreen: React.FC = () => {
                     font="semibold"
                     style={{ color: cooldown > 0 ? "#999" : "#6d5edc" }}
                   >
-                    {cooldown > 0 ? `Gửi lại (${cooldown}s)` : "Gửi lại"}
+                    {cooldown > 0
+                      ? t("AUTH_FORGOT_PASSWORD_RESEND_COOLDOWN", { seconds: cooldown })
+                      : t("AUTH_FORGOT_PASSWORD_RESEND_BUTTON")}
                   </PickText>
                 </TouchableOpacity>
               </PickView>
@@ -162,7 +169,7 @@ const ForgotPasswordScreen: React.FC = () => {
                 style={{ marginTop: 12, alignSelf: "center" }}
               >
                 <PickText size={14} font="semibold" style={{ color: "#6d5edc" }}>
-                  Quay lại đăng nhập
+                  {t("AUTH_FORGOT_PASSWORD_BACK_TO_LOGIN")}
                 </PickText>
               </TouchableOpacity>
             </PickView>

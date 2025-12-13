@@ -2,8 +2,17 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { PickText } from "@Components";
 import { SPACING, FONT_SIZE, RADIUS } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
-const WEEKDAYS = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"];
+const WEEKDAY_KEYS = [
+  "COMMON_WEEKDAY_MON",
+  "COMMON_WEEKDAY_TUE",
+  "COMMON_WEEKDAY_WED",
+  "COMMON_WEEKDAY_THU",
+  "COMMON_WEEKDAY_FRI",
+  "COMMON_WEEKDAY_SAT",
+  "COMMON_WEEKDAY_SUN",
+] as const;
 const pad = (n: number) => n.toString().padStart(2, "0");
 
 interface DateButtonProps {
@@ -13,7 +22,8 @@ interface DateButtonProps {
 }
 
 const DateButton: React.FC<DateButtonProps> = ({ date, isActive, onPress }) => {
-  const weekday = WEEKDAYS[(date.getDay() + 6) % 7];
+  const { t } = useTranslation();
+  const weekday = t(WEEKDAY_KEYS[(date.getDay() + 6) % 7]);
   const isToday = date.toDateString() === new Date().toDateString();
 
   return (
@@ -47,7 +57,7 @@ const DateButton: React.FC<DateButtonProps> = ({ date, isActive, onPress }) => {
         }}
       >
         {isToday
-          ? `Hôm nay\n${pad(date.getDate())}/${pad(date.getMonth() + 1)}`
+          ? `${t("COMMON_TODAY")}\n${pad(date.getDate())}/${pad(date.getMonth() + 1)}`
           : `${weekday}\n${pad(date.getDate())}/${pad(date.getMonth() + 1)}`}
       </PickText>
     </TouchableOpacity>

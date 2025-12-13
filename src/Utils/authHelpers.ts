@@ -1,6 +1,7 @@
 import type { AuthTokens, UserInfo } from "@Types/authTypes";
 import type { LoginResponse } from "@Types/authTypes";
 import { transformUserToUserInfo } from "./userTransformUtils";
+import { i18n } from "@Locales/i18n";
 
 /**
  * Transform login response to AuthTokens and UserInfo
@@ -34,8 +35,9 @@ export const isUserAuthenticated = (accessToken: string | null, user: UserInfo |
  * Format user display name
  */
 export const getUserDisplayName = (user: UserInfo | null): string => {
-  if (!user) return "Người dùng";
-  return user.name || user.preferred_username || user.email || "Người dùng";
+  const fallback = i18n.t("COMMON_GENERIC_NAME");
+  if (!user) return fallback;
+  return user.name || user.preferred_username || user.email || fallback;
 };
 
 /**

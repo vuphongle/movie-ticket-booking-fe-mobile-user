@@ -1,10 +1,14 @@
 import type { Order, OrderSummary } from "@Types/orderTypes";
+import { useTranslation } from "@Hooks/useTranslation";
 
 /**
  * Utility functions for Order data manipulation
  * Reusable business logic for order-related operations
  */
 export const useOrderUtils = () => {
+  const { t, language } = useTranslation();
+  const locale = language === "vi" ? "vi-VN" : "en-US";
+
   /**
    * Transform Order to OrderSummary for easier UI consumption
    */
@@ -12,8 +16,12 @@ export const useOrderUtils = () => {
     const movie = order.showtime.movie;
     const cinema = order.showtime.auditorium.cinema;
     const showDate = Array.isArray(order.showtime.date)
-      ? `${order.showtime.date[2]}/${order.showtime.date[1]}/${order.showtime.date[0]}`
-      : new Date(order.showtime.date).toLocaleDateString("vi-VN");
+      ? new Date(
+          order.showtime.date[0],
+          order.showtime.date[1] - 1,
+          order.showtime.date[2]
+        ).toLocaleDateString(locale)
+      : new Date(order.showtime.date).toLocaleDateString(locale);
 
     return {
       totalTickets: order.ticketItems.length,
@@ -35,7 +43,7 @@ export const useOrderUtils = () => {
       // Format: [year, month, day, hour, minute, second, nanoseconds]
       const [year, month, day, hour, minute] = createdAt;
       const date = new Date(year, month - 1, day, hour, minute);
-      return date.toLocaleDateString("vi-VN", {
+      return date.toLocaleDateString(locale, {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -43,7 +51,7 @@ export const useOrderUtils = () => {
         minute: "2-digit",
       });
     }
-    return new Date(createdAt).toLocaleDateString("vi-VN");
+    return new Date(createdAt).toLocaleDateString(locale);
   };
 
   /**
@@ -53,31 +61,31 @@ export const useOrderUtils = () => {
     switch (status) {
       case "CONFIRMED":
         return {
-          label: "Đã thanh toán",
+          label: t("ORDERS_STATUS_CONFIRMED"),
           color: "#22c55e", // green
           bgColor: "#dcfce7",
         };
       case "PENDING":
         return {
-          label: "Chờ thanh toán",
+          label: t("ORDERS_STATUS_PENDING"),
           color: "#f59e0b", // amber
           bgColor: "#fef3c7",
         };
       case "CANCELLED":
         return {
-          label: "Đã hủy",
+          label: t("ORDERS_STATUS_CANCELLED"),
           color: "#ef4444", // red
           bgColor: "#fee2e2",
         };
       case "RETURNED":
         return {
-          label: "Đã trả vé",
+          label: t("ORDERS_STATUS_RETURNED"),
           color: "#6b7280", // gray
           bgColor: "#f3f4f6",
         };
       default:
         return {
-          label: "Không xác định",
+          label: t("ORDERS_STATUS_UNKNOWN"),
           color: "#6b7280",
           bgColor: "#f3f4f6",
         };
