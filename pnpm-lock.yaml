@@ -159,6 +159,9 @@ importers:
       '@react-native-community/cli':
         specifier: 18.0.0
         version: 18.0.0(typescript@5.9.2)
+      '@react-native-community/cli-platform-android':
+        specifier: 18.0.0
+        version: 18.0.0
       '@react-native-community/cli-platform-ios':
         specifier: 18.0.0
         version: 18.0.0
