@@ -8,6 +8,7 @@ import { PickText, PickView, ScalableButton } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useAuth } from "@Contexts/AuthContext";
 import { useGetProfile } from "@Hooks";
+import { useTranslation } from "@Hooks/useTranslation";
 import { getUserDisplayName, transformUserToUserInfo } from "@Utils";
 
 interface MenuItem {
@@ -24,6 +25,7 @@ export const AuthenticatedProfileView: React.FC = () => {
   const { colors } = useThemedStyles();
   const { state, logout, updateUser } = useAuth();
   const { user } = state;
+  const { t } = useTranslation();
 
   const [avatarLoadError, setAvatarLoadError] = useState(false);
 
@@ -38,7 +40,10 @@ export const AuthenticatedProfileView: React.FC = () => {
       }
     },
     onError: (error) => {
-      Alert.alert("Lỗi", `Không thể tải thông tin: ${error.message}`);
+      Alert.alert(
+        t("PROFILE_REFRESH_ERROR_TITLE"),
+        t("PROFILE_REFRESH_ERROR_MESSAGE", { message: error.message })
+      );
     },
   });
 
@@ -49,22 +54,22 @@ export const AuthenticatedProfileView: React.FC = () => {
   const handleLogout = async () => {
     // Show confirmation dialog like web
     Alert.alert(
-      "Đăng xuất",
-      "Bạn có chắc chắn muốn đăng xuất?",
+      t("PROFILE_LOGOUT_TITLE"),
+      t("PROFILE_LOGOUT_MESSAGE"),
       [
         {
-          text: "Hủy",
+          text: t("PROFILE_LOGOUT_CANCEL"),
           style: "cancel",
         },
         {
-          text: "Đăng xuất",
+          text: t("PROFILE_LOGOUT_CONFIRM"),
           style: "destructive",
           onPress: async () => {
             try {
               await logout();
-              Alert.alert("Thành công", "Đăng xuất thành công. Hẹn gặp lại bạn!");
+              Alert.alert(t("PROFILE_LOGOUT_SUCCESS_TITLE"), t("PROFILE_LOGOUT_SUCCESS_MESSAGE"));
             } catch (error) {
-              Alert.alert("Lỗi", "Không thể đăng xuất. Vui lòng thử lại.");
+              Alert.alert(t("PROFILE_LOGOUT_ERROR_TITLE"), t("PROFILE_LOGOUT_ERROR_MESSAGE"));
             }
           },
         },
@@ -76,52 +81,52 @@ export const AuthenticatedProfileView: React.FC = () => {
   const menuItems: MenuItem[] = [
     {
       icon: "person-outline",
-      title: "Thông tin cá nhân",
-      subtitle: "Cập nhật thông tin tài khoản",
+      title: t("PROFILE_MENU_PERSONAL_INFO_TITLE"),
+      subtitle: t("PROFILE_MENU_PERSONAL_INFO_SUBTITLE"),
       color: "#6d5edc",
       onPress: () => navigation.navigate("EditProfile"),
     },
     {
       icon: "key-outline",
-      title: "Đổi mật khẩu",
-      subtitle: "Thay đổi mật khẩu đăng nhập",
+      title: t("PROFILE_MENU_CHANGE_PASSWORD_TITLE"),
+      subtitle: t("PROFILE_MENU_CHANGE_PASSWORD_SUBTITLE"),
       color: "#8b5cf6",
       onPress: () => navigation.navigate("ChangePassword"),
     },
     {
       icon: "ticket-outline",
-      title: "Lịch sử đặt vé",
-      subtitle: "Xem các vé đã đặt",
+      title: t("PROFILE_MENU_ORDER_HISTORY_TITLE"),
+      subtitle: t("PROFILE_MENU_ORDER_HISTORY_SUBTITLE"),
       color: "#2193b0",
       onPress: () => navigation.navigate("OrderHistory"),
     },
     {
       icon: "star-outline",
-      title: "Điểm thành viên",
-      subtitle: "Tích điểm và ưu đãi",
+      title: t("PROFILE_MENU_MEMBER_POINTS_TITLE"),
+      subtitle: t("PROFILE_MENU_MEMBER_POINTS_SUBTITLE"),
       color: "#ffd700",
       onPress: () => console.log("Member points"),
     },
     {
       icon: "card-outline",
-      title: "Phương thức thanh toán",
-      subtitle: "Quản lý thẻ và ví",
+      title: t("PROFILE_MENU_PAYMENT_METHODS_TITLE"),
+      subtitle: t("PROFILE_MENU_PAYMENT_METHODS_SUBTITLE"),
       color: "#4ecdc4",
       onPress: () => console.log("Payment methods"),
     },
     {
       icon: "notifications-outline",
-      title: "Thông báo",
-      subtitle: "Cài đặt thông báo",
+      title: t("PROFILE_MENU_NOTIFICATIONS_TITLE"),
+      subtitle: t("PROFILE_MENU_NOTIFICATIONS_SUBTITLE"),
       color: "#ff6b6b",
       onPress: () => console.log("Notifications"),
     },
     {
       icon: "settings-outline",
-      title: "Cài đặt",
-      subtitle: "Cài đặt ứng dụng",
+      title: t("PROFILE_MENU_SETTINGS_TITLE"),
+      subtitle: t("PROFILE_MENU_SETTINGS_SUBTITLE"),
       color: "#95a5a6",
-      onPress: () => console.log("Settings"),
+      onPress: () => navigation.navigate("Settings"),
     },
   ];
 
@@ -205,7 +210,7 @@ export const AuthenticatedProfileView: React.FC = () => {
           backgroundColor={colors.background["bg-primary"]}
         >
           <PickText size={18} font="bold" style={{ color: "#1a1a2e", marginBottom: 16 }}>
-            Tài khoản của tôi
+            {t("PROFILE_MY_ACCOUNT")}
           </PickText>
 
           {menuItems.map((item, index) => (
@@ -259,7 +264,7 @@ export const AuthenticatedProfileView: React.FC = () => {
             >
               <Icon name="log-out-outline" size={20} color={colors.icon["icon-on-fill"]} />
               <PickText size={16} font="semibold" color="body-on-brand">
-                Đăng xuất
+                {t("PROFILE_LOGOUT_CONFIRM")}
               </PickText>
             </PickView>
           </TouchableOpacity>

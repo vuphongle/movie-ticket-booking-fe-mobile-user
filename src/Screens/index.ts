@@ -9,3 +9,4 @@ export { ChangePasswordScreen } from "./Main/Profile/ChangePasswordScreen";
 export { LoginScreen } from "./Auth/LoginScreen";
 export { RegisterScreen } from "./Auth/RegisterScreen";
 export { default as ForgotPasswordScreen } from "./Auth/ForgotPasswordScreen";
+export { default as SettingsScreen } from "./Main/Profile/Settings/SettingsScreen";

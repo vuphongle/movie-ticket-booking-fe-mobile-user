@@ -57,6 +57,7 @@ export type RootStackParamList = {
     reviews: Review[];
   };
   CinemaShowtime: { cinemaId: number; cinemaName: string };
+  Settings: undefined;
 };
 
 // Main Tab Param List

@@ -33,7 +33,9 @@
       "@Theme": ["src/Theme"],
       "@Theme/*": ["src/Theme/*"],
       "@Schemas": ["src/Schemas"],
-      "@Schemas/*": ["src/Schemas/*"]
+      "@Schemas/*": ["src/Schemas/*"],
+      "@Locales": ["src/Locales"],
+      "@Locales/*": ["src/Locales/*"]
     }
   }
 }
