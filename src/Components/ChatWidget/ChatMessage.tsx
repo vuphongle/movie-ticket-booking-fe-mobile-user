@@ -8,9 +8,14 @@ import { PickView } from "@Components";
 interface ChatMessageProps {
   message: ChatMessage;
   onMoviePress?: (movieId: string, slug: string) => void;
+  onShowtimePress?: (movie: any, showtime: any) => void;
 }
 
-export const ChatMessageBubble: React.FC<ChatMessageProps> = ({ message, onMoviePress }) => {
+export const ChatMessageBubble: React.FC<ChatMessageProps> = ({
+  message,
+  onMoviePress,
+  onShowtimePress,
+}) => {
   const { width } = useWindowDimensions();
   const isAssistant = message.sender === "assistant";
   const isError = message.variant === "error";
@@ -71,7 +76,12 @@ export const ChatMessageBubble: React.FC<ChatMessageProps> = ({ message, onMovie
         {isAssistant && message.movies && message.movies.length > 0 && (
           <PickView gap={12} marginTop={12}>
             {message.movies.map((movie) => (
-              <ChatMovieCard key={movie.movieId} movie={movie} onPress={onMoviePress} />
+              <ChatMovieCard
+                key={movie.movieId}
+                movie={movie}
+                onPress={onMoviePress}
+                onShowtimePress={onShowtimePress}
+              />
             ))}
           </PickView>
         )}

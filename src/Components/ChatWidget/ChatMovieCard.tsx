@@ -1,19 +1,61 @@
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
-import type { RecommendedMovie } from "@Types/chatTypes";
+import type { RecommendedMovie, RecommendedShowtime } from "@Types/chatTypes";
 import { PickView, PickText } from "@Components";
+import { parseBackendDate, toDisplayDate } from "@Utils/dateUtils";
 
 interface ChatMovieCardProps {
   movie: RecommendedMovie;
   onPress?: (movieId: string, slug: string) => void;
+  onShowtimePress?: (movie: RecommendedMovie, showtime: RecommendedShowtime) => void;
 }
 
-export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({ movie, onPress }) => {
+export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({
+  movie,
+  onPress,
+  onShowtimePress,
+}) => {
   const handlePress = () => {
     const movieId = movie.movieId.toString();
     const slug = movie.slug || `phim-${movie.movieId}`;
 
     onPress?.(movieId, slug);
+  };
+
+  const renderShowtimes = () => {
+    if (!movie.showtimes || movie.showtimes.length === 0) return null;
+    return (
+      <PickView row gap={8} flexWrap="wrap">
+        {movie.showtimes.slice(0, 4).map((st) => {
+          const dateText = toDisplayDate(parseBackendDate(st.date));
+          const meta = [dateText, st.cinemaName].filter(Boolean).join(" • ");
+          return (
+            <TouchableOpacity
+              key={`${movie.movieId}-${st.id}`}
+              style={{
+                paddingHorizontal: 10,
+                paddingVertical: 8,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: "#e0e0e0",
+                backgroundColor: "#f4f6fb",
+              }}
+              activeOpacity={0.8}
+              onPress={() => onShowtimePress?.(movie, st)}
+            >
+              <PickText size={13} style={{ fontWeight: "700", color: "#1a1a2e" }}>
+                {st.startTime}
+              </PickText>
+              {meta ? (
+                <PickText size={11} style={{ color: "#555", marginTop: 2 }}>
+                  {meta}
+                </PickText>
+              ) : null}
+            </TouchableOpacity>
+          );
+        })}
+      </PickView>
+    );
   };
 
   const posterUrl = movie.poster || "https://via.placeholder.com/120x160?text=No+Image";
@@ -95,6 +137,8 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({ movie, onPress }) 
             ))}
           </PickView>
         )}
+
+        {renderShowtimes()}
 
         <PickText size={12} style={{ color: "#6366f1", fontWeight: "600", marginTop: 4 }}>
           Xem chi tiết →

@@ -16,14 +16,21 @@ import { useChat } from "@Hooks/useChat";
 import { ChatMessageBubble } from "./ChatMessage";
 import { CHAT_CONFIG } from "@Constants";
 import { PickView, PickText, PickInput } from "@Components";
+import type { RecommendedMovie, RecommendedShowtime } from "@Types/chatTypes";
 
 interface ChatWindowProps {
   visible: boolean;
   onClose: () => void;
   onMoviePress?: (movieId: string, slug: string) => void;
+  onShowtimePress?: (movie: RecommendedMovie, showtime: RecommendedShowtime) => void;
 }
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMoviePress }) => {
+export const ChatWindow: React.FC<ChatWindowProps> = ({
+  visible,
+  onClose,
+  onMoviePress,
+  onShowtimePress,
+}) => {
   const { messages, isLoading, sendMessage, resetConversation } = useChat();
   const [inputValue, setInputValue] = useState("");
   const flatListRef = useRef<FlatList>(null);
@@ -153,7 +160,11 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ visible, onClose, onMovi
             data={messages}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <ChatMessageBubble message={item} onMoviePress={onMoviePress} />
+              <ChatMessageBubble
+                message={item}
+                onMoviePress={onMoviePress}
+                onShowtimePress={onShowtimePress}
+              />
             )}
             contentContainerStyle={styles.messagesList}
             showsVerticalScrollIndicator={false}
