@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBookingStore } from "@Store/useBookingStore";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface BookingSummaryProps {
   onContinue?: () => void;
@@ -14,20 +15,24 @@ interface BookingSummaryProps {
 const BookingSummary: React.FC<BookingSummaryProps> = ({ onContinue, isPending }) => {
   const { seats, totalPrice } = useBookingStore();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   return (
     <PickView style={[styles.summary, { paddingBottom: insets.bottom }]}>
       <PickView style={styles.summaryLeft}>
         <PickText style={styles.summaryText}>
-          Ghế đã chọn:{" "}
-          {seats.length ? seats.map((s) => `${s.row}${s.number}`).join(", ") : "Chưa chọn"}
+          {t("BOOKING_SUMMARY_SELECTED", {
+            seats: seats.length ? seats.map((s) => `${s.row}${s.number}`).join(", ") : t("BOOKING_SUMMARY_NONE"),
+          })}
         </PickText>
 
-        <PickText style={styles.totalText}>Tổng tiền: {formatCurrency(totalPrice)}</PickText>
+        <PickText style={styles.totalText}>
+          {t("BOOKING_SUMMARY_TOTAL", { amount: formatCurrency(totalPrice) })}
+        </PickText>
       </PickView>
 
       <PickButton
-        title={isPending ? "Đang xử lý..." : "Tiếp tục"}
+        title={isPending ? t("BOOKING_SUMMARY_PROCESSING") : t("BOOKING_SUMMARY_CONTINUE")}
         type="Primary"
         onPress={onContinue}
         disabled={isPending}

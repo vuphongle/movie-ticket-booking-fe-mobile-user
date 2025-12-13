@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { PickView, PickText } from "@Components";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { SPACING, FONT_SIZE } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface Seat {
   id: number;
@@ -16,6 +17,7 @@ interface TicketListProps {
 }
 
 const TicketList: React.FC<TicketListProps> = ({ seats }) => {
+  const { t } = useTranslation();
   return (
     <PickView
       style={{
@@ -38,7 +40,7 @@ const TicketList: React.FC<TicketListProps> = ({ seats }) => {
           color: "#012e6e",
         }}
       >
-        Thông tin vé
+        {t("BOOKING_TICKETS_TITLE")}
       </PickText>
 
       {seats.map((seat) => (
@@ -54,8 +56,10 @@ const TicketList: React.FC<TicketListProps> = ({ seats }) => {
           }}
         >
           <PickText style={{ fontSize: FONT_SIZE.md, fontWeight: "500", color: "#2B2B2B" }}>
-            Ghế {seat.row}
-            {seat.number}
+            {t("BOOKING_TICKETS_SEAT_LABEL", {
+              seatRow: seat.row,
+              seatNumber: seat.number,
+            })}
           </PickText>
           <PickText style={{ fontSize: FONT_SIZE.md, fontWeight: "700", color: "#012e6e" }}>
             {formatCurrency(seat.price)}

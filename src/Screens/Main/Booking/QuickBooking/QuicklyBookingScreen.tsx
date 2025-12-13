@@ -13,6 +13,7 @@ import { useAllCinemas } from "@Hooks/cinema/useAllCinemas";
 import { parseLatLng } from "@Utils/parseLatLng";
 import { useCinemaDistances } from "@Hooks/cinema/useCinemaDistances";
 import StaticMap from "@Components/Map/StaticMap";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -21,6 +22,7 @@ const QuicklyBookingScreen = () => {
   const { colors, spacing } = useThemedStyles();
   const insets = useSafeAreaInsets();
   const { data: cinemas = [], isLoading } = useAllCinemas();
+  const { t } = useTranslation();
 
   const distances = useCinemaDistances(cinemas);
 
@@ -46,7 +48,7 @@ const QuicklyBookingScreen = () => {
       <PickView alignCenter justifyCenter style={{ paddingVertical: spacing.s48 * 2 }}>
         <ActivityIndicator size="large" color={colors.background["bg-brand-quaternary"]} />
         <PickText size={16} style={{ marginTop: spacing.s16, color: colors.text.body }}>
-          Đang tải danh sách rạp
+          {t("BOOKING_QUICK_LOADING")}
         </PickText>
       </PickView>
     );
@@ -72,10 +74,10 @@ const QuicklyBookingScreen = () => {
         }}
       >
         <PickText size={24} font="bold" color="body-inverted" style={{ marginBottom: spacing.s4 }}>
-          Mua vé nhanh
+          {t("BOOKING_QUICK_TITLE")}
         </PickText>
         <PickText size={14} color="body-inverted">
-          Chọn rạp - Chọn phim - Chọn ngày/suất chiếu
+          {t("BOOKING_QUICK_SUBTITLE")}
         </PickText>
       </PickView>
 

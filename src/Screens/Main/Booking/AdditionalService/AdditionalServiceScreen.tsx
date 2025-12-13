@@ -9,6 +9,7 @@ import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary"
 import BookingTimer from "@Screens/Main/Booking/BaseComponents/BookingTimer";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 import { useCancelSeatMulti } from "@Hooks/booking/useReservation";
+import { useTranslation } from "@Hooks/useTranslation";
 
 import AdditionalTab from "./Components/AdditionalTab";
 import AdditionalItem from "./Components/AdditionalItem";
@@ -29,6 +30,7 @@ const AdditionalServiceScreen: React.FC = () => {
   const [isPending, setIsPending] = useState(false);
 
   const [openTab, setOpenTab] = useState<"COMBO" | "SINGLE">("COMBO");
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (fetchedServices.length > 0 && services.length === 0) {
@@ -75,7 +77,7 @@ const AdditionalServiceScreen: React.FC = () => {
 
   return (
     <PickView style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <ScreenHeader title="Dịch vụ bổ sung" onBackPress={handleBackPress} />
+      <ScreenHeader title={t("BOOKING_ADDITIONAL_TITLE")} onBackPress={handleBackPress} />
       <BookingTimer />
 
       <AdditionalTab openTab={openTab} setOpenTab={setOpenTab} />
@@ -83,7 +85,7 @@ const AdditionalServiceScreen: React.FC = () => {
       {isLoading ? (
         <PickView style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
           <ActivityIndicator size="large" color={COLORS.primary} />
-          <PickText>Đang tải dịch vụ...</PickText>
+          <PickText>{t("BOOKING_ADDITIONAL_LOADING")}</PickText>
         </PickView>
       ) : (
         <ScrollView
@@ -101,16 +103,16 @@ const AdditionalServiceScreen: React.FC = () => {
 
       <UniversalConfirmModal
         visible={showLeaveModal}
-        title="Xác nhận rời khỏi"
-        message="Ghế và dịch vụ đã chọn sẽ bị hủy, bạn có chắc chắn muốn rời?"
+        title={t("BOOKING_ADDITIONAL_LEAVE_TITLE")}
+        message={t("BOOKING_ADDITIONAL_LEAVE_MESSAGE")}
         buttons={[
           {
-            text: "Hủy",
+            text: t("COMMON_CANCEL"),
             type: "cancel",
             onPress: () => setShowLeaveModal(false),
           },
           {
-            text: "Đồng ý",
+            text: t("COMMON_AGREE"),
             type: "primary",
             onPress: async () => {
               try {

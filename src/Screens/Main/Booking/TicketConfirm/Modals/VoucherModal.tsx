@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from "rea
 import { PickView, PickText, PickButton } from "@Components";
 import { SPACING, FONT_SIZE } from "@Constants/theme";
 import { formatCurrency } from "@Utils/currencyUtils";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface VoucherModalProps {
   visible: boolean;
@@ -38,7 +39,11 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
   setVoucherDiscount,
   setVisible,
 }) => {
+  const { t, language } = useTranslation();
   if (!visible || !voucherPreview) return null;
+  const locale = language === "vi" ? "vi-VN" : "en-US";
+  const formatDate = (value?: number | string | Date) =>
+    value ? new Date(value).toLocaleDateString(locale) : "";
 
   return (
     <PickView style={styles.modalOverlay}>
@@ -46,8 +51,10 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
         <PickText style={styles.modalTitle}>🎟️ {selectedCoupon?.name}</PickText>
         <PickText style={styles.modalDescription}>{selectedCoupon?.description}</PickText>
         <PickText style={styles.modalDate}>
-          Hiệu lực: {new Date(selectedCoupon?.startDate || 0).toLocaleDateString("vi-VN")} -{" "}
-          {new Date(selectedCoupon?.endDate || 0).toLocaleDateString("vi-VN")}
+          {t("BOOKING_VOUCHER_VALIDITY", {
+            startDate: formatDate(selectedCoupon?.startDate),
+            endDate: formatDate(selectedCoupon?.endDate),
+          })}
         </PickText>
 
         <ScrollView style={{ maxHeight: 200 }} showsVerticalScrollIndicator={false}>
@@ -115,7 +122,9 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
                     </PickView>
                   ) : (
                     <PickText style={styles.discountText}>
-                      Giảm {formatCurrency(d.lineDiscount)}
+                      {t("BOOKING_VOUCHER_DISCOUNT_LABEL", {
+                        amount: formatCurrency(d.lineDiscount),
+                      })}
                     </PickText>
                   )}
                 </View>
@@ -126,7 +135,7 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
 
         <View style={styles.modalButtons}>
           <PickButton
-            title="Xác nhận"
+            title={t("COMMON_CONFIRM")}
             type="Primary"
             onPress={() => {
               const selectedDiscounts = voucherPreview.detailResults

@@ -6,6 +6,7 @@ import { RootStackParamList } from "@Types/navigationTypes";
 import { ScreenHeader } from "@Components";
 import { useBookingStore } from "@Store/useBookingStore";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type Props = NativeStackScreenProps<RootStackParamList, "PaymentWebView">;
 
@@ -18,6 +19,7 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const hasHandledResult = useRef(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const backAction = () => {
@@ -49,7 +51,7 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
         index: 0,
         routes: [{ name: "Main" }],
       });
-      Alert.alert("Thành công", "Thanh toán thành công! Vui lòng kiểm tra vé trong lịch sử.");
+      Alert.alert(t("COMMON_SUCCESS"), t("BOOKING_PAYMENT_SUCCESS_ALERT_MESSAGE"));
       return;
     }
 
@@ -57,7 +59,7 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
       hasHandledResult.current = true;
       clearAll();
       navigation.navigate("Main");
-      Alert.alert("Thất bại", "Thanh toán không thành công. Vui lòng thử lại sau.");
+      Alert.alert(t("BOOKING_PAYMENT_FAILED_TITLE"), t("BOOKING_PAYMENT_FAILED_ALERT_MESSAGE"));
       return;
     }
   };
@@ -68,7 +70,7 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#F2F3F5" }}>
-      <ScreenHeader title="Thanh toán" onBackPress={() => setShowCancelModal(true)} />
+      <ScreenHeader title={t("BOOKING_CONFIRM_TITLE")} onBackPress={() => setShowCancelModal(true)} />
 
       {isLoading && (
         <View
@@ -122,16 +124,16 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
 
       <UniversalConfirmModal
         visible={showCancelModal}
-        title="Hủy thanh toán"
-        message="Bạn có chắc chắn muốn hủy thanh toán? Giao dịch sẽ bị hủy."
+        title={t("BOOKING_PAYMENT_CANCEL_TITLE")}
+        message={t("BOOKING_PAYMENT_CANCEL_MESSAGE")}
         buttons={[
           {
-            text: "Tiếp tục thanh toán",
+            text: t("BOOKING_PAYMENT_CONTINUE_BUTTON"),
             type: "cancel",
             onPress: () => setShowCancelModal(false),
           },
           {
-            text: "Hủy thanh toán",
+            text: t("BOOKING_PAYMENT_CANCEL_BUTTON"),
             type: "danger",
             onPress: () => {
               setShowCancelModal(false);
@@ -144,11 +146,11 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
 
       <UniversalConfirmModal
         visible={showErrorModal}
-        title="Lỗi"
-        message="Không thể tải trang thanh toán. Vui lòng kiểm tra kết nối mạng và thử lại."
+        title={t("COMMON_ERROR")}
+        message={t("BOOKING_PAYMENT_WEBVIEW_ERROR")}
         buttons={[
           {
-            text: "Thử lại",
+            text: t("COMMON_RETRY"),
             type: "primary",
             onPress: () => {
               setShowErrorModal(false);
@@ -156,7 +158,7 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
             },
           },
           {
-            text: "Hủy",
+            text: t("COMMON_CANCEL"),
             type: "cancel",
             onPress: () => {
               setShowErrorModal(false);

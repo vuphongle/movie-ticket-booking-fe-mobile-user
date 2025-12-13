@@ -12,6 +12,7 @@ import RenderHtml from "react-native-render-html";
 import Icon from "react-native-vector-icons/Ionicons";
 import BlogCard from "../News/Components/BlogCard";
 import { ScreenHeader } from "@Components";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 type BlogDetailRouteProp = RouteProp<RootStackParamList, "BlogDetail">;
@@ -22,6 +23,7 @@ const BlogDetailScreen: React.FC = () => {
   const navigation = useNavigation<RootStackNavigationProp>();
   const route = useRoute<BlogDetailRouteProp>();
   const { width } = useWindowDimensions();
+  const { t } = useTranslation();
 
   const { id, slug } = route.params;
   const { blog, recommendBlogs, isLoading, isError, refetch } = useBlogDetail({ id, slug });
@@ -104,7 +106,7 @@ const BlogDetailScreen: React.FC = () => {
         {/* Loading skeleton */}
         <PickView flex={1} alignCenter justifyCenter>
           <PickText size={16} style={{ color: colors.text.body }}>
-            Đang tải bài viết...
+            {t("NEWS_LOADING_ARTICLE")}
           </PickText>
         </PickView>
       </PickView>
@@ -115,7 +117,10 @@ const BlogDetailScreen: React.FC = () => {
   if (isError || !blog) {
     return (
       <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-        <ScreenHeader title="Chi tiết bài viết" onBackPress={() => navigation.goBack()} />
+        <ScreenHeader
+          title={t("NEWS_ARTICLE_DETAIL_TITLE")}
+          onBackPress={() => navigation.goBack()}
+        />
 
         {/* Error state */}
         <PickView flex={1} alignCenter justifyCenter padding={spacing.s24}>
@@ -129,13 +134,13 @@ const BlogDetailScreen: React.FC = () => {
               textAlign: "center",
             }}
           >
-            Không thể tải bài viết
+            {t("NEWS_ARTICLE_ERROR_TITLE")}
           </PickText>
           <PickText
             size={14}
             style={{ color: colors.text.body, textAlign: "center", marginBottom: spacing.s24 }}
           >
-            Vui lòng thử lại sau
+            {t("NEWS_ARTICLE_ERROR_MESSAGE")}
           </PickText>
           <TouchableOpacity
             onPress={() => refetch()}
@@ -147,7 +152,7 @@ const BlogDetailScreen: React.FC = () => {
             }}
           >
             <PickText size={14} font="semibold" style={{ color: colors.text["body-inverted"] }}>
-              Thử lại
+              {t("NEWS_RETRY")}
             </PickText>
           </TouchableOpacity>
         </PickView>
@@ -157,7 +162,7 @@ const BlogDetailScreen: React.FC = () => {
 
   return (
     <PickView flex={1} backgroundColor={colors.background["bg-primary"]}>
-      <ScreenHeader title="Chi tiết bài viết" />
+      <ScreenHeader title={t("NEWS_ARTICLE_DETAIL_TITLE")} />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Thumbnail */}
@@ -227,7 +232,7 @@ const BlogDetailScreen: React.FC = () => {
                 marginBottom: spacing.s16,
               }}
             >
-              📰 Tin tức liên quan
+              {t("NEWS_RELATED")}
             </PickText>
 
             {recommendBlogs.map((recommendBlog) => (

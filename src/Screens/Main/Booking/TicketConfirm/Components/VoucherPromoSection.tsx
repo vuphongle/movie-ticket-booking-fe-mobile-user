@@ -4,6 +4,7 @@ import { PickView, PickText, PickButton } from "@Components";
 import { SPACING, FONT_SIZE } from "@Constants/theme";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { CouponPreviewResponse } from "@Types/couponTypes";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface VoucherPromoSectionProps {
   voucherCode: string;
@@ -29,61 +30,64 @@ const VoucherPromoSection: React.FC<VoucherPromoSectionProps> = ({
   selectedDetails,
   promoPreview,
   selectedPromo,
-}) => (
-  <PickView>
-    {/* Nhập voucher */}
-    <PickView
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: SPACING.md,
-        gap: SPACING.sm,
-        backgroundColor: "#F9F9F9",
-        borderRadius: 16,
-      }}
-    >
-      <TextInput
-        placeholder="Nhập mã voucher"
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <PickView>
+      {/* Nhập voucher */}
+      <PickView
         style={{
-          flex: 1,
-          borderWidth: 0,
-          paddingHorizontal: 16,
-          paddingVertical: 2,
-          fontSize: FONT_SIZE.md,
-          backgroundColor: "transparent",
-          color: "#2B2B2B",
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: SPACING.md,
+          gap: SPACING.sm,
+          backgroundColor: "#F9F9F9",
+          borderRadius: 16,
         }}
-        value={voucherCode}
-        onChangeText={setVoucherCode}
-      />
+      >
+        <TextInput
+          placeholder={t("BOOKING_VOUCHER_INPUT_PLACEHOLDER")}
+          style={{
+            flex: 1,
+            borderWidth: 0,
+            paddingHorizontal: 16,
+            paddingVertical: 2,
+            fontSize: FONT_SIZE.md,
+            backgroundColor: "transparent",
+            color: "#2B2B2B",
+          }}
+          value={voucherCode}
+          onChangeText={setVoucherCode}
+        />
+        <PickButton
+          title={isCheckingVoucher ? t("BOOKING_VOUCHER_CHECKING") : t("BOOKING_VOUCHER_CHECK")}
+          type="Primary"
+          onPress={handleCheckVoucher}
+          disabled={isCheckingVoucher}
+          style={{ borderRadius: 5, paddingHorizontal: 10, height: 40 }}
+        />
+      </PickView>
+
+      {/* Nút Khuyến mại */}
       <PickButton
-        title={isCheckingVoucher ? "Đang kiểm tra..." : "Kiểm tra"}
+        title={isLoadingPromo ? t("BOOKING_PROMO_LOADING") : t("BOOKING_PROMO_BUTTON")}
         type="Primary"
-        onPress={handleCheckVoucher}
-        disabled={isCheckingVoucher}
-        style={{ borderRadius: 5, paddingHorizontal: 10, height: 40 }}
+        onPress={handlePreviewDisplay}
+        disabled={isLoadingPromo}
+        style={{
+          borderRadius: 5,
+          paddingHorizontal: 10,
+          height: 40,
+          backgroundColor: "#ff8c43",
+          width: 120,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
       />
-    </PickView>
 
-    {/* Nút Khuyến mại */}
-    <PickButton
-      title={isLoadingPromo ? "Đang tải..." : "Khuyến mại"}
-      type="Primary"
-      onPress={handlePreviewDisplay}
-      disabled={isLoadingPromo}
-      style={{
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        height: 40,
-        backgroundColor: "#ff8c43",
-        width: 120,
-        marginTop: 10,
-        marginBottom: 10,
-      }}
-    />
-
-    {/* Voucher đã chọn */}
-    {selectedDetails.length > 0 &&
+      {/* Voucher đã chọn */}
+      {selectedDetails.length > 0 &&
       voucherPreview &&
       voucherPreview.detailResults
         .filter((d) => selectedDetails.includes(d.detailId))
@@ -112,7 +116,9 @@ const VoucherPromoSection: React.FC<VoucherPromoSectionProps> = ({
                   borderColor: "#4CAF50",
                 }}
               >
-                <PickText style={{ fontWeight: "700", color: "#1B5E20" }}>Voucher</PickText>
+                <PickText style={{ fontWeight: "700", color: "#1B5E20" }}>
+                  {t("BOOKING_VOUCHER_BADGE")}
+                </PickText>
               </PickView>
               <PickText style={{ fontWeight: "500", color: "#1B5E20" }}>
                 {gift
@@ -123,48 +129,51 @@ const VoucherPromoSection: React.FC<VoucherPromoSectionProps> = ({
           );
         })}
 
-    {/* Khuyến mại đã chọn */}
-    {selectedPromo && promoPreview && (
-      <PickView
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: SPACING.sm,
-          borderRadius: 8,
-          backgroundColor: "white",
-        }}
-      >
+      {/* Khuyến mại đã chọn */}
+      {selectedPromo && promoPreview && (
         <PickView
           style={{
-            backgroundColor: "#D7E8FF",
-            paddingHorizontal: 6,
-            paddingVertical: 2,
-            borderRadius: 4,
-            borderWidth: 1,
-            borderColor: "#014dba",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: SPACING.sm,
+            borderRadius: 8,
+            backgroundColor: "white",
           }}
         >
-          <PickText style={{ fontWeight: "700", color: "#0D47A1" }}>Khuyến mại</PickText>
+          <PickView
+            style={{
+              backgroundColor: "#D7E8FF",
+              paddingHorizontal: 6,
+              paddingVertical: 2,
+              borderRadius: 4,
+              borderWidth: 1,
+              borderColor: "#014dba",
+            }}
+          >
+            <PickText style={{ fontWeight: "700", color: "#0D47A1" }}>
+              {t("BOOKING_PROMO_BADGE")}
+            </PickText>
+          </PickView>
+          <PickText
+            style={{ fontWeight: "500", color: "#0D47A1", marginLeft: SPACING.sm, flexShrink: 1 }}
+            numberOfLines={2}
+            ellipsizeMode="tail"
+          >
+            {promoPreview?.gifts.find((g) => g.serviceId === selectedPromo.giftServiceId)
+              ? `${
+                  promoPreview.gifts.find((g) => g.serviceId === selectedPromo.giftServiceId)
+                    ?.serviceName
+                } x${
+                  promoPreview.gifts.find((g) => g.serviceId === selectedPromo.giftServiceId)
+                    ?.quantity
+                }`
+              : `- ${formatCurrency(selectedPromo.lineDiscount || 0)}`}
+          </PickText>
         </PickView>
-        <PickText
-          style={{ fontWeight: "500", color: "#0D47A1", marginLeft: SPACING.sm, flexShrink: 1 }}
-          numberOfLines={2}
-          ellipsizeMode="tail"
-        >
-          {promoPreview?.gifts.find((g) => g.serviceId === selectedPromo.giftServiceId)
-            ? `${
-                promoPreview.gifts.find((g) => g.serviceId === selectedPromo.giftServiceId)
-                  ?.serviceName
-              } x${
-                promoPreview.gifts.find((g) => g.serviceId === selectedPromo.giftServiceId)
-                  ?.quantity
-              }`
-            : `- ${formatCurrency(selectedPromo.lineDiscount || 0)}`}
-        </PickText>
-      </PickView>
-    )}
-  </PickView>
-);
+      )}
+    </PickView>
+  );
+};
 
 export default VoucherPromoSection;

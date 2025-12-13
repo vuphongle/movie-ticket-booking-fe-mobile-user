@@ -6,10 +6,12 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { FONT_SIZE, SPACING } from "@Constants/theme";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { FileText } from "lucide-react-native";
+import { useTranslation } from "@Hooks/useTranslation";
 
 const PaymentResultScreen = () => {
   const route = useRoute<any>();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { t } = useTranslation();
 
   const { status, pdfUrl } = route.params || {};
   const [scaleAnim] = useState(new Animated.Value(0));
@@ -40,15 +42,13 @@ const PaymentResultScreen = () => {
               </View>
             </Animated.View>
 
-            <Text style={styles.title}>Thanh toán thành công!</Text>
-            <Text style={styles.subtitle}>
-              Thông tin vé và mã QR đã được gửi qua email của bạn.
-            </Text>
+            <Text style={styles.title}>{t("BOOKING_PAYMENT_SUCCESS_TITLE")}</Text>
+            <Text style={styles.subtitle}>{t("BOOKING_PAYMENT_SUCCESS_SUBTITLE")}</Text>
 
             {pdfUrl && (
               <TouchableOpacity onPress={handleDownloadTicket} style={styles.actionButton}>
                 <FileText size={18} color="#fff" />
-                <Text style={styles.actionButtonText}>Xem vé của bạn</Text>
+                <Text style={styles.actionButtonText}>{t("BOOKING_PAYMENT_VIEW_TICKETS")}</Text>
               </TouchableOpacity>
             )}
 
@@ -56,7 +56,7 @@ const PaymentResultScreen = () => {
               onPress={() => navigation.navigate("Main")}
               style={[styles.primaryButton, { backgroundColor: "#012e6e" }]}
             >
-              <Text style={styles.primaryButtonText}>Quay về trang chủ</Text>
+              <Text style={styles.primaryButtonText}>{t("BOOKING_PAYMENT_BACK_HOME")}</Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -66,15 +66,17 @@ const PaymentResultScreen = () => {
               style={styles.failImage}
               resizeMode="contain"
             />
-            <Text style={[styles.title, { color: "#b91c1c" }]}>Thanh toán thất bại</Text>
-            <Text style={styles.subtitle}>Giao dịch đã bị hủy, hết hạn hoặc không thành công.</Text>
-            <Text style={styles.subtitle}>Vui lòng thử lại sau.</Text>
+            <Text style={[styles.title, { color: "#b91c1c" }]}>
+              {t("BOOKING_PAYMENT_FAILED_TITLE")}
+            </Text>
+            <Text style={styles.subtitle}>{t("BOOKING_PAYMENT_FAILED_MESSAGE")}</Text>
+            <Text style={styles.subtitle}>{t("BOOKING_PAYMENT_FAILED_RETRY")}</Text>
 
             <TouchableOpacity
               onPress={() => navigation.navigate("Main")}
               style={[styles.primaryButton, { backgroundColor: "#012e6e" }]}
             >
-              <Text style={styles.primaryButtonText}>Quay về trang chủ</Text>
+              <Text style={styles.primaryButtonText}>{t("BOOKING_PAYMENT_BACK_HOME")}</Text>
             </TouchableOpacity>
           </>
         )}

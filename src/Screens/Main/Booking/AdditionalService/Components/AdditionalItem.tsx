@@ -6,10 +6,12 @@ import { COLORS, FONT_SIZE, SPACING } from "@Constants/theme";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { useAdditionalServicePrice } from "@Hooks/additionalService/useAdditionalService";
 import { useBookingStore } from "@Store/useBookingStore";
+import { useTranslation } from "@Hooks/useTranslation";
 
 const AdditionalItem = ({ item, updateServiceQty }: any) => {
   const { price, isLoading } = useAdditionalServicePrice(item.id);
   const { updateServicePrice } = useBookingStore();
+  const { t } = useTranslation();
 
   const displayPrice = price?.price ?? 0;
 
@@ -27,7 +29,7 @@ const AdditionalItem = ({ item, updateServiceQty }: any) => {
         <PickText style={styles.itemName}>{item.name}</PickText>
         {item.description && <PickText style={styles.itemDesc}>{item.description}</PickText>}
         <PickText style={styles.itemPrice}>
-          {isLoading ? "Đang tải..." : formatCurrency(displayPrice)}
+          {isLoading ? t("BOOKING_ADDITIONAL_ITEM_LOADING") : formatCurrency(displayPrice)}
         </PickText>
       </PickView>
 

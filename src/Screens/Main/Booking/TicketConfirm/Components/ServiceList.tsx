@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { PickView, PickText } from "@Components";
 import { formatCurrency } from "@Utils/currencyUtils";
 import { SPACING, FONT_SIZE } from "@Constants/theme";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface ServiceItem {
   id: number;
@@ -16,6 +17,7 @@ interface ServiceListProps {
 }
 
 const ServiceList: React.FC<ServiceListProps> = ({ services }) => {
+  const { t } = useTranslation();
   const selectedServices = services.filter((s) => s.quantity > 0);
   if (!selectedServices.length) return null;
 
@@ -41,7 +43,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ services }) => {
           color: "#012e6e",
         }}
       >
-        Dịch vụ đi kèm
+        {t("BOOKING_SERVICES_TITLE")}
       </PickText>
 
       {selectedServices.map((s) => (

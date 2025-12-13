@@ -25,6 +25,7 @@ import { useBookingStore } from "@Store/useBookingStore";
 import BookingSummary from "@Screens/Main/Booking/BaseComponents/BookingSummary";
 import Svg, { Path } from "react-native-svg";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
+import { useTranslation } from "@Hooks/useTranslation";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList, "AdditionalService">;
 
@@ -52,6 +53,7 @@ const SelectSeatScreen: React.FC = () => {
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [showNoSeatModal, setShowNoSeatModal] = useState(false);
   const [showHeldSeatModal, setShowHeldSeatModal] = useState(false);
+  const { t } = useTranslation();
 
   const [mappedSeats, setMappedSeats] = useState<Seat[]>([]);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
@@ -107,9 +109,11 @@ const SelectSeatScreen: React.FC = () => {
       let ageNumber = movie.age.replace("T", "");
       if (movie.age === "K") ageNumber = "0";
 
-      setAgeTitle(`Xác nhận mua vé cho người có độ tuổi phù hợp (${movie.age})`);
+      setAgeTitle(t("BOOKING_SELECT_SEAT_AGE_TITLE", { age: movie.age }));
       setAgeMessage(
-        `Tôi xác nhận mua vé xem phim này cho người có độ tuổi từ ${ageNumber} tuổi trở lên và đồng ý cung cấp giấy tờ tùy thân để xác minh độ tuổi.`
+        t("BOOKING_SELECT_SEAT_AGE_MESSAGE", {
+          age: ageNumber,
+        })
       );
       setShowAgeModal(true);
       return;
@@ -144,7 +148,7 @@ const SelectSeatScreen: React.FC = () => {
       navigation.navigate("AdditionalService");
     } catch (err) {
       console.error(err);
-      Alert.alert("Lỗi", "Không thể giữ ghế, vui lòng thử lại.");
+      Alert.alert(t("COMMON_ERROR"), t("BOOKING_SELECT_SEAT_RESERVE_ERROR"));
     } finally {
       setIsPending(false);
     }
@@ -170,7 +174,7 @@ const SelectSeatScreen: React.FC = () => {
       resizeMode="cover"
     >
       <PickView style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.3)" }}>
-        <ScreenHeader title="Chọn ghế" />
+        <ScreenHeader title={t("BOOKING_SELECT_SEAT_TITLE")} />
 
         <ScrollView
           contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}
@@ -190,7 +194,7 @@ const SelectSeatScreen: React.FC = () => {
                     fill="transparent"
                   />
                 </Svg>
-                <PickText style={styles.screenLabel}>MÀN HÌNH</PickText>
+                <PickText style={styles.screenLabel}>{t("BOOKING_SELECT_SEAT_SCREEN_LABEL")}</PickText>
               </View>
               <SeatMap seats={mappedSeats} selectedSeats={seats} onSelectSeat={toggleSeat} />
               <SeatLegend />
@@ -206,12 +210,12 @@ const SelectSeatScreen: React.FC = () => {
         message={ageMessage}
         buttons={[
           {
-            text: "Hủy",
+            text: t("COMMON_CANCEL"),
             type: "cancel",
             onPress: () => setShowAgeModal(false),
           },
           {
-            text: "Đồng ý",
+            text: t("COMMON_AGREE"),
             type: "primary",
             onPress: () => {
               setShowAgeModal(false);
@@ -224,11 +228,11 @@ const SelectSeatScreen: React.FC = () => {
       {/* Modal giới hạn 8 ghế */}
       <UniversalConfirmModal
         visible={showLimitModal}
-        title="Giới hạn"
-        message="Bạn chỉ được chọn tối đa 8 ghế."
+        title={t("BOOKING_SELECT_SEAT_LIMIT_TITLE")}
+        message={t("BOOKING_SELECT_SEAT_LIMIT_MESSAGE")}
         buttons={[
           {
-            text: "OK",
+            text: t("COMMON_OK"),
             type: "primary",
             onPress: () => setShowLimitModal(false),
           },
@@ -238,17 +242,21 @@ const SelectSeatScreen: React.FC = () => {
       {/* Modal chưa chọn ghế */}
       <UniversalConfirmModal
         visible={showNoSeatModal}
-        title="Chọn ghế"
-        message="Vui lòng chọn ít nhất 1 ghế."
-        buttons={[{ text: "OK", type: "primary", onPress: () => setShowNoSeatModal(false) }]}
+        title={t("BOOKING_SELECT_SEAT_NO_SELECTION_TITLE")}
+        message={t("BOOKING_SELECT_SEAT_NO_SELECTION_MESSAGE")}
+        buttons={[
+          { text: t("COMMON_OK"), type: "primary", onPress: () => setShowNoSeatModal(false) },
+        ]}
       />
 
       {/* Modal ghế đang được giữ */}
       <UniversalConfirmModal
         visible={showHeldSeatModal}
-        title="Ghế đang được giữ"
-        message="Một số ghế đã bị giữ hoặc đã được đặt. Vui lòng chọn lại."
-        buttons={[{ text: "OK", type: "primary", onPress: () => setShowHeldSeatModal(false) }]}
+        title={t("BOOKING_SELECT_SEAT_HELD_TITLE")}
+        message={t("BOOKING_SELECT_SEAT_HELD_MESSAGE")}
+        buttons={[
+          { text: t("COMMON_OK"), type: "primary", onPress: () => setShowHeldSeatModal(false) },
+        ]}
       />
     </ImageBackground>
   );

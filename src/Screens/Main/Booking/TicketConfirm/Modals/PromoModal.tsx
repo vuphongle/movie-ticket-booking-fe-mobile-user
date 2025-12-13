@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Alert, Image } from "react-na
 import { PickButton } from "@Components";
 import { SPACING, FONT_SIZE } from "@Constants/theme";
 import { formatCurrency } from "@Utils/currencyUtils";
+import { useTranslation } from "@Hooks/useTranslation";
 
 interface PromoModalProps {
   visible: boolean;
@@ -37,6 +38,8 @@ const PromoModal: React.FC<PromoModalProps> = ({
   setPromoDiscount,
   setVisible,
 }) => {
+  const { t } = useTranslation();
+  const successKeyword = "thành công";
   if (!visible || !promoPreview) return null;
 
   return (
@@ -71,7 +74,7 @@ const PromoModal: React.FC<PromoModalProps> = ({
             textAlign: "center",
           }}
         >
-          Chọn khuyến mại
+          {t("BOOKING_PROMO_SELECT_TITLE")}
         </Text>
 
         <ScrollView
@@ -79,7 +82,7 @@ const PromoModal: React.FC<PromoModalProps> = ({
           showsVerticalScrollIndicator={false}
         >
           {promoPreview.detailResults
-            .filter((detail: DetailType) => detail.reason.includes("thành công"))
+            .filter((detail: DetailType) => detail.reason.includes(successKeyword))
             .sort((a: DetailType, b: DetailType) => {
               const aUsedUp =
                 a.limitQuantityApplied != null && a.detailUsedCount >= a.limitQuantityApplied;
@@ -143,7 +146,7 @@ const PromoModal: React.FC<PromoModalProps> = ({
                       }}
                     >
                       <Text style={{ color: "#FFF", fontWeight: "bold", fontSize: 10 }}>
-                        Lựa chọn Tốt nhất
+                        {t("BOOKING_PROMO_BEST_BADGE")}
                       </Text>
                     </View>
                   )}
@@ -155,7 +158,7 @@ const PromoModal: React.FC<PromoModalProps> = ({
                     />
                     <View style={{ flex: 1 }}>
                       <Text style={{ fontWeight: "600", color: "#012e6e" }}>
-                        {detail.reason.replace("thành công", "").trim()}
+                        {detail.reason.replace(successKeyword, "").trim()}
                       </Text>
 
                       {gift ? (
@@ -191,15 +194,19 @@ const PromoModal: React.FC<PromoModalProps> = ({
                         </View>
                       ) : (
                         <Text style={{ color: "#555", marginTop: 4 }}>
-                          Giảm: {formatCurrency(detail.lineDiscount || 0)}
+                          {t("BOOKING_PROMO_DISCOUNT", {
+                            amount: formatCurrency(detail.lineDiscount || 0),
+                          })}
                         </Text>
                       )}
 
                       {detail.limitQuantityApplied != null && (
                         <View style={{ marginTop: 4 }}>
                           <Text style={{ fontSize: FONT_SIZE.sm, color: "#555" }}>
-                            Giới hạn: {detail.limitQuantityApplied} | Đã dùng:{" "}
-                            {detail.detailUsedCount}
+                            {t("BOOKING_PROMO_USAGE", {
+                              limit: detail.limitQuantityApplied,
+                              used: detail.detailUsedCount,
+                            })}
                           </Text>
                           <View
                             style={{
@@ -232,11 +239,11 @@ const PromoModal: React.FC<PromoModalProps> = ({
 
         <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 10 }}>
           <PickButton
-            title="Áp dụng"
+            title={t("COMMON_APPLY")}
             type="Primary"
             onPress={() => {
               if (!selectedPromo) {
-                Alert.alert("Chọn khuyến mại", "Vui lòng chọn một khuyến mại.");
+                Alert.alert(t("BOOKING_PROMO_SELECT_TITLE"), t("BOOKING_PROMO_SELECT_PROMPT"));
                 return;
               }
               setPromoDiscount(selectedPromo.lineDiscount || 0);

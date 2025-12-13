@@ -10,6 +10,7 @@ import movie from "./movie";
 import news from "./news";
 import orders from "./orders";
 import validation from "./validation";
+import booking from "./booking";
 
 export default {
   ...common,
@@ -24,4 +25,5 @@ export default {
   ...news,
   ...orders,
   ...validation,
+  ...booking,
 };
