@@ -70,7 +70,7 @@ export const ChatWidget: React.FC = () => {
       navigation.navigate("SelectSeat", {
         showtimeId: showtime.id,
         cinema: {
-          id: showtime.cinemaId,
+          id: showtime.cinemaId ?? 0,
           name: showtime.cinemaName ?? "",
           location: showtime.cinemaAddress ?? "",
         },
@@ -102,14 +102,22 @@ export const ChatWidget: React.FC = () => {
       <UniversalConfirmModal
         visible={showLoginModal}
         title="Đăng nhập để đặt vé"
-        description="Vui lòng đăng nhập để tiếp tục chọn ghế và thanh toán."
-        confirmText="Đăng nhập"
-        cancelText="Đóng"
-        onConfirm={() => {
-          setShowLoginModal(false);
-          navigation.navigate("Login");
-        }}
-        onCancel={() => setShowLoginModal(false)}
+        message="Vui lòng đăng nhập để tiếp tục chọn ghế và thanh toán."
+        buttons={[
+          {
+            text: "Đóng",
+            type: "cancel",
+            onPress: () => setShowLoginModal(false),
+          },
+          {
+            text: "Đăng nhập",
+            type: "primary",
+            onPress: () => {
+              setShowLoginModal(false);
+              navigation.navigate("Login");
+            },
+          },
+        ]}
       />
     </>
   );
