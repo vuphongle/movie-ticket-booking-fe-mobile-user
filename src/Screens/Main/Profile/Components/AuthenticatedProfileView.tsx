@@ -101,27 +101,6 @@ export const AuthenticatedProfileView: React.FC = () => {
       onPress: () => navigation.navigate("OrderHistory"),
     },
     {
-      icon: "star-outline",
-      title: t("PROFILE_MENU_MEMBER_POINTS_TITLE"),
-      subtitle: t("PROFILE_MENU_MEMBER_POINTS_SUBTITLE"),
-      color: "#ffd700",
-      onPress: () => console.log("Member points"),
-    },
-    {
-      icon: "card-outline",
-      title: t("PROFILE_MENU_PAYMENT_METHODS_TITLE"),
-      subtitle: t("PROFILE_MENU_PAYMENT_METHODS_SUBTITLE"),
-      color: "#4ecdc4",
-      onPress: () => console.log("Payment methods"),
-    },
-    {
-      icon: "notifications-outline",
-      title: t("PROFILE_MENU_NOTIFICATIONS_TITLE"),
-      subtitle: t("PROFILE_MENU_NOTIFICATIONS_SUBTITLE"),
-      color: "#ff6b6b",
-      onPress: () => console.log("Notifications"),
-    },
-    {
       icon: "settings-outline",
       title: t("PROFILE_MENU_SETTINGS_TITLE"),
       subtitle: t("PROFILE_MENU_SETTINGS_SUBTITLE"),

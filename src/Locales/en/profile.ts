@@ -9,12 +9,6 @@ export default {
   PROFILE_MENU_CHANGE_PASSWORD_SUBTITLE: "Update your login password",
   PROFILE_MENU_ORDER_HISTORY_TITLE: "Order history",
   PROFILE_MENU_ORDER_HISTORY_SUBTITLE: "View booked tickets",
-  PROFILE_MENU_MEMBER_POINTS_TITLE: "Member points",
-  PROFILE_MENU_MEMBER_POINTS_SUBTITLE: "Earn points and rewards",
-  PROFILE_MENU_PAYMENT_METHODS_TITLE: "Payment methods",
-  PROFILE_MENU_PAYMENT_METHODS_SUBTITLE: "Manage cards and wallets",
-  PROFILE_MENU_NOTIFICATIONS_TITLE: "Notifications",
-  PROFILE_MENU_NOTIFICATIONS_SUBTITLE: "Notification preferences",
   PROFILE_MENU_SETTINGS_TITLE: "Settings",
   PROFILE_MENU_SETTINGS_SUBTITLE: "App preferences",
 
