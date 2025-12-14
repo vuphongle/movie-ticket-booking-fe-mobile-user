@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieDetail">;
 
@@ -16,7 +17,7 @@ const MovieListScreen = ({ route }: any) => {
   const { type, title, emptyText } = route.params;
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const { movies, isLoading, error } = useMovieList({ type });
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const normalizedTitle = String(title || "").toLowerCase();
 
   if (isLoading)
@@ -69,7 +70,7 @@ const MovieListScreen = ({ route }: any) => {
 
       <PickView style={styles.contentContainer}>
         <PickText style={styles.title} numberOfLines={2}>
-          {item.name}
+          {getMovieTitle(item, language)}
         </PickText>
         <PickText style={styles.genre}>{item.genres?.map((g: any) => g.name).join(", ")}</PickText>
         <PickText style={styles.duration}>
