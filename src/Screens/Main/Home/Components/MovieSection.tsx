@@ -8,12 +8,14 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieDetail">;
 
 interface Movie {
   id: string;
   name: string;
+  nameEn?: string | null;
   slug: string;
   genre: string;
   age: MovieAge;
@@ -31,7 +33,7 @@ interface MovieSectionProps {
 
 const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) => {
   const navigation = useNavigation<MovieSectionNavigationProp>();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   return (
     <PickView style={styles.container}>
       <PickView row justifySpaceBetween alignCenter style={styles.header}>
@@ -51,7 +53,7 @@ const MovieSection: React.FC<MovieSectionProps> = ({ title, movies, onSeeAll }) 
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
-            name={movie.name}
+            name={getMovieTitle(movie, language)}
             genre={movie.genre}
             age={movie.age}
             graphics={movie.graphics}

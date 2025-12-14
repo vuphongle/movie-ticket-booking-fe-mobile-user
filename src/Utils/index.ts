@@ -16,3 +16,5 @@ export {
 export { transformUserToUserInfo, getUserPhone, getUserDob } from "./userTransformUtils";
 
 export { getUserDisplayName, getFullAvatarUrl } from "./authHelpers";
+
+export { getMovieTitle } from "./movieUtils";

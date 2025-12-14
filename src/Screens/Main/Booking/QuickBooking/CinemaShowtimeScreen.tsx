@@ -12,6 +12,7 @@ import { RootStackParamList } from "@Types/navigationTypes";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import UniversalConfirmModal from "@Components/Modals/UniversalConfirmModal";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 type NavProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -22,7 +23,7 @@ const CinemaShowtimeScreen = () => {
   const route = useRoute();
   const { cinemaId, cinemaName } = route.params as any;
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const { state } = useAuth();
   const { isAuthenticated } = state;
@@ -139,6 +140,7 @@ const CinemaShowtimeScreen = () => {
 
         {/* --- Movie list --- */}
         {movies.map((movie: any) => {
+          const displayName = getMovieTitle(movie, language);
           const showtimes = movie.showtimes.filter((st: any) => {
             const [y, m, d] = st.date;
             const dt = new Date(y, m - 1, d);
@@ -187,7 +189,7 @@ const CinemaShowtimeScreen = () => {
                       marginBottom: 16,
                     }}
                   >
-                    {movie.name}
+                    {displayName}
                   </PickText>
 
                   <View style={{ flexDirection: "row", flexWrap: "wrap", gap: SPACING.xs }}>

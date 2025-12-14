@@ -13,6 +13,7 @@ import MovieSection from "@Screens/Main/Home/Components/MovieSection";
 import { movieService } from "@Services/movie/movieService";
 import { COLORS, SPACING, FONT_SIZE } from "@Constants/theme";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
 
@@ -28,6 +29,7 @@ enum MovieAge {
 interface MovieItem {
   id: string;
   name: string;
+  nameEn?: string | null;
   genre: string;
   age: MovieAge;
   slug: string;
@@ -43,7 +45,7 @@ const MovieDetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const { colors, spacing } = useThemedStyles();
   const { id, slug } = route.params as { id: string; slug: string };
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const [movie, setMovie] = useState<MovieContentProps["movie"] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -72,7 +74,7 @@ const MovieDetailScreen: React.FC = () => {
         setNowShowingMovies(
           moviesNow.map((m) => ({
             id: m.id.toString(),
-            name: m.name,
+            name: getMovieTitle(m, language),
             genre: m.genres.map((g) => g.name).join(", "),
             age: m.age as MovieAge,
             slug: m.slug,
@@ -93,7 +95,7 @@ const MovieDetailScreen: React.FC = () => {
     };
 
     fetchData();
-  }, [id, slug]);
+  }, [id, slug, language, t]);
 
   if (loading)
     return (
@@ -119,6 +121,8 @@ const MovieDetailScreen: React.FC = () => {
       </PickView>
     );
 
+  const displayMovieName = getMovieTitle(movie, language);
+
   return (
     <PickView style={styles.container}>
       <ScreenHeader title={t("MOVIE_DETAIL_TITLE")} />
@@ -139,7 +143,7 @@ const MovieDetailScreen: React.FC = () => {
               onPress={() =>
                 navigation.navigate("MovieRating", {
                   movieId: Number(id),
-                  movieName: movie.name,
+                  movieName: displayMovieName,
                   reviews,
                 })
               }
@@ -168,7 +172,7 @@ const MovieDetailScreen: React.FC = () => {
             onPress={() =>
               navigation.navigate("MovieShowtime", {
                 movieId: Number(id),
-                movieName: movie.name,
+                movieName: displayMovieName,
                 slug,
               })
             }

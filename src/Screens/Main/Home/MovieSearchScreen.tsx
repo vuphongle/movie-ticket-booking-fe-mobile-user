@@ -9,6 +9,7 @@ import debounce from "lodash.debounce";
 import { useNavigation } from "@react-navigation/native";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 interface MovieWithStatus extends Movie {
   status?: "SHOWING" | "COMING_SOON";
@@ -20,7 +21,7 @@ const MovieSearchScreen = () => {
   const [keyword, setKeyword] = useState("");
   const [movies, setMovies] = useState<MovieWithStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const handleSearch = async (text: string) => {
     setKeyword(text);
@@ -225,7 +226,7 @@ const MovieSearchScreen = () => {
 
             <PickView flex={1}>
               <PickText style={{ fontSize: 16, fontWeight: "700", marginBottom: 4 }}>
-                {movie.name}
+                {getMovieTitle(movie, language)}
               </PickText>
 
               <PickText style={{ color: "#999", marginBottom: 4 }}></PickText>

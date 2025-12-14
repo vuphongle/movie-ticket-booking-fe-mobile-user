@@ -1,5 +1,6 @@
 import type { Order, OrderSummary } from "@Types/orderTypes";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 /**
  * Utility functions for Order data manipulation
@@ -26,7 +27,7 @@ export const useOrderUtils = () => {
     return {
       totalTickets: order.ticketItems.length,
       totalServices: order.serviceItems.length,
-      movieName: movie.name,
+      movieName: getMovieTitle(movie, language),
       cinemaName: cinema.name,
       showDate,
       showTime: order.showtime.startTime,
