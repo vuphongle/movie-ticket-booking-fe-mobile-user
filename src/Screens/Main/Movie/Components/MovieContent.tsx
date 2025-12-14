@@ -4,6 +4,7 @@ import { PickView, PickText } from "@Components";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 export interface Person {
   id: number;
@@ -35,7 +36,12 @@ export interface MovieContentProps {
 const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
   const { colors, spacing } = useThemedStyles();
   const screenWidth = Dimensions.get("window").width;
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+
+  const primaryTitle = getMovieTitle(movie, language);
+  const secondaryTitle = language.toLowerCase().startsWith("en") ? movie.name : movie.nameEn;
+  const showSecondaryTitle =
+    !!secondaryTitle && secondaryTitle.trim() && secondaryTitle.trim() !== primaryTitle.trim();
 
   // Extract YouTube video ID from URL
   const getYouTubeVideoId = (url: string): string | null => {
@@ -79,14 +85,16 @@ const MovieDetailScreen: React.FC<MovieContentProps> = ({ movie }) => {
         <PickView padding={spacing.s16}>
           <PickView marginBottom={6}>
             <PickText size={22} font="bold" style={{ color: colors.text["heading-primary"] }}>
-              {movie.name}
+              {primaryTitle}
             </PickText>
-            <PickText
-              size={15}
-              style={{ color: colors.text.body, fontStyle: "italic", marginBottom: 12 }}
-            >
-              {movie.nameEn}
-            </PickText>
+            {showSecondaryTitle && (
+              <PickText
+                size={15}
+                style={{ color: colors.text.body, fontStyle: "italic", marginBottom: 12 }}
+              >
+                {secondaryTitle}
+              </PickText>
+            )}
 
             <PickView row gap={6} flexWrap="wrap">
               {infoBoxes.map((box, i) => (

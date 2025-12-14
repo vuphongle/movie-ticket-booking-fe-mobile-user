@@ -11,13 +11,14 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@Types/navigationTypes";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 type MovieSectionNavigationProp = NativeStackNavigationProp<RootStackParamList, "MovieList">;
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<MovieSectionNavigationProp>();
   const { colors } = useThemedStyles();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const mockBanners = [
     {
@@ -70,7 +71,7 @@ const HomeScreen: React.FC = () => {
   const formatMovies = (movies: typeof nowShowing) => {
     const formatted = movies.map((m) => ({
       id: m.id.toString(),
-      name: m.name,
+      name: getMovieTitle(m, language),
       slug: m.slug,
       genre: m.genres.map((g) => g.name).join(", "),
       rating: m.rating,

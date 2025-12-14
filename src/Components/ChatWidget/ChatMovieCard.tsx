@@ -4,6 +4,7 @@ import type { RecommendedMovie, RecommendedShowtime } from "@Types/chatTypes";
 import { PickView, PickText } from "@Components";
 import { parseBackendDate, toDisplayDate } from "@Utils/dateUtils";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 interface ChatMovieCardProps {
   movie: RecommendedMovie;
@@ -16,7 +17,7 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({
   onPress,
   onShowtimePress,
 }) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   const handlePress = () => {
     const movieId = movie.movieId.toString();
@@ -68,7 +69,7 @@ export const ChatMovieCard: React.FC<ChatMovieCardProps> = ({
   };
 
   const posterUrl = movie.poster || "https://via.placeholder.com/120x160?text=No+Image";
-  const movieName = movie.name || t("CHAT_MOVIE_NO_TITLE");
+  const movieName = getMovieTitle(movie, language) || t("CHAT_MOVIE_NO_TITLE");
   const rating = typeof movie.rating === "number" ? movie.rating.toFixed(1) : null;
 
   return (

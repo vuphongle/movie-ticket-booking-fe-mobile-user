@@ -3,10 +3,12 @@ import { View, Image } from "react-native";
 import { PickView, PickText } from "@Components";
 import { FONT_SIZE, SPACING } from "@Constants/theme";
 import { useTranslation } from "@Hooks/useTranslation";
+import { getMovieTitle } from "@Utils";
 
 interface MovieInfoCardProps {
   movie?: {
     name: string;
+    nameEn?: string | null;
     poster: string;
     age: string;
     duration: number;
@@ -24,8 +26,9 @@ const MovieInfoCard: React.FC<MovieInfoCardProps> = ({
   showtime,
   format,
 }) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   if (!movie) return null;
+  const displayMovieName = getMovieTitle(movie, language);
 
   return (
     <PickView
@@ -61,7 +64,7 @@ const MovieInfoCard: React.FC<MovieInfoCardProps> = ({
                 flexShrink: 1,
               }}
             >
-              {movie.name}
+              {displayMovieName}
             </PickText>
             <View style={{ alignItems: "flex-end" }}>
               <PickText
