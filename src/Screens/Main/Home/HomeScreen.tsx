@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, StyleSheet, ActivityIndicator } from "react-native";
-import { PickView } from "@Components";
+import { PickView, ChatWidget } from "@Components";
 import { SPACING, RADIUS } from "@Constants/theme";
 import Header from "./Components/Header";
 import Banner from "./Components/Banner";
@@ -85,46 +85,49 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background["bg-secondary"] }}
-      showsVerticalScrollIndicator={false}
-      bounces={false}
-      contentContainerStyle={{ paddingBottom: SPACING.xxl * 2 }}
-    >
-      <Header />
-      <PickView
-        flex={1}
-        style={styles.contentContainer}
-        borderTopRadius={RADIUS.xl}
-        backgroundColor={colors.background["bg-secondary"]}
+    <>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: colors.background["bg-secondary"] }}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        contentContainerStyle={{ paddingBottom: SPACING.xxl * 2 }}
       >
-        <Banner banners={mockBanners} />
+        <Header />
+        <PickView
+          flex={1}
+          style={styles.contentContainer}
+          borderTopRadius={RADIUS.xl}
+          backgroundColor={colors.background["bg-secondary"]}
+        >
+          <Banner banners={mockBanners} />
 
-        <MovieSection
-          title={t("HOME_SECTION_NOW_SHOWING")}
-          movies={formatMovies(nowShowing.slice(0, 7))}
-          onSeeAll={() =>
-            navigation.navigate("MovieList", {
-              type: "nowShowing",
-              title: t("HOME_SECTION_NOW_SHOWING"),
-              emptyText: t("HOME_SECTION_NOW_SHOWING_EMPTY"),
-            })
-          }
-        />
+          <MovieSection
+            title={t("HOME_SECTION_NOW_SHOWING")}
+            movies={formatMovies(nowShowing.slice(0, 7))}
+            onSeeAll={() =>
+              navigation.navigate("MovieList", {
+                type: "nowShowing",
+                title: t("HOME_SECTION_NOW_SHOWING"),
+                emptyText: t("HOME_SECTION_NOW_SHOWING_EMPTY"),
+              })
+            }
+          />
 
-        <MovieSection
-          title={t("HOME_SECTION_COMING_SOON")}
-          movies={formatMovies(comingSoon.slice(0, 7))}
-          onSeeAll={() =>
-            navigation.navigate("MovieList", {
-              type: "comingSoon",
-              title: t("HOME_SECTION_COMING_SOON"),
-              emptyText: t("HOME_SECTION_COMING_SOON_EMPTY"),
-            })
-          }
-        />
-      </PickView>
-    </ScrollView>
+          <MovieSection
+            title={t("HOME_SECTION_COMING_SOON")}
+            movies={formatMovies(comingSoon.slice(0, 7))}
+            onSeeAll={() =>
+              navigation.navigate("MovieList", {
+                type: "comingSoon",
+                title: t("HOME_SECTION_COMING_SOON"),
+                emptyText: t("HOME_SECTION_COMING_SOON_EMPTY"),
+              })
+            }
+          />
+        </PickView>
+      </ScrollView>
+      <ChatWidget />
+    </>
   );
 };
 
