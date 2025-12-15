@@ -17,7 +17,7 @@ export default {
   HOME_SEARCH_TAG_SHOWING: "Đang chiếu",
   HOME_SEARCH_TAG_COMING_SOON: "Sắp chiếu",
   HOME_SEARCH_EMPTY_TITLE: "Úi, không tìm thấy phim rồi!",
-  HOME_SEARCH_EMPTY_SUBTITLE: "Bạn thử lại từ khóa khác nha",
+  HOME_SEARCH_EMPTY_SUBTITLE: "Bạn thử lại từ khóa hoặc ảnh khác nha",
   HOME_SEARCH_EMPTY_ACTION: "Tìm kiếm phim",
   HOME_SEARCH_BUTTON_BOOK: "Đặt vé",
   HOME_SEARCH_BUTTON_INFO: "Thông tin",

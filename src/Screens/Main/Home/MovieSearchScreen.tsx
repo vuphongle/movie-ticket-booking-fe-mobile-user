@@ -25,6 +25,7 @@ const MovieSearchScreen = () => {
   const [movies, setMovies] = useState<MovieWithStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [isImageSearch, setIsImageSearch] = useState(false);
   const [statusSets, setStatusSets] = useState<{ showing: Set<number>; coming: Set<number> }>();
   const { t, language } = useTranslation();
   const loadStatusSets = useCallback(async () => {
@@ -70,6 +71,7 @@ const MovieSearchScreen = () => {
       const trimmed = text.trim();
 
       setKeyword(text);
+      setIsImageSearch(false);
 
       if (!trimmed) {
         setMovies([]);
@@ -110,6 +112,7 @@ const MovieSearchScreen = () => {
     setKeyword("");
     setMovies([]);
     setHasSearched(false);
+    setIsImageSearch(false);
     debouncedSearch.cancel();
   }, [debouncedSearch]);
 
@@ -120,6 +123,8 @@ const MovieSearchScreen = () => {
     const picked = res.assets[0];
     if (!picked?.uri) return;
 
+    setKeyword("");
+    setIsImageSearch(true);
     setIsLoading(true);
     setHasSearched(true);
 
@@ -141,8 +146,12 @@ const MovieSearchScreen = () => {
   }, [loadStatusSets, statusSets, withStatus]);
 
   const showEmptyState = useMemo(
-    () => !isLoading && hasSearched && keyword.trim().length > 0 && movies.length === 0,
-    [hasSearched, isLoading, keyword, movies.length]
+    () =>
+      !isLoading &&
+      hasSearched &&
+      (keyword.trim().length > 0 || isImageSearch) &&
+      movies.length === 0,
+    [hasSearched, isLoading, keyword, movies.length, isImageSearch]
   );
 
   useEffect(() => {
