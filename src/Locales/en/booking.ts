@@ -34,8 +34,7 @@ export default {
   BOOKING_SELECT_SEAT_NO_SELECTION_TITLE: "Select seats",
   BOOKING_SELECT_SEAT_NO_SELECTION_MESSAGE: "Please select at least one seat.",
   BOOKING_SELECT_SEAT_HELD_TITLE: "Seats unavailable",
-  BOOKING_SELECT_SEAT_HELD_MESSAGE:
-    "Some seats are currently held or booked. Please choose again.",
+  BOOKING_SELECT_SEAT_HELD_MESSAGE: "Some seats are currently held or booked. Please choose again.",
   BOOKING_SELECT_SEAT_AGE_TITLE: "Confirm age requirement ({{age}})",
   BOOKING_SELECT_SEAT_AGE_MESSAGE:
     "I confirm these tickets are for viewers aged {{age}} or older and can provide ID if required.",
@@ -99,12 +98,13 @@ export default {
   BOOKING_PAYMENT_FAILED_TITLE: "Payment failed",
   BOOKING_PAYMENT_FAILED_MESSAGE: "The transaction was canceled, expired, or unsuccessful.",
   BOOKING_PAYMENT_FAILED_RETRY: "Please try again later.",
-  BOOKING_PAYMENT_SUCCESS_ALERT_MESSAGE:
-    "Payment completed! Please check your tickets in history.",
+  BOOKING_PAYMENT_SUCCESS_ALERT_MESSAGE: "Payment completed! Please check your tickets in history.",
   BOOKING_PAYMENT_FAILED_ALERT_MESSAGE: "Payment unsuccessful. Please try again.",
   BOOKING_PAYMENT_CANCEL_TITLE: "Cancel payment",
-  BOOKING_PAYMENT_CANCEL_MESSAGE: "Are you sure you want to cancel? The transaction will be aborted.",
+  BOOKING_PAYMENT_CANCEL_MESSAGE:
+    "Are you sure you want to cancel? The transaction will be aborted.",
   BOOKING_PAYMENT_CONTINUE_BUTTON: "Continue paying",
   BOOKING_PAYMENT_CANCEL_BUTTON: "Cancel payment",
-  BOOKING_PAYMENT_WEBVIEW_ERROR: "Could not load the payment page. Check your connection and try again.",
+  BOOKING_PAYMENT_WEBVIEW_ERROR:
+    "Could not load the payment page. Check your connection and try again.",
 };

@@ -38,4 +38,20 @@ export default {
   COMMON_WEEKDAY_FRI: "Friday",
   COMMON_WEEKDAY_SAT: "Saturday",
   COMMON_WEEKDAY_SUN: "Sunday",
+
+  // ===== SEARCH BY IMAGE  =====
+  SEARCH_BY_IMAGE: "Search by image",
+  PLEASE_UPLOAD_ONE_OR_MORE_IMAGES_TO_SEARCH_FOR_MATCHING_MOVIES:
+    "Upload one or more images to find matching movies.",
+  UPLOAD_IMAGES: "Upload images",
+  UPLOAD_MORE_IMAGES: "Upload more images",
+  SEARCH: "Search",
+  SEARCH_RESULTS: "Search results",
+  NO_RESULTS_FOUND: "No results found",
+  SEARCH_WITH_OTHER_IMAGES: "Search with other images",
+  MOVIE_DURATION: "Duration",
+  CLOSE: "Close",
+  EARCH_IMAGE_LIMIT_TITLE: "Image limit reached",
+  SEARCH_IMAGE_LIMIT_MESSAGE: "You can only select up to {{max}} images.",
+  MOVIE_DURATION_UNIT: "m",
 };

@@ -88,46 +88,46 @@ const VoucherPromoSection: React.FC<VoucherPromoSectionProps> = ({
 
       {/* Voucher đã chọn */}
       {selectedDetails.length > 0 &&
-      voucherPreview &&
-      voucherPreview.detailResults
-        .filter((d) => selectedDetails.includes(d.detailId))
-        .map((d) => {
-          const gift = voucherPreview.gifts.find((g) => g.serviceId === d.giftServiceId);
-          return (
-            <PickView
-              key={d.detailId}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: SPACING.sm,
-                borderRadius: 8,
-                backgroundColor: "white",
-                marginBottom: 4,
-              }}
-            >
+        voucherPreview &&
+        voucherPreview.detailResults
+          .filter((d) => selectedDetails.includes(d.detailId))
+          .map((d) => {
+            const gift = voucherPreview.gifts.find((g) => g.serviceId === d.giftServiceId);
+            return (
               <PickView
+                key={d.detailId}
                 style={{
-                  backgroundColor: "#DFF5E1",
-                  paddingHorizontal: 6,
-                  paddingVertical: 2,
-                  borderRadius: 4,
-                  borderWidth: 1,
-                  borderColor: "#4CAF50",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: SPACING.sm,
+                  borderRadius: 8,
+                  backgroundColor: "white",
+                  marginBottom: 4,
                 }}
               >
-                <PickText style={{ fontWeight: "700", color: "#1B5E20" }}>
-                  {t("BOOKING_VOUCHER_BADGE")}
+                <PickView
+                  style={{
+                    backgroundColor: "#DFF5E1",
+                    paddingHorizontal: 6,
+                    paddingVertical: 2,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    borderColor: "#4CAF50",
+                  }}
+                >
+                  <PickText style={{ fontWeight: "700", color: "#1B5E20" }}>
+                    {t("BOOKING_VOUCHER_BADGE")}
+                  </PickText>
+                </PickView>
+                <PickText style={{ fontWeight: "500", color: "#1B5E20" }}>
+                  {gift
+                    ? `${gift.serviceName} x${gift.quantity}`
+                    : `- ${formatCurrency(d.lineDiscount)}`}
                 </PickText>
               </PickView>
-              <PickText style={{ fontWeight: "500", color: "#1B5E20" }}>
-                {gift
-                  ? `${gift.serviceName} x${gift.quantity}`
-                  : `- ${formatCurrency(d.lineDiscount)}`}
-              </PickText>
-            </PickView>
-          );
-        })}
+            );
+          })}
 
       {/* Khuyến mại đã chọn */}
       {selectedPromo && promoPreview && (

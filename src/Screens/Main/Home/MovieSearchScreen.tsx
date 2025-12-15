@@ -10,18 +10,23 @@ import { useNavigation } from "@react-navigation/native";
 import useThemedStyles from "@Theme/Hook/useThemedStyles";
 import { useTranslation } from "@Hooks/useTranslation";
 import { getMovieTitle } from "@Utils";
+import SearchByImageModal from "@Components/Modals/SearchByImageModal";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface MovieWithStatus extends Movie {
   status?: "SHOWING" | "COMING_SOON";
 }
 
 const MovieSearchScreen = () => {
+  const insets = useSafeAreaInsets();
   const { colors } = useThemedStyles();
   const navigation = useNavigation<any>();
   const [keyword, setKeyword] = useState("");
   const [movies, setMovies] = useState<MovieWithStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { t, language } = useTranslation();
+
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const handleSearch = async (text: string) => {
     setKeyword(text);
@@ -118,7 +123,7 @@ const MovieSearchScreen = () => {
         paddingHorizontal={SPACING.md}
         marginBottom={SPACING.md}
         backgroundColor="#012e6e"
-        paddingTop={30}
+        paddingTop={insets.top + 16}
         paddingBottom={12}
         shadowColor="#000"
         shadowOpacity={0.1}
@@ -145,9 +150,26 @@ const MovieSearchScreen = () => {
               marginLeft: 8,
               fontSize: FONT_SIZE.md,
               color: COLORS.text.primary,
+              paddingVertical: 8,
+              lineHeight: 23,
             }}
           />
         </PickView>
+
+        <TouchableOpacity
+          onPress={() => setIsImageModalOpen(true)}
+          style={{
+            marginLeft: 10,
+            width: 38,
+            height: 38,
+            borderRadius: 99,
+            backgroundColor: "rgba(255,255,255,0.18)",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Icon name="image-outline" size={20} color="white" />
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <PickText
@@ -263,6 +285,15 @@ const MovieSearchScreen = () => {
           </PickView>
         ))}
       </ScrollView>
+
+      <SearchByImageModal
+        visible={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        onSelectMovie={(movie) => {
+          setIsImageModalOpen(false);
+          navigation.navigate("MovieDetail", { id: movie.id, slug: movie.slug });
+        }}
+      />
     </PickView>
   );
 };

@@ -70,7 +70,10 @@ const PaymentWebViewScreen: React.FC<Props> = ({ route, navigation }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#F2F3F5" }}>
-      <ScreenHeader title={t("BOOKING_CONFIRM_TITLE")} onBackPress={() => setShowCancelModal(true)} />
+      <ScreenHeader
+        title={t("BOOKING_CONFIRM_TITLE")}
+        onBackPress={() => setShowCancelModal(true)}
+      />
 
       {isLoading && (
         <View

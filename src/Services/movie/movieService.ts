@@ -1,5 +1,7 @@
 import { HttpService } from "../httpService";
 import { Movie, MovieDetail, MovieListParams, MovieServiceInterface } from "@Types/movieTypes";
+import type { SearchMovieResult } from "@Types/movieTypes";
+import { Platform } from "react-native";
 
 class MovieService implements MovieServiceInterface {
   private httpService: HttpService;
@@ -51,6 +53,32 @@ class MovieService implements MovieServiceInterface {
 
   async deleteReview(reviewId: number): Promise<any> {
     return this.httpService.delete(`/reviews/${reviewId}`);
+  }
+
+  async searchByImage(file: {
+    uri: string;
+    type?: string;
+    fileName?: string;
+  }): Promise<SearchMovieResult[]> {
+    const formData = new FormData();
+    formData.append("file", {
+      uri: Platform.OS === "ios" ? file.uri.replace("file://", "") : file.uri,
+      type: file.type || "image/jpeg",
+      name: file.fileName || `search-${Date.now()}.jpg`,
+    } as any);
+
+    const res = await this.httpService.post<{ success: boolean; data: SearchMovieResult[] }>(
+      "public/movies/search-by-image",
+      formData,
+      {
+        skipAuth: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return res?.data ?? [];
   }
 }
 
