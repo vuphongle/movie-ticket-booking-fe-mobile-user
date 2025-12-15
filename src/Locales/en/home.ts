@@ -17,7 +17,7 @@ export default {
   HOME_SEARCH_TAG_SHOWING: "Now showing",
   HOME_SEARCH_TAG_COMING_SOON: "Coming soon",
   HOME_SEARCH_EMPTY_TITLE: "Oops, no movies found!",
-  HOME_SEARCH_EMPTY_SUBTITLE: "Try another keyword?",
+  HOME_SEARCH_EMPTY_SUBTITLE: "Try another keyword or image",
   HOME_SEARCH_EMPTY_ACTION: "Search movies",
   HOME_SEARCH_BUTTON_BOOK: "Book",
   HOME_SEARCH_BUTTON_INFO: "Details",

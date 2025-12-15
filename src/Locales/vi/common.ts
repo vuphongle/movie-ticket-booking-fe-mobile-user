@@ -38,20 +38,4 @@ export default {
   COMMON_WEEKDAY_FRI: "Thứ Sáu",
   COMMON_WEEKDAY_SAT: "Thứ Bảy",
   COMMON_WEEKDAY_SUN: "Chủ Nhật",
-
-  // ===== SEARCH BY IMAGE =====
-  SEARCH_BY_IMAGE: "Tìm kiếm bằng hình ảnh",
-  PLEASE_UPLOAD_ONE_OR_MORE_IMAGES_TO_SEARCH_FOR_MATCHING_MOVIES:
-    "Chọn một hoặc nhiều hình ảnh để tìm phim phù hợp.",
-  UPLOAD_IMAGES: "Tải ảnh lên",
-  UPLOAD_MORE_IMAGES: "Chọn thêm ảnh",
-  SEARCH: "Tìm kiếm",
-  SEARCH_RESULTS: "Kết quả tìm kiếm",
-  NO_RESULTS_FOUND: "Không tìm thấy kết quả",
-  SEARCH_WITH_OTHER_IMAGES: "Tìm kiếm bằng các ảnh khác",
-  MOVIE_DURATION: "Thời lượng",
-  CLOSE: "Đóng",
-  SEARCH_IMAGE_LIMIT_TITLE: "Đã đạt giới hạn hình ảnh",
-  SEARCH_IMAGE_LIMIT_MESSAGE: "Bạn chỉ có thể chọn tối đa {{max}} hình ảnh.",
-  MOVIE_DURATION_UNIT: "phút",
 };
