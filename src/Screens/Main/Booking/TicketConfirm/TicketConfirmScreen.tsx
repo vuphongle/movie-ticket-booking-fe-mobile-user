@@ -210,10 +210,7 @@ const TicketConfirmScreen = () => {
     try {
       const coupon = await couponByCodeQuery.refetch();
       if (!coupon.data) {
-        openVoucherModal(
-          t("BOOKING_VOUCHER_INVALID_TITLE"),
-          t("BOOKING_VOUCHER_INVALID_MESSAGE")
-        );
+        openVoucherModal(t("BOOKING_VOUCHER_INVALID_TITLE"), t("BOOKING_VOUCHER_INVALID_MESSAGE"));
         return;
       }
 
@@ -253,10 +250,7 @@ const TicketConfirmScreen = () => {
     }
 
     if (!paymentMethod) {
-      openVoucherModal(
-        t("BOOKING_PAYMENT_METHOD_TITLE"),
-        t("BOOKING_PAYMENT_METHOD_REQUIRED")
-      );
+      openVoucherModal(t("BOOKING_PAYMENT_METHOD_TITLE"), t("BOOKING_PAYMENT_METHOD_REQUIRED"));
       return;
     }
 

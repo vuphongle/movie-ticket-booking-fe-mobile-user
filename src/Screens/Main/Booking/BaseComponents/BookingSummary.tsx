@@ -22,7 +22,9 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({ onContinue, isPending }
       <PickView style={styles.summaryLeft}>
         <PickText style={styles.summaryText}>
           {t("BOOKING_SUMMARY_SELECTED", {
-            seats: seats.length ? seats.map((s) => `${s.row}${s.number}`).join(", ") : t("BOOKING_SUMMARY_NONE"),
+            seats: seats.length
+              ? seats.map((s) => `${s.row}${s.number}`).join(", ")
+              : t("BOOKING_SUMMARY_NONE"),
           })}
         </PickText>
 

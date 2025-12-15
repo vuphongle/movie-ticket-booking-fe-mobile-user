@@ -163,22 +163,19 @@ const MovieDetailScreen: React.FC = () => {
           }
         />
       </ScrollView>
-
-      {isNowShowing && (
-        <View style={[styles.bookingButtonContainer, { bottom: insets.bottom + 12 }]}>
-          <PickButton
-            type="Primary"
-            title={t("MOVIE_DETAIL_BOOK")}
-            onPress={() =>
-              navigation.navigate("MovieShowtime", {
-                movieId: Number(id),
-                movieName: displayMovieName,
-                slug,
-              })
-            }
-          />
-        </View>
-      )}
+      <View style={[styles.bookingButtonContainer, { bottom: insets.bottom + 12 }]}>
+        <PickButton
+          type="Primary"
+          title={t("MOVIE_DETAIL_BOOK")}
+          onPress={() =>
+            navigation.navigate("MovieShowtime", {
+              movieId: Number(id),
+              movieName: displayMovieName,
+              slug,
+            })
+          }
+        />
+      </View>
     </PickView>
   );
 };

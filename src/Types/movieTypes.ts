@@ -46,6 +46,18 @@ export interface MovieListParams {
   limit?: number;
 }
 
+export interface SearchMovieResult {
+  id: number;
+  name: string;
+  nameEn?: string;
+  slug: string;
+  poster: string;
+  rating: number;
+  duration: number;
+  age: MovieAge;
+  graphics: string[];
+}
+
 export interface MovieServiceInterface {
   getShowingNowMovies: (params?: MovieListParams) => Promise<Movie[]>;
   getComingSoonMovies: (params?: MovieListParams) => Promise<Movie[]>;
@@ -55,4 +67,5 @@ export interface MovieServiceInterface {
   createReview(formData: FormData): Promise<any>;
   updateReview(formData: FormData): Promise<any>;
   deleteReview(reviewId: number): Promise<any>;
+  searchByImage: (file: any) => Promise<SearchMovieResult[]>;
 }

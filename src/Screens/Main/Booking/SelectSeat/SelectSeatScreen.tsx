@@ -194,7 +194,9 @@ const SelectSeatScreen: React.FC = () => {
                     fill="transparent"
                   />
                 </Svg>
-                <PickText style={styles.screenLabel}>{t("BOOKING_SELECT_SEAT_SCREEN_LABEL")}</PickText>
+                <PickText style={styles.screenLabel}>
+                  {t("BOOKING_SELECT_SEAT_SCREEN_LABEL")}
+                </PickText>
               </View>
               <SeatMap seats={mappedSeats} selectedSeats={seats} onSelectSeat={toggleSeat} />
               <SeatLegend />
